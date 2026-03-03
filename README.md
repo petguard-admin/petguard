@@ -2,6 +2,10 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Project Description
+
+This is a pet management application built with React and Firebase. It allows users to manage their pets, view medical records, and access various features for pet care.
+
 ## Available Scripts
 
 In the project directory, you can run:
