@@ -9,13 +9,13 @@ import { useAuth } from '../AuthContext';
 const AdminRoute = ({ children }) => {
   const { user, loading } = useAuth();
   const [checking, setChecking] = React.useState(true);
-  const [isAdmin, setIsAdmin] = React.useState(false);
+  const [isVet, setIsVet] = React.useState(false);
 
   React.useEffect(() => {
     if (loading) return;
     if (!user) {
       setChecking(false);
-      setIsAdmin(false);
+      setIsVet(false);
       return;
     }
 
@@ -24,7 +24,7 @@ const AdminRoute = ({ children }) => {
 
     const unsub = onValue(roleRef, (snap) => {
       const role = snap.exists() ? snap.val() : '';
-      setIsAdmin(role === 'admin');
+      setIsVet(role === 'vet');
       setChecking(false);
     });
 
@@ -39,7 +39,7 @@ const AdminRoute = ({ children }) => {
     return <Navigate to="/login" replace />;
   }
 
-  if (!isAdmin) {
+  if (!isVet) {
     return <Navigate to="/" replace />;
   }
 

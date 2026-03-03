@@ -12,6 +12,7 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [role, setRole] = useState('');
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (firebaseUser) => {
@@ -26,6 +27,7 @@ export const AuthProvider = ({ children }) => {
     if (loading) return;
     if (!user) {
       setIsAdmin(false);
+      setRole('');
       return;
     }
 
@@ -33,6 +35,7 @@ export const AuthProvider = ({ children }) => {
     const roleRef = ref(db, `users/${user.uid}/role`);
     const unsub = onValue(roleRef, (snap) => {
       const role = snap.exists() ? snap.val() : '';
+      setRole(role);
       setIsAdmin(role === 'admin');
     });
 
@@ -44,9 +47,10 @@ export const AuthProvider = ({ children }) => {
       user,
       loading,
       isAdmin,
+      role,
       logout: () => signOut(auth),
     };
-  }, [user, loading, isAdmin]);
+  }, [user, loading, isAdmin, role]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

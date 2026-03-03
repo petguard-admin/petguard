@@ -1,9 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import { getDatabase, onValue, ref, remove, set, update } from 'firebase/database';
-
-import app from '../firebaseConfig';
 import { useAuth } from '../AuthContext';
 import { Button } from './ui/Button';
 import OwnerSidebarLayout from './OwnerSidebarLayout';
@@ -20,35 +17,46 @@ const MyPets = () => {
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
 
+  const authedFetch = React.useCallback(
+    async (path, options) => {
+      if (!user) throw new Error('Not logged in.');
+      const token = await user.getIdToken();
+      const res = await fetch(path, {
+        ...options,
+        headers: {
+          ...(options?.headers || {}),
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data?.error || 'Request failed.');
+      return data;
+    },
+    [user]
+  );
+
   useEffect(() => {
     if (loading) return;
     if (!user) return;
 
-    const db = getDatabase(app);
-
-    const petsRef = ref(db, `petsByOwner/${user.uid}`);
-    const unsubPets = onValue(petsRef, (snap) => {
-      if (!snap.exists()) {
-        setPets([]);
-        return;
+    let active = true;
+    (async () => {
+      try {
+        const me = await authedFetch('/api/me', { method: 'GET' });
+        const petsRes = await authedFetch('/api/me/pets', { method: 'GET' });
+        if (!active) return;
+        setPets(Array.isArray(petsRes?.pets) ? petsRes.pets : []);
+        setSelectedPetId(me?.profile?.selectedPetId || '');
+      } catch (e) {
+        if (!active) return;
+        setError(e?.message || 'Failed to load pets.');
       }
-
-      const val = snap.val();
-      const arr = Object.keys(val).map((id) => ({ id, ...val[id] }));
-      arr.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
-      setPets(arr);
-    });
-
-    const selectedRef = ref(db, `selectedPetByOwner/${user.uid}`);
-    const unsubSelected = onValue(selectedRef, (snap) => {
-      setSelectedPetId(snap.exists() ? snap.val() : '');
-    });
+    })();
 
     return () => {
-      unsubPets();
-      unsubSelected();
+      active = false;
     };
-  }, [user, loading]);
+  }, [user, loading, authedFetch]);
 
   const selectedPet = useMemo(() => {
     return pets.find((p) => p.id === selectedPetId) || null;
@@ -84,8 +92,16 @@ const MyPets = () => {
 
   const onSwitch = async (petId) => {
     if (!user) return;
-    const db = getDatabase(app);
-    await set(ref(db, `selectedPetByOwner/${user.uid}`), petId);
+    try {
+      await authedFetch('/api/me/selected-pet', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ petId }),
+      });
+      setSelectedPetId(petId);
+    } catch (e) {
+      setError(e?.message || 'Failed to switch pet.');
+    }
   };
 
   const onEditChange = (e) => {
@@ -98,12 +114,24 @@ const MyPets = () => {
     setMessage('');
     setSaving(true);
     try {
-      const db = getDatabase(app);
-      await update(ref(db, `petsByOwner/${user.uid}/${selectedPetId}`), {
-        ...editForm,
-        weightKgs: editForm.weightKgs === '' ? '' : Number(editForm.weightKgs),
-        updatedAt: Date.now(),
+      await authedFetch(`/api/me/pets/${selectedPetId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          pet: {
+            ...editForm,
+            weightKgs: editForm.weightKgs === '' ? '' : Number(editForm.weightKgs),
+          },
+        }),
       });
+
+      setPets((prev) =>
+        prev.map((p) =>
+          p.id === selectedPetId
+            ? { ...p, ...editForm, weightKgs: editForm.weightKgs === '' ? '' : Number(editForm.weightKgs), updatedAt: Date.now() }
+            : p
+        )
+      );
       setEditing(false);
       setMessage('Pet updated.');
     } catch (err) {
@@ -122,17 +150,17 @@ const MyPets = () => {
     setError('');
     setMessage('');
     setDeleting(true);
+
     try {
-      const db = getDatabase(app);
-      await remove(ref(db, `petsByOwner/${user.uid}/${selectedPetId}`));
+      const deletingId = selectedPetId;
+      await authedFetch(`/api/me/pets/${deletingId}`, { method: 'DELETE' });
 
-      // If we deleted the selected pet, switch to another pet (if any)
-      const remaining = pets.filter((p) => p.id !== selectedPetId);
-      const nextId = remaining[0]?.id || '';
-      await set(ref(db, `selectedPetByOwner/${user.uid}`), nextId);
-
-      setEditing(false);
-      setEditForm(null);
+      setPets((prev) => prev.filter((p) => p.id !== deletingId));
+      setSelectedPetId((prevSelected) => {
+        if (prevSelected !== deletingId) return prevSelected;
+        const remaining = pets.filter((p) => p.id !== deletingId);
+        return remaining[0]?.id || '';
+      });
       setMessage('Pet deleted.');
     } catch (err) {
       setError(err?.message || 'Failed to delete pet.');
