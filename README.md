@@ -6,6 +6,14 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 This is a pet management application built with React and Firebase. It allows users to manage their pets, view medical records, and access various features for pet care.
 
+## Features
+
+- Pet management
+- Medical records
+- User authentication
+- Admin dashboard
+- Owner dashboard
+
 ## Available Scripts
 
 In the project directory, you can run:
