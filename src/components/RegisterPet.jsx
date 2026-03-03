@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { getDatabase, push, ref, set } from 'firebase/database';
-
-import app from '../firebaseConfig';
 import { useAuth } from '../AuthContext';
 import { Button } from './ui/Button';
 
@@ -31,6 +28,24 @@ const RegisterPet = () => {
 
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
+
+  const authedFetch = React.useCallback(
+    async (path, options) => {
+      if (!user) throw new Error('Not logged in.');
+      const token = await user.getIdToken();
+      const res = await fetch(path, {
+        ...options,
+        headers: {
+          ...(options?.headers || {}),
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data?.error || 'Request failed.');
+      return data;
+    },
+    [user]
+  );
 
   const onChange = (e) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -62,12 +77,7 @@ const RegisterPet = () => {
 
     setSubmitting(true);
     try {
-      const db = getDatabase(app);
-      const petRef = push(ref(db, `petsByOwner/${user.uid}`));
-
       const payload = {
-        id: petRef.key,
-        ownerUid: user.uid,
         image: form.image,
         petName: form.petName,
         petOrigin: form.petOrigin,
@@ -83,17 +93,17 @@ const RegisterPet = () => {
         tagType: form.tagType,
         tagNumber: form.tagNumber,
         contactWithOtherAnimals: form.contactWithOtherAnimals,
-        createdAt: Date.now(),
       };
 
-      await set(petRef, payload);
-
-      // set selected pet if none yet
-      await set(ref(db, `selectedPetByOwner/${user.uid}`), petRef.key);
+      await authedFetch('/api/me/pets', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ pet: payload }),
+      });
 
       navigate('/my-pets');
     } catch (err) {
-      setError(err?.message || 'Failed to register pet.');
+      setError(err?.message || 'Failed to register a pet.');
     } finally {
       setSubmitting(false);
     }

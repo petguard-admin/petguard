@@ -1,10 +1,5 @@
 import React from 'react';
 
-import { getDatabase, onValue, ref, remove, update } from 'firebase/database';
-import { deleteUser, sendPasswordResetEmail } from 'firebase/auth';
-
-import app from '../firebaseConfig';
-import { auth } from '../auth';
 import { Button } from './ui/Button';
 import { useAuth } from '../AuthContext';
 import OwnerSidebarLayout from './OwnerSidebarLayout';
@@ -19,29 +14,51 @@ const Profile = () => {
   const [message, setMessage] = React.useState('');
   const [error, setError] = React.useState('');
 
+  const authedFetch = React.useCallback(
+    async (path, options) => {
+      if (!user) throw new Error('Not logged in.');
+      const token = await user.getIdToken();
+      const res = await fetch(path, {
+        ...options,
+        headers: {
+          ...(options?.headers || {}),
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data?.error || 'Request failed.');
+      return data;
+    },
+    [user]
+  );
+
   React.useEffect(() => {
     if (loading) return;
     if (!user) return;
 
-    const db = getDatabase(app);
-    const userRef = ref(db, `users/${user.uid}`);
-    const unsub = onValue(userRef, (snap) => {
-      if (!snap.exists()) {
-        setProfile(null);
-        return;
+    let active = true;
+    (async () => {
+      try {
+        const data = await authedFetch('/api/me', { method: 'GET' });
+        if (!active) return;
+        setProfile(data?.profile || null);
+        const val = data?.profile || {};
+        setForm({
+          firstname: val.firstname || '',
+          lastname: val.lastname || '',
+          phone: val.phone || '',
+          barangay: val.barangay || '',
+        });
+      } catch (e) {
+        if (!active) return;
+        setError(e?.message || 'Failed to load profile.');
       }
-      const val = snap.val();
-      setProfile(val);
-      setForm({
-        firstname: val.firstname || '',
-        lastname: val.lastname || '',
-        phone: val.phone || '',
-        barangay: val.barangay || '',
-      });
-    });
+    })();
 
-    return () => unsub();
-  }, [user, loading]);
+    return () => {
+      active = false;
+    };
+  }, [user, loading, authedFetch]);
 
   const onChange = (e) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -54,13 +71,17 @@ const Profile = () => {
 
     setSaving(true);
     try {
-      const db = getDatabase(app);
-      await update(ref(db, `users/${user.uid}`), {
-        firstname: form.firstname,
-        lastname: form.lastname,
-        phone: form.phone,
-        barangay: form.barangay,
-        updatedAt: Date.now(),
+      await authedFetch('/api/me', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          profile: {
+            firstname: form.firstname,
+            lastname: form.lastname,
+            phone: form.phone,
+            barangay: form.barangay,
+          },
+        }),
       });
       setMessage('Profile updated.');
     } catch (err) {
@@ -75,8 +96,9 @@ const Profile = () => {
     setError('');
     setMessage('');
     try {
-      await sendPasswordResetEmail(auth, user.email);
-      setMessage('Password reset link sent to your email.');
+      const data = await authedFetch('/api/me/reset-password-link', { method: 'POST' });
+      window.prompt('Password reset link (copy):', data?.resetLink || '');
+      setMessage('Password reset link generated (shown once).');
     } catch (err) {
       setError(err?.message || 'Failed to send reset link.');
     }
@@ -93,13 +115,8 @@ const Profile = () => {
     setDeleting(true);
 
     try {
-      const db = getDatabase(app);
-      await remove(ref(db, `users/${user.uid}`));
-
-      // Best-effort: deleting auth user may require recent login.
-      if (auth.currentUser) {
-        await deleteUser(auth.currentUser);
-      }
+      await authedFetch('/api/me', { method: 'DELETE' });
+      await logout();
     } catch (err) {
       setError(err?.message || 'Failed to delete account.');
     } finally {

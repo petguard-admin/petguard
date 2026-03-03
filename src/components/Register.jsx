@@ -17,6 +17,8 @@ const Register = () => {
     email: '',
     phone: '',
     barangay: '',
+    gender: '',
+    birthday: '',
     password: '',
     confirmPassword: '',
   });
@@ -34,6 +36,8 @@ const Register = () => {
     if (!form.email.trim()) return 'Email is required.';
     if (!form.phone.trim()) return 'Phone no. is required.';
     if (!form.barangay.trim()) return 'Barangay is required.';
+    if (!form.gender.trim()) return 'Gender is required.';
+    if (!form.birthday.trim()) return 'Birthday is required.';
     if (!form.password) return 'Password is required.';
     if (form.password.length < 6) return 'Password must be at least 6 characters.';
     if (form.password !== form.confirmPassword) return 'Passwords do not match.';
@@ -78,6 +82,8 @@ const Register = () => {
           email,
           phone: form.phone,
           barangay: form.barangay,
+          gender: form.gender,
+          birthday: form.birthday,
           createdAt: Date.now(),
         },
         [`emailIndex/${emailKey}`]: cred.user.uid,
@@ -163,6 +169,35 @@ const Register = () => {
               onChange={onChange}
               className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
               autoComplete="address-level3"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium mb-1" htmlFor="gender">Gender</label>
+            <select
+              id="gender"
+              name="gender"
+              value={form.gender}
+              onChange={onChange}
+              className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+            >
+              <option value="">Select gender</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="prefer_not_to_say">Prefer not to say</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium mb-1" htmlFor="birthday">Birthday</label>
+            <input
+              id="birthday"
+              name="birthday"
+              type="date"
+              value={form.birthday}
+              onChange={onChange}
+              className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+              autoComplete="bday"
             />
           </div>
 

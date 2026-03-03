@@ -20,6 +20,7 @@
   },
   "scripts": {
     "dev": "vite",
+    "server": "npm --prefix server run dev",
     "build": "vite build",
     "preview": "vite preview"
   },

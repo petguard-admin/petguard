@@ -1,9 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import { getDatabase, onValue, push, ref, remove, set, update } from 'firebase/database';
-
-import app from '../firebaseConfig';
 import { useAuth } from '../AuthContext';
 import { Button } from './ui/Button';
 import OwnerSidebarLayout from './OwnerSidebarLayout';
@@ -38,19 +35,44 @@ const MedicalRecords = () => {
   const [savingEdit, setSavingEdit] = useState(false);
   const [deletingId, setDeletingId] = useState('');
 
+  const authedFetch = React.useCallback(
+    async (path, options) => {
+      if (!user) throw new Error('Not logged in.');
+      const token = await user.getIdToken();
+      const res = await fetch(path, {
+        ...options,
+        headers: {
+          ...(options?.headers || {}),
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data?.error || 'Request failed.');
+      return data;
+    },
+    [user]
+  );
+
   useEffect(() => {
     if (loading) return;
     if (!user) return;
 
-    const db = getDatabase(app);
+    let active = true;
+    (async () => {
+      try {
+        const me = await authedFetch('/api/me', { method: 'GET' });
+        if (!active) return;
+        setSelectedPetId(me?.profile?.selectedPetId || '');
+      } catch (e) {
+        if (!active) return;
+        setError(e?.message || 'Failed to load selected pet.');
+      }
+    })();
 
-    const selectedRef = ref(db, `selectedPetByOwner/${user.uid}`);
-    const unsubSelected = onValue(selectedRef, (snap) => {
-      setSelectedPetId(snap.exists() ? snap.val() : '');
-    });
-
-    return () => unsubSelected();
-  }, [user, loading]);
+    return () => {
+      active = false;
+    };
+  }, [user, loading, authedFetch]);
 
   useEffect(() => {
     if (loading) return;
@@ -60,22 +82,22 @@ const MedicalRecords = () => {
       return;
     }
 
-    const db = getDatabase(app);
-    const recordsRef = ref(db, `medicalRecordsByPet/${selectedPetId}`);
-
-    const unsub = onValue(recordsRef, (snap) => {
-      if (!snap.exists()) {
-        setRecords([]);
-        return;
+    let active = true;
+    (async () => {
+      try {
+        const data = await authedFetch(`/api/me/pets/${selectedPetId}/medical-records`, { method: 'GET' });
+        if (!active) return;
+        setRecords(Array.isArray(data?.records) ? data.records : []);
+      } catch (e) {
+        if (!active) return;
+        setError(e?.message || 'Failed to load medical records.');
       }
-      const val = snap.val();
-      const arr = Object.keys(val).map((id) => ({ id, ...val[id] }));
-      arr.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
-      setRecords(arr);
-    });
+    })();
 
-    return () => unsub();
-  }, [user, loading, selectedPetId]);
+    return () => {
+      active = false;
+    };
+  }, [user, loading, selectedPetId, authedFetch]);
 
   const canSubmit = useMemo(() => {
     if (!selectedPetId) return false;
@@ -109,21 +131,10 @@ const MedicalRecords = () => {
 
     setSubmitting(true);
     try {
-      const db = getDatabase(app);
-      const recRef = push(ref(db, `medicalRecordsByPet/${selectedPetId}`));
-
-      const base = {
-        id: recRef.key,
-        petId: selectedPetId,
-        ownerUid: user.uid,
-        recordType,
-        createdAt: Date.now(),
-      };
-
       const payload =
         recordType === 'vaccination'
           ? {
-              ...base,
+              recordType: 'vaccination',
               date: vaccinationForm.date,
               vaccineSource: vaccinationForm.vaccineSource,
               vaccineType: vaccinationForm.vaccineType,
@@ -132,12 +143,20 @@ const MedicalRecords = () => {
               notes: vaccinationForm.notes,
             }
           : {
-              ...base,
+              recordType: 'medical',
               date: medicalForm.date,
               results: medicalForm.results,
             };
 
-      await set(recRef, payload);
+      const data = await authedFetch(`/api/me/pets/${selectedPetId}/medical-records`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ record: payload }),
+      });
+
+      if (data?.record) {
+        setRecords((prev) => [data.record, ...prev]);
+      }
 
       if (recordType === 'vaccination') {
         setVaccinationForm({
@@ -198,9 +217,6 @@ const MedicalRecords = () => {
     setMessage('');
     setSavingEdit(true);
     try {
-      const db = getDatabase(app);
-      const recPath = ref(db, `medicalRecordsByPet/${selectedPetId}/${editingId}`);
-
       const patch =
         editForm.recordType === 'vaccination'
           ? {
@@ -210,15 +226,19 @@ const MedicalRecords = () => {
               vaccineStock: editForm.vaccineStock,
               vaccinatedBy: editForm.vaccinatedBy,
               notes: editForm.notes,
-              updatedAt: Date.now(),
             }
           : {
               date: editForm.date,
               results: editForm.results,
-              updatedAt: Date.now(),
             };
 
-      await update(recPath, patch);
+      await authedFetch(`/api/me/pets/${selectedPetId}/medical-records/${editingId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ record: patch }),
+      });
+
+      setRecords((prev) => prev.map((r) => (r.id === editingId ? { ...r, ...patch, updatedAt: Date.now() } : r)));
       setMessage('Record updated.');
       cancelEdit();
     } catch (err) {
@@ -228,18 +248,17 @@ const MedicalRecords = () => {
     }
   };
 
-  const deleteRecord = async (recId) => {
-    if (!user || !selectedPetId || !recId) return;
+  const deleteRecord = async (id) => {
+    if (!user || !selectedPetId || !id) return;
     const ok = window.confirm('Delete this record?');
     if (!ok) return;
 
     setError('');
     setMessage('');
-    setDeletingId(recId);
+    setDeletingId(id);
     try {
-      const db = getDatabase(app);
-      await remove(ref(db, `medicalRecordsByPet/${selectedPetId}/${recId}`));
-      if (editingId === recId) cancelEdit();
+      await authedFetch(`/api/me/pets/${selectedPetId}/medical-records/${id}`, { method: 'DELETE' });
+      setRecords((prev) => prev.filter((r) => r.id !== id));
       setMessage('Record deleted.');
     } catch (err) {
       setError(err?.message || 'Failed to delete record.');
