@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { sendPasswordResetEmail, signInWithEmailAndPassword } from 'firebase/auth';
 
 import { auth } from '../auth';
 import { Button } from './ui/Button';
+import { logAuditTrail } from '../utils/auditLogger';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -13,10 +14,13 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
+  const [message, setMessage] = useState('');
+  const [resetting, setResetting] = useState(false);
 
   const onSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setMessage('');
 
     if (!email.trim() || !password) {
       setError('Email and password are required.');
@@ -25,12 +29,36 @@ const Login = () => {
 
     setSubmitting(true);
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      navigate('/');
+      const cred = await signInWithEmailAndPassword(auth, email, password);
+      const tokenRes = await cred.user.getIdTokenResult(true);
+      const isAdmin = tokenRes?.claims?.admin === true;
+      await logAuditTrail('view', cred.user.uid, isAdmin ? 'admin' : 'owner', null, { email });
+      navigate(isAdmin ? '/admin' : '/select-pet');
     } catch (err) {
       setError(err?.message || 'Login failed.');
     } finally {
       setSubmitting(false);
+    }
+  };
+
+  const onForgotPassword = async () => {
+    setError('');
+    setMessage('');
+
+    if (!email.trim()) {
+      setError('Enter your email above, then click "Forgot password".');
+      return;
+    }
+
+    setResetting(true);
+    try {
+      await sendPasswordResetEmail(auth, email.trim());
+      setMessage('Password reset email sent. Check your inbox.');
+      await logAuditTrail('view', email, 'password_reset', null, { email });
+    } catch (err) {
+      setError(err?.message || 'Failed to send password reset email.');
+    } finally {
+      setResetting(false);
     }
   };
 
@@ -43,6 +71,12 @@ const Login = () => {
         {error ? (
           <div className="mb-4 rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
             {error}
+          </div>
+        ) : null}
+
+        {message ? (
+          <div className="mb-4 rounded-md border border-border bg-muted px-3 py-2 text-sm">
+            {message}
           </div>
         ) : null}
 
@@ -74,6 +108,15 @@ const Login = () => {
           <Button type="submit" className="w-full" disabled={submitting}>
             {submitting ? 'Signing in...' : 'Sign in'}
           </Button>
+
+          <button
+            type="button"
+            onClick={onForgotPassword}
+            disabled={resetting || submitting}
+            className="w-full text-sm underline text-muted-foreground disabled:opacity-60"
+          >
+            {resetting ? 'Sending reset email...' : 'Forgot password?'}
+          </button>
         </form>
 
         <p className="mt-4 text-sm text-muted-foreground">

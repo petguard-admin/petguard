@@ -1,21 +1,23 @@
-import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
-
-import Navbar from './Navbar';
+import React from "react";
+import { Link, useLocation } from "react-router-dom";
+import Navbar from "./Navbar";
 
 const nav = [
-  { label: 'Dashboard', to: '/admin' },
-  { label: 'User Management', to: '/admin/users' },
-  { label: 'Pet Management', to: '/admin/pets' },
-  { label: 'Information Center', to: '/admin/info' },
-  { label: 'Reports', to: '/admin/reports' },
-  { label: 'Audit Trail', to: '/admin/audit-trail' },
-  { label: 'Settings', to: '/admin/settings' },
+  { label: "Dashboard", to: "/admin" },
+  { label: "User Management", to: "/admin/users" },
+  { label: "Pet Management", to: "/admin/pets" },
+  { label: "Information Center", to: "/admin/info" },
+  { label: "Reports", to: "/admin/reports" },
+  { label: "Audit Trail", to: "/admin/audit-trail" },
+  { label: "Profile", to: "/admin/profile" },
 ];
+
+const adminControls = [{ label: "Admins", to: "/admin/control" }];
 
 const AdminSidebarLayout = ({ title, children }) => {
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = React.useState(false);
+  const [adminControlsOpen, setAdminControlsOpen] = React.useState(true);
 
   React.useEffect(() => {
     setMobileOpen(false);
@@ -29,33 +31,70 @@ const AdminSidebarLayout = ({ title, children }) => {
           <Link
             key={item.to}
             to={item.to}
-            className={
-              'block rounded-md px-3 py-2 text-sm transition-colors ' +
-              (active ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-muted')
-            }
+            className={`block rounded-xl px-4 py-3 text-sm font-medium transition-all ${
+              active
+                ? "bg-green-700 text-white shadow-sm"
+                : "text-slate-700 hover:bg-green-50 hover:text-green-700"
+            }`}
           >
             {item.label}
           </Link>
         );
       })}
+
+      {/* Admin Controls */}
+      <div className="pt-3 border-t border-slate-200 mt-3">
+        <button
+          type="button"
+          onClick={() => setAdminControlsOpen((v) => !v)}
+          className="w-full flex items-center justify-between rounded-xl px-4 py-3 text-sm font-medium text-slate-700 hover:bg-green-50 hover:text-green-700"
+        >
+          <span>Admin Controls</span>
+          <span className="text-xs">{adminControlsOpen ? "−" : "+"}</span>
+        </button>
+
+        {adminControlsOpen && (
+          <div className="mt-2 space-y-1">
+            {adminControls.map((item) => {
+              const active = location.pathname === item.to;
+              return (
+                <Link
+                  key={item.to}
+                  to={item.to}
+                  className={`block rounded-lg px-4 py-2 text-sm ml-3 transition-all ${
+                    active
+                      ? "bg-green-100 text-green-700 font-medium"
+                      : "text-slate-600 hover:bg-green-50 hover:text-green-700"
+                  }`}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
+          </div>
+        )}
+      </div>
     </nav>
   );
 
   return (
-    <div className="min-h-screen bg-muted">
+    <div className="min-h-screen bg-[#f7faf7]">
       <Navbar />
-      <div className="container mx-auto px-4 py-8">
-        <div className="md:hidden mb-4 flex items-center justify-between">
+
+      <div className="flex flex-col md:flex-row gap-1">
+        {/* Mobile Menu */}
+        <div className="md:hidden px-4 py-4 flex items-center justify-between">
           <button
             type="button"
             onClick={() => setMobileOpen(true)}
-            className="inline-flex items-center justify-center rounded-md border border-input bg-card px-3 py-2 text-sm shadow-sm"
+            className="rounded-xl border border-green-100 bg-white px-4 py-2 text-sm font-medium shadow-sm"
           >
-            Menu
+            ☰ Menu
           </button>
         </div>
 
-        {mobileOpen ? (
+        {/* Mobile Drawer */}
+        {mobileOpen && (
           <div className="fixed inset-0 z-50 md:hidden">
             <button
               type="button"
@@ -63,39 +102,51 @@ const AdminSidebarLayout = ({ title, children }) => {
               onClick={() => setMobileOpen(false)}
               className="absolute inset-0 bg-black/40"
             />
-            <div className="absolute left-0 top-0 h-full w-72 bg-card border-r border-border p-4 shadow-xl">
-              <div className="flex items-center justify-between mb-3">
-                <div className="text-sm font-semibold">Admin</div>
+            <div className="absolute left-0 top-0 h-full w-72 bg-white border-r border-slate-200 p-5 shadow-xl">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-lg font-bold text-slate-900">Admin Panel</h2>
                 <button
                   type="button"
                   onClick={() => setMobileOpen(false)}
-                  className="rounded-md border border-input bg-background px-2 py-1 text-sm"
+                  className="text-slate-500 hover:text-slate-900"
                 >
-                  Close
+                  ✕
                 </button>
               </div>
               {renderNav()}
             </div>
           </div>
-        ) : null}
+        )}
 
-        <div className="grid grid-cols-1 md:grid-cols-[240px_1fr] gap-6 items-start">
-          <aside className="hidden md:block md:sticky md:top-6">
-            <div className="rounded-lg border border-border bg-card p-4 shadow-sm">
-              <div className="text-sm font-semibold mb-3">Admin</div>
+        {/* Desktop Sidebar */}
+        <aside className="hidden md:block w-64 shrink-0 sticky top-0 h-screen overflow-y-auto">
+          <div className="p-3">
+            <div className="rounded-3xl bg-white border border-green-100 shadow-sm p-5">
+              <h2 className="text-lg font-bold text-slate-900 mb-4">
+                Admin Panel
+              </h2>
               {renderNav()}
             </div>
-          </aside>
+          </div>
+        </aside>
 
-          <main>
-            {title ? (
-              <div className="mb-6">
-                <h1 className="text-2xl font-bold">{title}</h1>
+        {/* Main Content */}
+        <main className="flex-1 px-3 py-8">
+          <div className="max-w-7xl mx-auto">
+            {title && (
+              <div className="mb-8">
+                <h1 className="text-3xl font-bold text-slate-900">{title}</h1>
+                <p className="text-slate-500 mt-1">
+                  Manage and monitor system information here.
+                </p>
               </div>
-            ) : null}
-            {children}
-          </main>
-        </div>
+            )}
+
+            <div className="bg-white rounded-3xl border border-green-100 shadow-sm p-6">
+              {children}
+            </div>
+          </div>
+        </main>
       </div>
     </div>
   );

@@ -1,12 +1,9 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
-import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
-import { get, getDatabase, ref, set, update } from 'firebase/database';
-
-import app from '../firebaseConfig';
-import { auth } from '../auth';
+import { authService } from '../services/authService';
 import { Button } from './ui/Button';
+import { logAuditTrail } from '../utils/auditLogger';
 
 const Register = () => {
   const navigate = useNavigate();
@@ -56,40 +53,27 @@ const Register = () => {
 
     setSubmitting(true);
     try {
-      const db = getDatabase(app);
       const email = form.email.trim().toLowerCase();
 
-      const emailKey = btoa(unescape(encodeURIComponent(email)));
-      const emailIndexRef = ref(db, `emailIndex/${emailKey}`);
-      const emailIndexSnap = await get(emailIndexRef);
-      if (emailIndexSnap.exists()) {
-        setError('Email already exists. Please use a different email.');
-        return;
-      }
-
-      const cred = await createUserWithEmailAndPassword(auth, form.email, form.password);
-
-      await updateProfile(cred.user, {
-        displayName: `${form.firstname} ${form.lastname}`.trim(),
+      // Register user with authService
+      await authService.register(form.email, form.password, {
+        firstname: form.firstname,
+        lastname: form.lastname,
       });
 
-      await update(ref(db), {
-        [`users/${cred.user.uid}`]: {
-          uid: cred.user.uid,
-          role: 'pet_owner',
-          lastname: form.lastname,
-          firstname: form.firstname,
-          email,
-          phone: form.phone,
-          barangay: form.barangay,
-          gender: form.gender,
-          birthday: form.birthday,
-          createdAt: Date.now(),
-        },
-        [`emailIndex/${emailKey}`]: cred.user.uid,
+      // Link owner profile
+      await authService.linkOwnerByPhone({
+        email,
+        phoneNumber: form.phone,
+        firstname: form.firstname,
+        lastname: form.lastname,
+        barangay: form.barangay,
+        gender: form.gender,
+        birthday: form.birthday,
       });
 
       navigate('/');
+      await logAuditTrail('create', email, 'owner', null, { email, firstname: form.firstname, lastname: form.lastname, phone: form.phone, barangay: form.barangay, gender: form.gender, birthday: form.birthday });
     } catch (err) {
       setError(err?.message || 'Registration failed.');
     } finally {

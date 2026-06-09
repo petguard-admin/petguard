@@ -1,12 +1,10 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import LandingPage from './components/LandingPage';
-import Write from './components/Write';
-import Read from './components/Read';
-import UpdateRead from './components/UpdateRead';
 import Login from './components/Login';
 import Register from './components/Register';
 import Profile from './components/Profile';
 import ProtectedRoute from './components/ProtectedRoute';
+import SelectPet from './components/SelectPet';
 import MyPets from './components/MyPets';
 import RegisterPet from './components/RegisterPet';
 import MedicalRecords from './components/MedicalRecords';
@@ -18,6 +16,8 @@ import AdminInformationCenter from './components/AdminInformationCenter';
 import AdminReports from './components/AdminReports';
 import AdminAuditTrail from './components/AdminAuditTrail';
 import AdminSettings from './components/AdminSettings';
+import AdminControl from './components/AdminControl';
+import AdminProfile from './components/AdminProfile';
 
 function App() {
   return (
@@ -26,6 +26,14 @@ function App() {
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route
+            path="/select-pet"
+            element={
+              <ProtectedRoute>
+                <SelectPet />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/profile"
             element={
@@ -58,9 +66,6 @@ function App() {
               </ProtectedRoute>
             }
           />
-          <Route path="/write" element={<Write />} />
-          <Route path="/read" element={<Read />} />
-          <Route path="/update" element={<UpdateRead />} />
 
           <Route
             path="/admin"
@@ -71,10 +76,26 @@ function App() {
             }
           />
           <Route
+            path="/admin/profile"
+            element={
+              <AdminRoute>
+                <AdminProfile />
+              </AdminRoute>
+            }
+          />
+          <Route
             path="/admin/users"
             element={
               <AdminRoute>
                 <AdminUserManagement />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/admin/control"
+            element={
+              <AdminRoute>
+                <AdminControl />
               </AdminRoute>
             }
           />

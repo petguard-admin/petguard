@@ -1,32 +1,23 @@
 import React from 'react';
 
 import { sendPasswordResetEmail } from 'firebase/auth';
-import { getDatabase, get, ref, remove, update } from 'firebase/database';
+import { getDatabase, get, ref, update } from 'firebase/database';
 
 import { Button } from './ui/Button';
 import { useAuth } from '../AuthContext';
 import { auth } from '../auth';
 import app from '../firebaseConfig';
-import OwnerSidebarLayout from './OwnerSidebarLayout';
+import AdminSidebarLayout from './AdminSidebarLayout';
 import { logAuditTrail } from '../utils/auditLogger';
 
-const Profile = () => {
-  const { user, logout, loading } = useAuth();
+const AdminProfile = () => {
+  const { user, loading } = useAuth();
 
   const [profile, setProfile] = React.useState(null);
-  const [form, setForm] = React.useState({ firstname: '', lastname: '', phone: '', barangay: '', gender: '', birthday: '' });
+  const [form, setForm] = React.useState({ firstname: '', lastname: '', phone: '' });
   const [saving, setSaving] = React.useState(false);
-  const [deleting, setDeleting] = React.useState(false);
   const [message, setMessage] = React.useState('');
   const [error, setError] = React.useState('');
-
-  const getOwnerId = React.useCallback(async () => {
-    if (!user) throw new Error('Not logged in.');
-    const db = getDatabase(app);
-    const mapSnap = await get(ref(db, `ownerUidMap/${user.uid}`));
-    if (!mapSnap.exists()) throw new Error('No owner profile linked to this account.');
-    return String(mapSnap.val() || '');
-  }, [user]);
 
   React.useEffect(() => {
     if (loading) return;
@@ -36,8 +27,7 @@ const Profile = () => {
     (async () => {
       try {
         const db = getDatabase(app);
-        const ownerId = await getOwnerId();
-        const snap = await get(ref(db, `owners/${ownerId}`));
+        const snap = await get(ref(db, `users/${user.uid}`));
         const data = snap.exists() ? snap.val() : null;
         if (!active) return;
         setProfile(data);
@@ -45,10 +35,7 @@ const Profile = () => {
         setForm({
           firstname: val.firstname || '',
           lastname: val.lastname || '',
-          phone: val.phone || val.phoneNumber || '',
-          barangay: val.barangay || '',
-          gender: val.gender || '',
-          birthday: val.birthday || '',
+          phone: val.phone || '',
         });
       } catch (e) {
         if (!active) return;
@@ -59,7 +46,7 @@ const Profile = () => {
     return () => {
       active = false;
     };
-  }, [user, loading, getOwnerId]);
+  }, [user, loading]);
 
   const onChange = (e) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -73,19 +60,14 @@ const Profile = () => {
     setSaving(true);
     try {
       const db = getDatabase(app);
-      const ownerId = await getOwnerId();
-      await update(ref(db, `owners/${ownerId}`), {
+      await update(ref(db, `users/${user.uid}`), {
         firstname: form.firstname,
         lastname: form.lastname,
         phone: form.phone,
-        phoneNumber: form.phone,
-        barangay: form.barangay,
-        gender: form.gender,
-        birthday: form.birthday,
         updatedAt: Date.now(),
       });
       setMessage('Profile updated.');
-      await logAuditTrail('update', ownerId, 'owner_profile', profile, form);
+      await logAuditTrail('update', user.uid, 'admin_profile', profile, form);
     } catch (err) {
       setError(err?.message || 'Failed to update profile.');
     } finally {
@@ -106,49 +88,16 @@ const Profile = () => {
     }
   };
 
-  const deleteAccount = async () => {
-    if (!user) return;
-
-    const ok = window.confirm('Delete your account? This will remove your profile and sign you out.');
-    if (!ok) return;
-
-    setError('');
-    setMessage('');
-    setDeleting(true);
-
-    try {
-      const db = getDatabase(app);
-      const ownerId = await getOwnerId();
-      await remove(ref(db, `ownerUidMap/${user.uid}`));
-      await remove(ref(db, `owners/${ownerId}`));
-      await remove(ref(db, `petsByOwner/${ownerId}`));
-      await remove(ref(db, `selectedPetByOwner/${ownerId}`));
-      await logout();
-      await logAuditTrail('delete', ownerId, 'owner_account', profile, null);
-    } catch (err) {
-      setError(err?.message || 'Failed to delete account.');
-    } finally {
-      setDeleting(false);
-    }
-  };
-
   if (loading) {
     return <div className="p-6">Loading...</div>;
   }
 
   if (!user) {
-    return (
-      <div className="p-6">
-        <p className="mb-4">Please login to view your profile.</p>
-        <Button asChild>
-          <a href="/login">Go to Login</a>
-        </Button>
-      </div>
-    );
+    return <div className="p-6">Please login to view your profile.</div>;
   }
 
   return (
-    <OwnerSidebarLayout title="Profile">
+    <AdminSidebarLayout title="Profile">
       <div className="max-w-2xl">
         {error ? (
           <div className="mb-3 rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
@@ -167,7 +116,7 @@ const Profile = () => {
             <span className="font-medium">Email:</span> {user.email}
           </div>
           <div>
-            <span className="font-medium">Name:</span> {user.displayName || '—'}
+            <span className="font-medium">Role:</span> {profile?.role || 'admin'}
           </div>
         </div>
 
@@ -190,43 +139,11 @@ const Profile = () => {
               className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
             />
           </div>
-          <div>
+          <div className="md:col-span-2">
             <label className="block text-xs text-slate-500 mb-1">Phone no.</label>
             <input
               name="phone"
               value={form.phone}
-              onChange={onChange}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
-            />
-          </div>
-          <div>
-            <label className="block text-xs text-slate-500 mb-1">Barangay</label>
-            <input
-              name="barangay"
-              value={form.barangay}
-              onChange={onChange}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
-            />
-          </div>
-          <div>
-            <label className="block text-xs text-slate-500 mb-1">Gender</label>
-            <select
-              name="gender"
-              value={form.gender}
-              onChange={onChange}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
-            >
-              <option value="">Select</option>
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-            </select>
-          </div>
-          <div>
-            <label className="block text-xs text-slate-500 mb-1">Birthday</label>
-            <input
-              name="birthday"
-              type="date"
-              value={form.birthday}
               onChange={onChange}
               className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
             />
@@ -239,28 +156,19 @@ const Profile = () => {
             onClick={resetPassword}
             className="rounded-xl"
           >
-            Reset password
+            Reset Password
           </Button>
           <Button
             onClick={saveProfile}
             disabled={saving}
             className="bg-green-700 hover:bg-green-800 text-white rounded-xl"
           >
-            {saving ? 'Saving...' : 'Save changes'}
-          </Button>
-        </div>
-
-        <div className="mt-6 flex flex-wrap gap-2">
-          <Button variant="destructive" onClick={logout}>
-            Logout
-          </Button>
-          <Button variant="destructive" onClick={deleteAccount} disabled={deleting}>
-            {deleting ? 'Deleting...' : 'Delete account'}
+            {saving ? 'Saving...' : 'Save'}
           </Button>
         </div>
       </div>
-    </OwnerSidebarLayout>
+    </AdminSidebarLayout>
   );
 };
 
-export default Profile;
+export default AdminProfile;
