@@ -1,61 +1,119 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { Button } from './ui/Button';
-import { useAuth } from '../AuthContext';
+import React from "react";
+import { Link } from "react-router-dom";
+import { Button } from "./ui/Button";
+import { useAuth } from "../AuthContext";
+import { PawPrint } from "lucide-react";
 
 const Navbar = () => {
-  const { user, logout, loading, isAdmin } = useAuth();
+  const { user, logout, loading, roleLoading, isAdmin } = useAuth();
 
   return (
-    <nav className="bg-primary text-primary-foreground shadow-md">
-      <div className="container mx-auto px-4 py-3 flex justify-between items-center">
-        <div className="text-xl font-bold">
-          <Link to="/" className="hover:text-accent">PetGuard</Link>
-        </div>
-        <ul className="flex space-x-6 items-center">
+    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-green-100">
+      <nav className="container mx-auto px-4 lg:px-8 py-4 flex justify-between items-center">
+        
+        {/* Logo */}
+        <Link
+          to="/"
+          className="flex items-center gap-2 text-2xl font-bold text-slate-900"
+        >
+          <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-green-700 text-white">
+            <PawPrint size={20} />
+          </div>
+          <span>
+            Pet<span className="text-green-700">Guard</span>
+          </span>
+        </Link>
+
+        {/* Nav Links */}
+        <ul className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-700">
           <li>
-            <Link to="/" className="hover:text-accent transition-colors">Home</Link>
+            <Link
+              to="/"
+              className="hover:text-green-700 transition-colors"
+            >
+              Home
+            </Link>
           </li>
+
           {user && isAdmin ? (
             <li>
-              <Link to="/admin" className="hover:text-accent transition-colors">Dashboard</Link>
+              <Link
+                to="/admin"
+                className="hover:text-green-700 transition-colors"
+              >
+                Dashboard
+              </Link>
             </li>
           ) : (
             <>
               <li>
-                <Link to="/my-pets" className="hover:text-accent transition-colors">My Pets</Link>
+                <Link
+                  to="/my-pets"
+                  className="hover:text-green-700 transition-colors"
+                >
+                  My Pets
+                </Link>
               </li>
               <li>
-                <Link to="/medical-records" className="hover:text-accent transition-colors">Medical Records</Link>
+                <Link
+                  to="/medical-records"
+                  className="hover:text-green-700 transition-colors"
+                >
+                  Medical Records
+                </Link>
               </li>
             </>
           )}
-          <li>
-            {loading ? (
-              <span className="text-sm opacity-90">Loading...</span>
-            ) : user ? (
-              <div className="flex items-center gap-2">
-                <Button variant="secondary" size="sm" asChild>
-                  <Link to={isAdmin ? '/admin' : '/profile'}>Profile</Link>
-                </Button>
-                <Button variant="ghost" size="sm" onClick={logout}>
-                  Logout
-                </Button>
-              </div>
-            ) : (
-              <div className="flex items-center gap-2">
-                <Button variant="secondary" size="sm" asChild>
-                  <Link to="/login">Login</Link>
-                </Button>
-                <Button variant="ghost" size="sm" asChild>
-                  <Link to="/register">Register</Link>
-                </Button>
-              </div>
-            )}
-          </li>
         </ul>
-      </div>
-    </nav>
+
+        {/* Auth Actions */}
+        <div className="flex items-center gap-3">
+          {loading || (user && roleLoading) ? (
+            <span className="text-sm text-slate-500">Loading...</span>
+          ) : user ? (
+            <>
+              <Button
+                variant="outline"
+                size="sm"
+                asChild
+                className="border-green-700 text-green-700 hover:bg-green-50 rounded-xl"
+              >
+                <Link to={isAdmin ? "/admin/profile" : "/profile"}>
+                  Profile
+                </Link>
+              </Button>
+
+              <Button
+                size="sm"
+                onClick={logout}
+                className="bg-green-700 hover:bg-green-800 text-white rounded-xl"
+              >
+                Logout
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button
+                variant="ghost"
+                size="sm"
+                asChild
+                className="text-slate-700 hover:text-green-700 hover:bg-green-50 rounded-xl"
+              >
+                <Link to="/login">Login</Link>
+              </Button>
+
+              <Button
+                size="sm"
+                asChild
+                className="bg-green-700 hover:bg-green-800 text-white rounded-xl px-5"
+              >
+                <Link to="/register">Get Started</Link>
+              </Button>
+            </>
+          )}
+        </div>
+      </nav>
+    </header>
   );
 };
 

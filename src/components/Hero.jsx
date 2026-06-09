@@ -1,22 +1,77 @@
-import React from 'react';
-import { Button } from './ui/Button';
+import React from "react";
+import { Button } from "./ui/Button";
 
 const Hero = () => {
   return (
-    <section className="bg-linear-to-r from-green-400 to-blue-500 text-white py-20">
-      <div className="container mx-auto px-4 text-center">
-        <h1 className="text-4xl md:text-6xl font-bold mb-4">
-          Welcome to PetGuard
-        </h1>
-        <p className="text-xl md:text-2xl mb-8">
-          Your trusted partner in pet healthcare for cats and dogs
-        </p>
-        <p className="text-lg mb-8">
-          Comprehensive health monitoring, medical records, and expert advice all in one place.
-        </p>
-        <Button size="lg" className="bg-white text-green-600 hover:bg-gray-100">
-          Get Started
-        </Button>
+    <section className="bg-white">
+      <div className="container mx-auto px-4 py-20 lg:py-28">
+        <div className="grid lg:grid-cols-2 gap-12 items-center">
+          
+          {/* Left Content */}
+          <div className="text-center lg:text-left">
+            <span className="inline-block px-4 py-1.5 mb-6 text-sm font-medium text-green-700 bg-green-50 rounded-full border border-green-100">
+              Trusted Pet Healthcare Platform
+            </span>
+
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-slate-900 leading-tight">
+              Better Care for Your
+              <span className="text-green-700"> Cats & Dogs</span>
+            </h1>
+
+            <p className="mt-6 text-lg text-slate-600 leading-relaxed max-w-xl mx-auto lg:mx-0">
+              Manage your pet’s health with ease—track medical records,
+              monitor wellness, receive expert advice, and stay updated with
+              important pet care information.
+            </p>
+
+            <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+              <Button
+                size="lg"
+                className="bg-green-700 hover:bg-green-800 text-white rounded-xl px-8"
+              >
+                Get Started
+              </Button>
+
+              <Button
+                size="lg"
+                variant="outline"
+                className="border-green-700 text-green-700 hover:bg-green-50 rounded-xl px-8"
+              >
+                Learn More
+              </Button>
+            </div>
+
+            {/* Stats */}
+            <div className="mt-10 flex flex-wrap gap-8 justify-center lg:justify-start">
+              <div>
+                <p className="text-2xl font-bold text-slate-900">24/7</p>
+                <p className="text-sm text-slate-500">Health Support</p>
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-slate-900">100+</p>
+                <p className="text-sm text-slate-500">Pet Care Tips</p>
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-slate-900">Secure</p>
+                <p className="text-sm text-slate-500">Medical Records</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Right Image */}
+          <div className="relative">
+            <div className="bg-white rounded-3xl p-6">
+              <img
+                src="src/img/hero-pet.png"
+                alt="Pet healthcare"
+                className="w-full max-w-lg mx-auto"
+              />
+            </div>
+
+            
+          </div>
+
+        </div>
       </div>
     </section>
   );

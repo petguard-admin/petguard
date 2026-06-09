@@ -1,0 +1,81 @@
+{
+  "rules": {
+    ".read": "auth != null",
+    ".write": "false",
+
+    "announcements": {
+      ".read": "auth != null",
+      ".write": "auth != null && auth.token.admin === true",
+      "$id": {
+        ".read": "auth != null",
+        ".write": "auth != null && auth.token.admin === true"
+      }
+    },
+
+    "ownerUidMap": {
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || auth.token.admin === true)",
+        ".write": "auth != null && (auth.uid === $uid || auth.token.admin === true)"
+      }
+    },
+
+    "owners": {
+      "$ownerId": {
+        ".read": "auth != null && (auth.token.admin === true || root.child('ownerUidMap').child(auth.uid).val() === $ownerId)",
+        ".write": "auth != null && (auth.token.admin === true || root.child('ownerUidMap').child(auth.uid).val() === $ownerId)"
+      }
+    },
+
+    "petsByOwner": {
+      "$ownerId": {
+        ".read": "auth != null && (auth.token.admin === true || root.child('ownerUidMap').child(auth.uid).val() === $ownerId)",
+        ".write": "auth != null && (auth.token.admin === true || root.child('ownerUidMap').child(auth.uid).val() === $ownerId)"
+      }
+    },
+
+    "selectedPetByOwner": {
+      "$ownerId": {
+        ".read": "auth != null && (auth.token.admin === true || root.child('ownerUidMap').child(auth.uid).val() === $ownerId)",
+        ".write": "auth != null && (auth.token.admin === true || root.child('ownerUidMap').child(auth.uid).val() === $ownerId)"
+      }
+    },
+
+    "medicalRecordsByPet": {
+      "$petId": {
+        ".read": "auth != null",
+        ".write": "auth != null"
+      }
+    },
+
+    "users": {
+      "$uid": {
+        ".read": "auth != null && auth.token.admin === true",
+        ".write": "auth != null && auth.token.admin === true"
+      }
+    },
+
+    "emailIndex": {
+      "$emailKey": {
+        ".read": "true",
+        ".write": "auth != null && auth.token.admin === true"
+      }
+    },
+
+    "phoneIndex": {
+      "$phone": {
+        ".read": "auth != null && auth.token.admin === true",
+        ".write": "auth != null && auth.token.admin === true"
+      }
+    },
+
+    "auditTrail": {
+      ".read": "auth != null && auth.token.admin === true",
+      ".write": "auth != null && auth.token.admin === true",
+      "$recordId": {
+        ".read": "auth != null && auth.token.admin === true",
+        ".write": "auth != null && auth.token.admin === true && !data.exists()",
+        ".validate": "newData.hasChildren(['timestamp', 'userId', 'userRole', 'actionType', 'targetRecordId', 'targetRecordType'])"
+      }
+    }
+  }
+}

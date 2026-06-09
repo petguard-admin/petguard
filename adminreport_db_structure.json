@@ -1,0 +1,39 @@
+{
+  "vaccinationRecords": {
+    "recordId_001": {
+      "reason": "R",
+      "date": "2025-01-09",
+      "barangay": "Fatima",
+      "owner": {
+        "firstName": "Pedro",
+        "lastName": "Bruma",
+        "gender": "M",
+        "birthday": null,
+        "contactNo": null
+      },
+      "pets": {
+        "petId_001": {
+          "species": "Cat",
+          "sex": "F",
+          "age": "4 mos."
+        },
+        "petId_002": {
+          "species": "Dog",
+          "sex": "F",
+          "age": "1 yr."
+        },
+        "petId_003": {
+          "species": "Dog",
+          "sex": "M",
+          "age": "4 yrs."
+        }
+      },
+      "vaccine": {
+        "disease": "",
+        "vaccineType": "Rabisin",
+        "vaccineStock": "F69854",
+        "vaccineSource": "LGU-MBO"
+      }
+    }
+  }
+}

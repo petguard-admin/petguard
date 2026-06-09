@@ -1,9 +1,6 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 
 import { onAuthStateChanged, signOut } from 'firebase/auth';
-import { getDatabase, onValue, ref } from 'firebase/database';
-
-import app from './firebaseConfig';
 import { auth } from './auth';
 
 const AuthContext = createContext(null);
@@ -13,6 +10,7 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
   const [role, setRole] = useState('');
+  const [roleLoading, setRoleLoading] = useState(false);
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (firebaseUser) => {
@@ -28,29 +26,43 @@ export const AuthProvider = ({ children }) => {
     if (!user) {
       setIsAdmin(false);
       setRole('');
+      setRoleLoading(false);
       return;
     }
 
-    const db = getDatabase(app);
-    const roleRef = ref(db, `users/${user.uid}/role`);
-    const unsub = onValue(roleRef, (snap) => {
-      const role = snap.exists() ? snap.val() : '';
-      setRole(role);
-      setIsAdmin(role === 'admin');
-    });
+    let active = true;
+    (async () => {
+      try {
+        if (active) setRoleLoading(true);
+        const tokenRes = await user.getIdTokenResult(true);
+        const isAdmin = tokenRes?.claims?.admin === true;
+        if (!active) return;
+        setIsAdmin(isAdmin);
+        setRole(isAdmin ? 'admin' : '');
+        setRoleLoading(false);
+      } catch {
+        if (!active) return;
+        setIsAdmin(false);
+        setRole('');
+        setRoleLoading(false);
+      }
+    })();
 
-    return () => unsub();
+    return () => {
+      active = false;
+    };
   }, [user, loading]);
 
   const value = useMemo(() => {
     return {
       user,
       loading,
+      roleLoading,
       isAdmin,
       role,
       logout: () => signOut(auth),
     };
-  }, [user, loading, isAdmin, role]);
+  }, [user, loading, roleLoading, isAdmin, role]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

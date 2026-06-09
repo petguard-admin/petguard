@@ -1,13 +1,12 @@
-import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
-
-import Navbar from './Navbar';
+import React from "react";
+import { Link, useLocation } from "react-router-dom";
+import Navbar from "./Navbar";
 
 const nav = [
-  { label: 'Home', to: '/' },
-  { label: 'My Pets', to: '/my-pets' },
-  { label: 'Medical Records', to: '/medical-records' },
-  { label: 'Profile', to: '/profile' },
+  { label: "Home", to: "/" },
+  { label: "My Pets", to: "/my-pets" },
+  { label: "Medical Records", to: "/medical-records" },
+  { label: "Profile", to: "/profile" },
 ];
 
 const OwnerSidebarLayout = ({ title, children }) => {
@@ -26,10 +25,11 @@ const OwnerSidebarLayout = ({ title, children }) => {
           <Link
             key={item.to}
             to={item.to}
-            className={
-              'block rounded-md px-3 py-2 text-sm transition-colors ' +
-              (active ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-muted')
-            }
+            className={`block rounded-xl px-4 py-3 text-sm font-medium transition-all ${
+              active
+                ? "bg-green-700 text-white shadow-sm"
+                : "text-slate-700 hover:bg-green-50 hover:text-green-700"
+            }`}
           >
             {item.label}
           </Link>
@@ -39,20 +39,23 @@ const OwnerSidebarLayout = ({ title, children }) => {
   );
 
   return (
-    <div className="min-h-screen bg-muted">
+    <div className="min-h-screen bg-[#f7faf7]">
       <Navbar />
-      <div className="container mx-auto px-4 py-8">
-        <div className="md:hidden mb-4 flex items-center justify-between">
+
+      <div className="flex flex-col md:flex-row gap-1">
+        {/* Mobile Menu */}
+        <div className="md:hidden px-4 py-4 flex items-center justify-between">
           <button
             type="button"
             onClick={() => setMobileOpen(true)}
-            className="inline-flex items-center justify-center rounded-md border border-input bg-card px-3 py-2 text-sm shadow-sm"
+            className="rounded-xl border border-green-100 bg-white px-4 py-2 text-sm font-medium shadow-sm"
           >
-            Menu
+            ☰ Menu
           </button>
         </div>
 
-        {mobileOpen ? (
+        {/* Mobile Drawer */}
+        {mobileOpen && (
           <div className="fixed inset-0 z-50 md:hidden">
             <button
               type="button"
@@ -60,39 +63,51 @@ const OwnerSidebarLayout = ({ title, children }) => {
               onClick={() => setMobileOpen(false)}
               className="absolute inset-0 bg-black/40"
             />
-            <div className="absolute left-0 top-0 h-full w-72 bg-card border-r border-border p-4 shadow-xl">
-              <div className="flex items-center justify-between mb-3">
-                <div className="text-sm font-semibold">Menu</div>
+            <div className="absolute left-0 top-0 h-full w-72 bg-white border-r border-slate-200 p-5 shadow-xl">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-lg font-bold text-slate-900">Menu</h2>
                 <button
                   type="button"
                   onClick={() => setMobileOpen(false)}
-                  className="rounded-md border border-input bg-background px-2 py-1 text-sm"
+                  className="text-slate-500 hover:text-slate-900"
                 >
-                  Close
+                  ✕
                 </button>
               </div>
               {renderNav()}
             </div>
           </div>
-        ) : null}
+        )}
 
-        <div className="grid grid-cols-1 md:grid-cols-[240px_1fr] gap-6 items-start">
-          <aside className="hidden md:block md:sticky md:top-6">
-            <div className="rounded-lg border border-border bg-card p-4 shadow-sm">
-              <div className="text-sm font-semibold mb-3">Menu</div>
+        {/* Desktop Sidebar */}
+        <aside className="hidden md:block w-64 shrink-0 sticky top-0 h-screen overflow-y-auto">
+          <div className="p-3">
+            <div className="rounded-3xl bg-white border border-green-100 shadow-sm p-5">
+              <h2 className="text-lg font-bold text-slate-900 mb-4">
+                My Account
+              </h2>
               {renderNav()}
             </div>
-          </aside>
+          </div>
+        </aside>
 
-          <main>
-            {title ? (
-              <div className="mb-6">
-                <h1 className="text-2xl font-bold">{title}</h1>
+        {/* Main Content */}
+        <main className="flex-1 px-3 py-8">
+          <div className="max-w-7xl mx-auto">
+            {title && (
+              <div className="mb-8">
+                <h1 className="text-3xl font-bold text-slate-900">{title}</h1>
+                <p className="text-slate-500 mt-1">
+                  Access and manage your pet information here.
+                </p>
               </div>
-            ) : null}
-            {children}
-          </main>
-        </div>
+            )}
+
+            <div className="bg-white rounded-3xl border border-green-100 shadow-sm p-6">
+              {children}
+            </div>
+          </div>
+        </main>
       </div>
     </div>
   );
