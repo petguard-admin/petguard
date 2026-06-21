@@ -16,18 +16,33 @@ const AdminAuditTrail = () => {
   const [roleFilter, setRoleFilter] = React.useState('');
   const [page, setPage] = React.useState(1);
   const pageSize = 10;
+  const [userNames, setUserNames] = React.useState({});
 
   const fetchAuditRecords = React.useCallback(async () => {
     setLoading(true);
     setError('');
     try {
       const user = auth.currentUser;
-      if (!user) throw new Error('Not authenticated.');
+      if (!user) throw new Error('Please log in to continue.');
 
       const db = getDatabase(app);
-      const auditSnap = await get(ref(db, 'auditTrail'));
+      const [auditSnap, ownersSnap] = await Promise.all([
+        get(ref(db, 'auditTrail')),
+        get(ref(db, 'owners')),
+      ]);
 
       const auditVal = auditSnap.exists() ? auditSnap.val() : {};
+      const ownersVal = ownersSnap.exists() ? ownersSnap.val() : {};
+
+      // Create mapping of user IDs to full names
+      const nameMap = {};
+      Object.entries(ownersVal || {}).forEach(([ownerId, owner]) => {
+        if (ownerId !== '__meta' && owner) {
+          const fullName = `${owner.firstname || ''} ${owner.lastname || ''}`.trim() || 'Unknown';
+          nameMap[ownerId] = fullName;
+        }
+      });
+      setUserNames(nameMap);
 
       const arr = [];
       Object.keys(auditVal || {}).forEach((recordId) => {
@@ -49,7 +64,7 @@ const AdminAuditTrail = () => {
       setAuditRecords(arr);
     } catch (e) {
       setAuditRecords([]);
-      setError(e?.message || 'Failed to load audit records.');
+      setError('Could not load audit records. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -88,9 +103,20 @@ const AdminAuditTrail = () => {
     return d.toLocaleString();
   };
 
-  const formatValues = (values) => {
+  const formatValues = (values, compareValues = null) => {
     if (!values) return '—';
     try {
+      if (compareValues) {
+        // Show only the changed values
+        const changed = {};
+        Object.keys(values).forEach((key) => {
+          if (values[key] !== compareValues[key]) {
+            changed[key] = values[key];
+          }
+        });
+        if (Object.keys(changed).length === 0) return 'No changes';
+        return JSON.stringify(changed, null, 2);
+      }
       return JSON.stringify(values, null, 2);
     } catch {
       return String(values);
@@ -116,15 +142,6 @@ const AdminAuditTrail = () => {
   return (
     <AdminSidebarLayout title="Audit Trail">
       <div className="flex flex-col gap-4">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-          <h2 className="text-lg font-semibold">Audit Trail</h2>
-          <div className="flex items-center gap-2">
-            <Button onClick={fetchAuditRecords} disabled={loading}>
-              {loading ? 'Loading...' : 'Refresh'}
-            </Button>
-          </div>
-        </div>
-
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
           <div className="flex flex-col md:flex-row md:items-center gap-2">
             <div className="flex-1">
@@ -166,6 +183,11 @@ const AdminAuditTrail = () => {
               </select>
             </div>
           </div>
+          <div className="flex items-center gap-2">
+            <Button variant="outline" onClick={fetchAuditRecords} disabled={loading}>
+              {loading ? 'Loading...' : 'Refresh'}
+            </Button>
+          </div>
         </div>
 
         {error ? (
@@ -204,13 +226,13 @@ const AdminAuditTrail = () => {
                   pageItems.map((record) => (
                     <tr key={record.recordId} className="border-b border-slate-200 hover:bg-slate-50 transition-colors">
                       <td className="py-3 px-4 border-r border-slate-300 whitespace-nowrap">{formatTimestamp(record.timestamp)}</td>
-                      <td className="py-3 px-4 border-r border-slate-300">{record.userId || '—'}</td>
+                      <td className="py-3 px-4 border-r border-slate-300">{userNames[record.userId] || record.userId || '—'}</td>
                       <td className="py-3 px-4 border-r border-slate-300">{record.userRole || '—'}</td>
                       <td className="py-3 px-4 border-r border-slate-300">{record.actionType || '—'}</td>
                       <td className="py-3 px-4 border-r border-slate-300">{record.targetRecordId || '—'}</td>
                       <td className="py-3 px-4 border-r border-slate-300">{record.targetRecordType || '—'}</td>
-                      <td className="py-3 px-4 border-r border-slate-300 max-w-xs truncate" title={formatValues(record.beforeValues)}>{formatValues(record.beforeValues)}</td>
-                      <td className="py-3 px-4 max-w-xs truncate" title={formatValues(record.afterValues)}>{formatValues(record.afterValues)}</td>
+                      <td className="py-3 px-4 border-r border-slate-300 max-w-xs truncate" title={formatValues(record.beforeValues, record.afterValues)}>{formatValues(record.beforeValues, record.afterValues)}</td>
+                      <td className="py-3 px-4 max-w-xs truncate" title={formatValues(record.afterValues, record.beforeValues)}>{formatValues(record.afterValues, record.beforeValues)}</td>
                     </tr>
                   ))
                 )}

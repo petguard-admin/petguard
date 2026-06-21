@@ -74,10 +74,10 @@ const AddMedicalRecordModal = ({
   const showVaccineTypeOther = vaccinationForm.vaccineType === 'others';
 
   const getOwnerId = React.useCallback(async () => {
-    if (!user) throw new Error('Not logged in.');
+    if (!user) throw new Error('Please log in to continue.');
     const db = getDatabase(app);
     const mapSnap = await get(ref(db, `ownerUidMap/${user.uid}`));
-    if (!mapSnap.exists()) throw new Error('No owner profile linked to this account.');
+    if (!mapSnap.exists()) throw new Error('No account found. Please contact support.');
     return String(mapSnap.val() || '');
   }, [user]);
 
@@ -97,16 +97,16 @@ const AddMedicalRecordModal = ({
 
     if (loading) return;
     if (!user) {
-      setError('Please login first.');
+      setError('Please log in to continue.');
       return;
     }
     if (!selectedPetId) {
-      setError('No selected pet.');
+      setError('Please select a pet first.');
       return;
     }
 
     if (!canSubmit) {
-      setError('Please fill out the required fields.');
+      setError('Please fill in all required fields.');
       return;
     }
 
@@ -155,7 +155,7 @@ const AddMedicalRecordModal = ({
       onSuccess?.(rec);
       onClose?.();
     } catch (err) {
-      setError(err?.message || 'Failed to save record.');
+      setError('Could not save record. Please try again.');
     } finally {
       setSubmitting(false);
     }
@@ -411,14 +411,13 @@ const AddMedicalRecordModal = ({
               <Button
                 variant="outline"
                 onClick={onClose}
-                className="rounded-xl"
               >
                 Cancel
               </Button>
               <Button
+                variant="green"
                 type="submit"
                 disabled={submitting || !canSubmit}
-                className="bg-green-700 hover:bg-green-800 text-white rounded-xl"
               >
                 {submitting ? 'Saving...' : 'Add Record'}
               </Button>

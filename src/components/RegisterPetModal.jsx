@@ -127,7 +127,7 @@ const RegisterPetModal = ({
       onClose?.();
       await logAuditTrail('create', newPet.id, 'pet', null, submitData);
     } catch (err) {
-      setError(err?.message || 'Failed to register a pet.');
+      setError('Could not register pet. Please try again.');
     } finally {
       setSubmitting(false);
     }
@@ -481,14 +481,13 @@ const RegisterPetModal = ({
               <Button
                 variant="outline"
                 onClick={onClose}
-                className="rounded-xl"
               >
                 Cancel
               </Button>
               <Button
+                variant="green"
                 type="submit"
                 disabled={submitting}
-                className="bg-green-700 hover:bg-green-800 text-white rounded-xl"
               >
                 {submitting ? 'Saving...' : 'Register Pet'}
               </Button>

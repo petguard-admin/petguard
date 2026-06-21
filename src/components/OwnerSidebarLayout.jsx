@@ -1,6 +1,7 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import Navbar from "./Navbar";
+import { useAuth } from "../AuthContext";
 
 const nav = [
   { label: "Home", to: "/" },
@@ -12,10 +13,15 @@ const nav = [
 const OwnerSidebarLayout = ({ title, children }) => {
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = React.useState(false);
+  const { logout } = useAuth();
 
   React.useEffect(() => {
     setMobileOpen(false);
   }, [location.pathname]);
+
+  const handleLogout = () => {
+    logout();
+  };
 
   const renderNav = () => (
     <nav className="space-y-1">
@@ -35,6 +41,13 @@ const OwnerSidebarLayout = ({ title, children }) => {
           </Link>
         );
       })}
+      <button
+        type="button"
+        onClick={handleLogout}
+        className="w-full block rounded-xl px-4 py-3 text-sm font-medium text-left transition-all text-slate-700 hover:bg-red-50 hover:text-red-700"
+      >
+        Logout
+      </button>
     </nav>
   );
 

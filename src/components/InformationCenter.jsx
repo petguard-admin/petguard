@@ -34,7 +34,7 @@ const InformationCenter = () => {
       setItems(arr);
     } catch (e) {
       setItems([]);
-      setError(e?.message || 'Failed to load information center items.');
+      setError('Could not load information. Please try again.');
     } finally {
       setFetching(false);
     }
@@ -79,14 +79,14 @@ const InformationCenter = () => {
               <option value="announcement">Announcements</option>
               <option value="health">Health</option>
             </select>
-            <button
+            <Button
               type="button"
+              variant="outline"
               onClick={load}
-              className="rounded-md border border-input bg-background px-3 py-2 text-sm"
               disabled={fetching}
             >
               {fetching ? 'Refreshing...' : 'Refresh'}
-            </button>
+            </Button>
           </div>
         </div>
 

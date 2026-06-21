@@ -36,10 +36,10 @@ const MyPets = () => {
   const showEditTagTypeOther = editForm?.tagType === 'others';
 
   const getOwnerId = React.useCallback(async () => {
-    if (!user) throw new Error('Not logged in.');
+    if (!user) throw new Error('Please log in to continue.');
     const db = getDatabase(app);
     const mapSnap = await get(ref(db, `ownerUidMap/${user.uid}`));
-    if (!mapSnap.exists()) throw new Error('No owner profile linked to this account.');
+    if (!mapSnap.exists()) throw new Error('No account found. Please contact support.');
     return String(mapSnap.val() || '');
   }, [user]);
 
@@ -72,7 +72,7 @@ const MyPets = () => {
         setSelectedPetId(effectiveSelected);
       } catch (e) {
         if (!active) return;
-        setError(e?.message || 'Failed to load pets.');
+        setError('Could not load pets. Please try again.');
       }
     })();
 
@@ -130,7 +130,7 @@ const MyPets = () => {
       setIsEditModalOpen(false);
       await logAuditTrail('view', petId, 'pet', null, { action: 'select_pet' });
     } catch (e) {
-      setError(e?.message || 'Failed to switch pet.');
+      setError('Could not switch pet. Please try again.');
     }
   };
   
@@ -185,7 +185,7 @@ const MyPets = () => {
       setMessage('Pet updated.');
       await logAuditTrail('update', selectedPetId, 'pet', selectedPet, updateData);
     } catch (err) {
-      setError(err?.message || 'Failed to update pet.');
+      setError('Could not update pet. Please try again.');
     } finally {
       setSaving(false);
     }
@@ -240,7 +240,7 @@ const MyPets = () => {
       setSelectedPetId(arr[0].id);
     }
   } catch (e) {
-    setError(e?.message || "Failed to reload pets.");
+    setError('Could not reload pets. Please try again.');
   }
 }, [getOwnerId]);
 
@@ -279,7 +279,7 @@ const MyPets = () => {
       setMessage('Pet deleted.');
       await logAuditTrail('delete', selectedPetId, 'pet', selectedPet, null);
     } catch (err) {
-      setError(err?.message || 'Failed to delete pet.');
+      setError('Could not delete pet. Please try again.');
     } finally {
       setDeleting(false);
     }
@@ -311,8 +311,8 @@ const MyPets = () => {
         </p>
       </div>
       <Button
+        variant="green"
         onClick={() => setIsRegisterModalOpen(true)}
-        className="bg-green-700 hover:bg-green-800 text-white rounded-xl px-5"
       >
         + Register Pet
       </Button>
@@ -338,8 +338,8 @@ const MyPets = () => {
           You have not registered any pets yet.
         </p>
         <Button
+          variant="green"
           onClick={() => setIsRegisterModalOpen(true)}
-          className="bg-green-700 text-white rounded-xl"
         >
           Register your first pet
         </Button>
@@ -430,17 +430,16 @@ const MyPets = () => {
                 {/* Actions */}
                 <div className="flex gap-2">
                   <Button
-                    variant="outline"
+                    variant="blue"
                     onClick={openEditModal}
-                    className="border-green-700 text-green-700 rounded-xl"
                   >
                     Edit
                   </Button>
 
                   <Button
+                    variant="destructive"
                     onClick={deletePet}
                     disabled={deleting}
-                    className="bg-red-600 hover:bg-red-700 text-white rounded-xl"
                   >
                     {deleting ? "Deleting..." : "Delete"}
                   </Button>
@@ -480,7 +479,7 @@ const MyPets = () => {
       onClose={() => setIsRegisterModalOpen(false)}
       onSuccess={async () => {
         setIsRegisterModalOpen(false);
-        setMessage("Pet registered successfully!");
+        setMessage('Pet registered successfully.');
         await reloadPets();
       }}
       title="Register Pet"
@@ -781,14 +780,13 @@ const MyPets = () => {
               <Button
                 variant="outline"
                 onClick={closeEditModal}
-                className="rounded-xl"
               >
                 Cancel
               </Button>
               <Button
+                variant="green"
                 onClick={savePet}
                 disabled={saving}
-                className="bg-green-700 hover:bg-green-800 text-white rounded-xl"
               >
                 {saving ? "Saving..." : "Save changes"}
               </Button>

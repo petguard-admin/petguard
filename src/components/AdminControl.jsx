@@ -35,7 +35,7 @@ const AdminControl = () => {
       const data = await adminService.getAdmins();
       setAdmins(Array.isArray(data?.admins) ? data.admins : []);
     } catch (e) {
-      setError(e?.message || 'Failed to load admins.');
+      setError('Could not load admins. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -86,14 +86,11 @@ const AdminControl = () => {
         phone: form.phone,
       });
 
-      const email = data?.email || form.email;
-      const { sendPasswordResetEmail } = await import('firebase/auth');
-      await sendPasswordResetEmail(auth, email);
-      setFormMessage('Invite created. Password setup email sent.');
+      setFormMessage(data?.message || 'Admin created successfully. Email verification sent.');
       await loadAdmins();
       setAddOpen(false);
     } catch (e) {
-      setFormError(e?.message || 'Failed to invite admin.');
+      setFormError(e?.message || 'Could not invite admin. Please try again.');
     } finally {
       setSubmitting(false);
     }
@@ -107,7 +104,7 @@ const AdminControl = () => {
       await adminService.deleteAdmin(adminRow.uid);
       await loadAdmins();
     } catch (e) {
-      setError(e?.message || 'Failed to delete admin.');
+      setError('Could not delete admin. Please try again.');
     }
   };
 
@@ -186,7 +183,7 @@ const AdminControl = () => {
               className="w-full md:w-80 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
             />
           </div>
-          <Button type="button" onClick={openAdd}>Add New Admin</Button>
+          <Button variant="green" type="button" onClick={openAdd}>Add New Admin</Button>
         </div>
 
         {error ? (
@@ -195,35 +192,35 @@ const AdminControl = () => {
 
         <div className="rounded-lg border border-border bg-card shadow-sm overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="min-w-full text-sm border-collapse">
+            <table className="w-full text-sm border-collapse">
               <thead>
                 <tr className="bg-slate-50 border-b border-slate-200">
-                  <th className="py-3 px-4 text-left font-semibold">
+                  <th className="py-3 px-4 text-left font-semibold w-1/6">
                     <button type="button" onClick={() => toggleSort('name')} className="hover:text-green-700 transition-colors">
                       Name
                     </button>
                   </th>
-                  <th className="py-3 px-4 text-left font-semibold">
+                  <th className="py-3 px-4 text-left font-semibold w-1/6">
                     <button type="button" onClick={() => toggleSort('email')} className="hover:text-green-700 transition-colors">
                       Email
                     </button>
                   </th>
-                  <th className="py-3 px-4 text-left font-semibold">
+                  <th className="py-3 px-4 text-left font-semibold w-1/6">
                     <button type="button" onClick={() => toggleSort('phone')} className="hover:text-green-700 transition-colors">
                       Phone
                     </button>
                   </th>
-                  <th className="py-3 px-4 text-left font-semibold">
+                  <th className="py-3 px-4 text-left font-semibold w-1/6">
                     <button type="button" onClick={() => toggleSort('role')} className="hover:text-green-700 transition-colors">
                       Role
                     </button>
                   </th>
-                  <th className="py-3 px-4 text-left font-semibold">
+                  <th className="py-3 px-4 text-left font-semibold w-1/6">
                     <button type="button" onClick={() => toggleSort('createdAt')} className="hover:text-green-700 transition-colors">
                       Date Created
                     </button>
                   </th>
-                  <th className="py-3 px-4 text-left font-semibold">Actions</th>
+                  <th className="py-3 px-4 text-left font-semibold w-1/6">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -245,7 +242,7 @@ const AdminControl = () => {
                         <td className="py-3 px-4">{fmtDate(a.createdAt)}</td>
                         <td className="py-3 px-4">
                           <div className="flex flex-wrap gap-2">
-                            <Button size="sm" variant="outline" type="button" onClick={() => openView(a)}>View</Button>
+                            <Button size="sm" variant="blue" type="button" onClick={() => openView(a)}>View</Button>
                             <Button size="sm" variant="destructive" type="button" onClick={() => handleDelete(a)}>Delete</Button>
                           </div>
                         </td>
@@ -323,14 +320,13 @@ const AdminControl = () => {
                 variant="outline"
                 onClick={closeAdd}
                 disabled={submitting}
-                className="rounded-xl"
               >
                 Cancel
               </Button>
               <Button
+                variant="green"
                 onClick={submitAdd}
                 disabled={submitting}
-                className="bg-green-700 hover:bg-green-800 text-white rounded-xl"
               >
                 {submitting ? 'Inviting...' : 'Invite Admin'}
               </Button>
@@ -346,6 +342,15 @@ const AdminControl = () => {
           <div><span className="font-medium">Phone:</span> {selectedAdmin?.phone || '—'}</div>
           <div><span className="font-medium">Role:</span> {selectedAdmin?.role || 'admin'}</div>
           <div><span className="font-medium">Date created:</span> {fmtDate(selectedAdmin?.createdAt)}</div>
+        </div>
+
+        <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-200">
+          <Button variant="outline" onClick={closeView}>
+            Close
+          </Button>
+          <Button variant="destructive" onClick={() => { closeView(); handleDelete(selectedAdmin); }}>
+            Delete
+          </Button>
         </div>
       </Modal>
     </AdminSidebarLayout>

@@ -4,7 +4,6 @@ import Login from './components/Login';
 import Register from './components/Register';
 import Profile from './components/Profile';
 import ProtectedRoute from './components/ProtectedRoute';
-import SelectPet from './components/SelectPet';
 import MyPets from './components/MyPets';
 import RegisterPet from './components/RegisterPet';
 import MedicalRecords from './components/MedicalRecords';
@@ -26,14 +25,6 @@ function App() {
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route
-            path="/select-pet"
-            element={
-              <ProtectedRoute>
-                <SelectPet />
-              </ProtectedRoute>
-            }
-          />
           <Route
             path="/profile"
             element={

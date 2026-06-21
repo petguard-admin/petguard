@@ -48,6 +48,7 @@ const AdminPetManagement = () => {
     petId: '',
     date: '',
     vaccineType: '',
+    vaccineTypeOther: '',
     vaccineSource: '',
     vaccinatedBy: '',
     reason: '',
@@ -86,6 +87,7 @@ const AdminPetManagement = () => {
   const showPetOriginOther = form.petOrigin === 'others';
   const showOwnershipOther = form.ownership === 'others';
   const showTagTypeOther = form.tagType === 'others';
+  const showVaccineTypeOther = vaccinationForm.vaccineType === 'others';
 
   const [ownerSearch, setOwnerSearch] = React.useState('');
   const [selectedOwner, setSelectedOwner] = React.useState(null);
@@ -118,7 +120,7 @@ const AdminPetManagement = () => {
     setError('');
     try {
       const user = auth.currentUser;
-      if (!user) throw new Error('Not authenticated.');
+      if (!user) throw new Error('Please log in to continue.');
 
       const db = getDatabase(app);
       const [ownersSnap, petsSnap] = await Promise.all([
@@ -182,7 +184,7 @@ const AdminPetManagement = () => {
     } catch (e) {
       setPets([]);
       setOwners([]);
-      setError(e?.message || 'Failed to load pets.');
+      setError('Could not load pets. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -196,7 +198,7 @@ const AdminPetManagement = () => {
       } catch (e) {
         if (!cancelled) {
           setPets([]);
-          setError(e?.message || 'Failed to load pets.');
+          setError('Could not load pets. Please try again.');
         }
       }
     };
@@ -211,7 +213,7 @@ const AdminPetManagement = () => {
     setError('');
     try {
       const user = auth.currentUser;
-      if (!user) throw new Error('Not authenticated.');
+      if (!user) throw new Error('Please log in to continue.');
 
       const db = getDatabase(app);
       const [petsSnap, medicalSnap, ownersSnap] = await Promise.all([
@@ -282,7 +284,7 @@ const AdminPetManagement = () => {
       setMedicalRecords(arr);
     } catch (e) {
       setMedicalRecords([]);
-      setError(e?.message || 'Failed to load medical records.');
+      setError('Could not load medical records. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -293,7 +295,7 @@ const AdminPetManagement = () => {
     setError('');
     try {
       const user = auth.currentUser;
-      if (!user) throw new Error('Not authenticated.');
+      if (!user) throw new Error('Please log in to continue.');
 
       const db = getDatabase(app);
       const [petsSnap, medicalSnap, ownersSnap] = await Promise.all([
@@ -368,7 +370,7 @@ const AdminPetManagement = () => {
       setVaccinationRecords(arr);
     } catch (e) {
       setVaccinationRecords([]);
-      setError(e?.message || 'Failed to load vaccination records.');
+      setError('Could not load vaccination records. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -435,26 +437,26 @@ const AdminPetManagement = () => {
       return;
     }
     if (!String(form.petName || '').trim()) {
-      setFormError('Pet name is required.');
+      setFormError('Please enter a pet name.');
       return;
     }
     if (!String(form.species || '').trim()) {
-      setFormError('Species is required.');
+      setFormError('Please select a species.');
       return;
     }
     if (!String(form.sex || '').trim()) {
-      setFormError('Sex is required.');
+      setFormError('Please select a sex.');
       return;
     }
     if (!String(form.weightKgs).toString().trim()) {
-      setFormError('Weight (kgs) is required.');
+      setFormError('Please enter a weight.');
       return;
     }
 
     setSubmitting(true);
     try {
       const user = auth.currentUser;
-      if (!user) throw new Error('Not authenticated.');
+      if (!user) throw new Error('Please log in to continue.');
 
       const db = getDatabase(app);
       const ownerId = String(selectedOwner.ownerId);
@@ -489,7 +491,7 @@ const AdminPetManagement = () => {
       await fetchPets();
       setAddOpen(false);
     } catch (e) {
-      setFormError(e?.message || 'Failed to add pet.');
+      setFormError('Could not add pet. Please try again.');
     } finally {
       setSubmitting(false);
     }
@@ -680,26 +682,26 @@ const AdminPetManagement = () => {
     setFormMessage('');
 
     if (!String(form.petName || '').trim()) {
-      setFormError('Pet name is required.');
+      setFormError('Please enter a pet name.');
       return;
     }
     if (!String(form.species || '').trim()) {
-      setFormError('Species is required.');
+      setFormError('Please select a species.');
       return;
     }
     if (!String(form.sex || '').trim()) {
-      setFormError('Sex is required.');
+      setFormError('Please select a sex.');
       return;
     }
     if (!String(form.weightKgs).toString().trim()) {
-      setFormError('Weight (kgs) is required.');
+      setFormError('Please enter a weight.');
       return;
     }
 
     setSubmitting(true);
     try {
       const user = auth.currentUser;
-      if (!user) throw new Error('Not authenticated.');
+      if (!user) throw new Error('Please log in to continue.');
       const db = getDatabase(app);
       await update(ref(db, `petsByOwner/${selected.ownerId}/${selected.petId}`), {
         image: form.image,
@@ -727,7 +729,7 @@ const AdminPetManagement = () => {
       await fetchPets();
       await logAuditTrail('update', selected.petId, 'pet', selected, form);
     } catch (e) {
-      setFormError(e?.message || 'Failed to save.');
+      setFormError('Could not save. Please try again.');
     } finally {
       setSubmitting(false);
     }
@@ -740,12 +742,12 @@ const AdminPetManagement = () => {
     setDeleting(true);
     try {
       const user = auth.currentUser;
-      if (!user) throw new Error('Not authenticated.');
+      if (!user) throw new Error('Please log in to continue.');
 
       const db = getDatabase(app);
       const ownerId = String(p.ownerId || '');
       const petId = String(p.petId || '');
-      if (!ownerId || !petId) throw new Error('Invalid pet record.');
+      if (!ownerId || !petId) throw new Error('Invalid pet information.');
 
       const multi = {};
       multi[`petsByOwner/${ownerId}/${petId}`] = null;
@@ -760,7 +762,7 @@ const AdminPetManagement = () => {
       await fetchPets();
       await logAuditTrail('delete', petId, 'pet', p, null);
     } catch (e) {
-      setError(e?.message || 'Failed to delete.');
+      setError('Could not delete. Please try again.');
     } finally {
       setDeleting(false);
     }
@@ -772,18 +774,18 @@ const AdminPetManagement = () => {
     setFormMessage('');
 
     if (!medicalForm.petId) {
-      setFormError('Pet is required.');
+      setFormError('Please select a pet.');
       return;
     }
     if (!medicalForm.date) {
-      setFormError('Date is required.');
+      setFormError('Please enter a date.');
       return;
     }
 
     setSubmitting(true);
     try {
       const user = auth.currentUser;
-      if (!user) throw new Error('Not authenticated.');
+      if (!user) throw new Error('Please log in to continue.');
 
       const db = getDatabase(app);
       const medicalRef = push(ref(db, `medicalRecordsByPet/${medicalForm.petId}`));
@@ -805,7 +807,7 @@ const AdminPetManagement = () => {
       setMedicalForm({ petId: '', date: '', results: '', veterinarian: '', notes: '' });
       await logAuditTrail('create', recordId, 'medical_record', null, { petId: medicalForm.petId, date: medicalForm.date, results: medicalForm.results, veterinarian: medicalForm.veterinarian, notes: medicalForm.notes });
     } catch (e) {
-      setFormError(e?.message || 'Failed to add medical record.');
+      setFormError('Could not add medical record. Please try again.');
     } finally {
       setSubmitting(false);
     }
@@ -817,14 +819,14 @@ const AdminPetManagement = () => {
     setFormMessage('');
 
     if (!medicalForm.date) {
-      setFormError('Date is required.');
+      setFormError('Please enter a date.');
       return;
     }
 
     setSubmitting(true);
     try {
       const user = auth.currentUser;
-      if (!user) throw new Error('Not authenticated.');
+      if (!user) throw new Error('Please log in to continue.');
 
       const db = getDatabase(app);
       await update(ref(db, `medicalRecordsByPet/${selectedMedicalRecord.petId}/${selectedMedicalRecord.recordId}`), {
@@ -853,14 +855,14 @@ const AdminPetManagement = () => {
     setDeleting(true);
     try {
       const user = auth.currentUser;
-      if (!user) throw new Error('Not authenticated.');
+      if (!user) throw new Error('Please log in to continue.');
 
       const db = getDatabase(app);
       await update(ref(db, `medicalRecordsByPet/${r.petId}/${r.recordId}`), null);
       await fetchMedicalRecords();
       await logAuditTrail('delete', r.recordId, 'medical_record', r, null);
     } catch (e) {
-      setError(e?.message || 'Failed to delete.');
+      setError('Could not delete. Please try again.');
     } finally {
       setDeleting(false);
     }
@@ -872,18 +874,18 @@ const AdminPetManagement = () => {
     setFormMessage('');
 
     if (!vaccinationForm.petId) {
-      setFormError('Pet is required.');
+      setFormError('Please select a pet.');
       return;
     }
     if (!vaccinationForm.date) {
-      setFormError('Date is required.');
+      setFormError('Please enter a date.');
       return;
     }
 
     setSubmitting(true);
     try {
       const user = auth.currentUser;
-      if (!user) throw new Error('Not authenticated.');
+      if (!user) throw new Error('Please log in to continue.');
 
       const db = getDatabase(app);
       const vaccinationRef = push(ref(db, `medicalRecordsByPet/${vaccinationForm.petId}`));
@@ -893,7 +895,7 @@ const AdminPetManagement = () => {
         petId: vaccinationForm.petId,
         recordType: 'vaccination',
         date: vaccinationForm.date,
-        vaccineType: vaccinationForm.vaccineType,
+        vaccineType: vaccinationForm.vaccineType === 'others' ? vaccinationForm.vaccineTypeOther : vaccinationForm.vaccineType,
         vaccineSource: vaccinationForm.vaccineSource,
         vaccinatedBy: vaccinationForm.vaccinatedBy,
         reason: vaccinationForm.reason,
@@ -906,10 +908,10 @@ const AdminPetManagement = () => {
       setFormMessage('Vaccination record added.');
       await fetchVaccinationRecords();
       setVaccinationAddOpen(false);
-      setVaccinationForm({ petId: '', date: '', vaccineType: '', vaccineSource: '', vaccinatedBy: '', reason: '', hasDisease: false, disease: '', notes: '' });
-      await logAuditTrail('create', recordId, 'vaccination_record', null, { petId: vaccinationForm.petId, date: vaccinationForm.date, vaccineType: vaccinationForm.vaccineType, vaccineSource: vaccinationForm.vaccineSource, vaccinatedBy: vaccinationForm.vaccinatedBy, reason: vaccinationForm.reason, hasDisease: vaccinationForm.hasDisease, disease: vaccinationForm.hasDisease ? vaccinationForm.disease : '', notes: vaccinationForm.notes });
+      setVaccinationForm({ petId: '', date: '', vaccineType: '', vaccineTypeOther: '', vaccineSource: '', vaccinatedBy: '', reason: '', hasDisease: false, disease: '', notes: '' });
+      await logAuditTrail('create', recordId, 'vaccination_record', null, { petId: vaccinationForm.petId, date: vaccinationForm.date, vaccineType: vaccinationForm.vaccineType === 'others' ? vaccinationForm.vaccineTypeOther : vaccinationForm.vaccineType, vaccineSource: vaccinationForm.vaccineSource, vaccinatedBy: vaccinationForm.vaccinatedBy, reason: vaccinationForm.reason, hasDisease: vaccinationForm.hasDisease, disease: vaccinationForm.hasDisease ? vaccinationForm.disease : '', notes: vaccinationForm.notes });
     } catch (e) {
-      setFormError(e?.message || 'Failed to add vaccination record.');
+      setFormError('Could not add vaccination record. Please try again.');
     } finally {
       setSubmitting(false);
     }
@@ -921,19 +923,19 @@ const AdminPetManagement = () => {
     setFormMessage('');
 
     if (!vaccinationForm.date) {
-      setFormError('Date is required.');
+      setFormError('Please enter a date.');
       return;
     }
 
     setSubmitting(true);
     try {
       const user = auth.currentUser;
-      if (!user) throw new Error('Not authenticated.');
+      if (!user) throw new Error('Please log in to continue.');
 
       const db = getDatabase(app);
       await update(ref(db, `medicalRecordsByPet/${selectedVaccinationRecord.petId}/${selectedVaccinationRecord.recordId}`), {
         date: vaccinationForm.date,
-        vaccineType: vaccinationForm.vaccineType,
+        vaccineType: vaccinationForm.vaccineType === 'others' ? vaccinationForm.vaccineTypeOther : vaccinationForm.vaccineType,
         vaccineSource: vaccinationForm.vaccineSource,
         vaccinatedBy: vaccinationForm.vaccinatedBy,
         reason: vaccinationForm.reason,
@@ -946,7 +948,7 @@ const AdminPetManagement = () => {
       setFormMessage('Saved.');
       await fetchVaccinationRecords();
       setVaccinationEditOpen(false);
-      await logAuditTrail('update', selectedVaccinationRecord.recordId, 'vaccination_record', selectedVaccinationRecord, { date: vaccinationForm.date, vaccineType: vaccinationForm.vaccineType, vaccineSource: vaccinationForm.vaccineSource, vaccinatedBy: vaccinationForm.vaccinatedBy, reason: vaccinationForm.reason, hasDisease: vaccinationForm.hasDisease, disease: vaccinationForm.hasDisease ? vaccinationForm.disease : '', notes: vaccinationForm.notes });
+      await logAuditTrail('update', selectedVaccinationRecord.recordId, 'vaccination_record', selectedVaccinationRecord, { date: vaccinationForm.date, vaccineType: vaccinationForm.vaccineType === 'others' ? vaccinationForm.vaccineTypeOther : vaccinationForm.vaccineType, vaccineSource: vaccinationForm.vaccineSource, vaccinatedBy: vaccinationForm.vaccinatedBy, reason: vaccinationForm.reason, hasDisease: vaccinationForm.hasDisease, disease: vaccinationForm.hasDisease ? vaccinationForm.disease : '', notes: vaccinationForm.notes });
     } catch (e) {
       setFormError(e?.message || 'Failed to save.');
     } finally {
@@ -961,14 +963,14 @@ const AdminPetManagement = () => {
     setDeleting(true);
     try {
       const user = auth.currentUser;
-      if (!user) throw new Error('Not authenticated.');
+      if (!user) throw new Error('Please log in to continue.');
 
       const db = getDatabase(app);
       await update(ref(db, `medicalRecordsByPet/${r.petId}/${r.recordId}`), null);
       await fetchVaccinationRecords();
       await logAuditTrail('delete', r.recordId, 'vaccination_record', r, null);
     } catch (e) {
-      setError(e?.message || 'Failed to delete.');
+      setError('Could not delete. Please try again.');
     } finally {
       setDeleting(false);
     }
@@ -1044,7 +1046,7 @@ const AdminPetManagement = () => {
                 </div>
               </div>
               <div className="flex items-center gap-2">
-                <Button onClick={openAdd}>Add New</Button>
+                <Button variant="green" onClick={openAdd}>Add New</Button>
               </div>
             </div>
 
@@ -1122,7 +1124,7 @@ const AdminPetManagement = () => {
                           <td className="py-3 px-4">{p.ownerName || '—'}</td>
                           <td className="py-3 px-4">
                             <div className="flex items-center gap-2">
-                              <Button variant="outline" size="sm" onClick={() => onView(p)}>
+                              <Button variant="blue" size="sm" onClick={() => onView(p)}>
                                 View
                               </Button>
                               <Button variant="outline" size="sm" onClick={() => onEdit(p)}>
@@ -1208,7 +1210,7 @@ const AdminPetManagement = () => {
                 </div>
               </div>
               <div className="flex items-center gap-2">
-                <Button onClick={() => setMedicalAddOpen(true)}>Add New</Button>
+                <Button variant="green" onClick={() => setMedicalAddOpen(true)}>Add New</Button>
               </div>
             </div>
 
@@ -1276,7 +1278,7 @@ const AdminPetManagement = () => {
                           <td className="py-3 px-4">{r.ownerName || '—'}</td>
                           <td className="py-3 px-4">
                             <div className="flex items-center gap-2">
-                              <Button variant="outline" size="sm" onClick={() => { setSelectedMedicalRecord(r); setMedicalViewOpen(true); }}>
+                              <Button variant="blue" size="sm" onClick={() => { setSelectedMedicalRecord(r); setMedicalViewOpen(true); }}>
                                 View
                               </Button>
                               <Button variant="outline" size="sm" onClick={() => { setSelectedMedicalRecord(r); setMedicalEditOpen(true); }}>
@@ -1356,7 +1358,7 @@ const AdminPetManagement = () => {
                 </div>
               </div>
               <div className="flex items-center gap-2">
-                <Button onClick={() => setVaccinationAddOpen(true)}>Add New</Button>
+                <Button variant="green" onClick={() => setVaccinationAddOpen(true)}>Add New</Button>
               </div>
             </div>
 
@@ -1430,7 +1432,7 @@ const AdminPetManagement = () => {
                           <td className="py-3 px-4">{r.ownerName || '—'}</td>
                           <td className="py-3 px-4">
                             <div className="flex items-center gap-2">
-                              <Button variant="outline" size="sm" onClick={() => { setSelectedVaccinationRecord(r); setVaccinationViewOpen(true); }}>
+                              <Button variant="blue" size="sm" onClick={() => { setSelectedVaccinationRecord(r); setVaccinationViewOpen(true); }}>
                                 View
                               </Button>
                               <Button variant="outline" size="sm" onClick={() => { setSelectedVaccinationRecord(r); setVaccinationEditOpen(true); }}>
@@ -1494,8 +1496,11 @@ const AdminPetManagement = () => {
             <div><span className="font-medium">Barangay:</span> {selected.barangay || '—'}</div>
           </div>
           
-          <div className="flex items-center space-x-4 border-t border-default pt-4">
-            <Button onClick={() => { setViewOpen(false); onEdit(selected); }}>
+          <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-200">
+            <Button variant="outline" onClick={closeView}>
+              Close
+            </Button>
+            <Button variant="blue" onClick={() => { setViewOpen(false); onEdit(selected); }}>
               Edit
             </Button>
             <Button variant="destructive" onClick={() => doDelete(selected)} disabled={deleting}>
@@ -1767,14 +1772,13 @@ const AdminPetManagement = () => {
               <Button
                 variant="outline"
                 onClick={closeEdit}
-                className="rounded-xl"
               >
                 Cancel
               </Button>
               <Button
+                variant="green"
                 onClick={saveEdit}
                 disabled={submitting}
-                className="bg-green-700 hover:bg-green-800 text-white rounded-xl"
               >
                 {submitting ? 'Saving...' : 'Save changes'}
               </Button>
@@ -2084,14 +2088,13 @@ const AdminPetManagement = () => {
                 <Button
                   variant="outline"
                   onClick={closeAdd}
-                  className="rounded-xl"
                 >
                   Cancel
                 </Button>
                 <Button
+                  variant="green"
                   onClick={createPet}
                   disabled={submitting}
-                  className="bg-green-700 hover:bg-green-800 text-white rounded-xl"
                 >
                   {submitting ? 'Saving...' : 'Add Pet'}
                 </Button>
@@ -2114,8 +2117,11 @@ const AdminPetManagement = () => {
             <div className="md:col-span-2"><span className="font-medium">Results:</span> {selectedMedicalRecord.results || '—'}</div>
             <div className="md:col-span-2"><span className="font-medium">Notes:</span> {selectedMedicalRecord.notes || '—'}</div>
           </div>
-          <div className="flex items-center space-x-4 border-t border-default pt-4">
-            <Button onClick={() => { setMedicalViewOpen(false); setMedicalEditOpen(true); }}>
+          <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-200">
+            <Button variant="outline" onClick={() => setMedicalViewOpen(false)}>
+              Close
+            </Button>
+            <Button variant="blue" onClick={() => { setMedicalViewOpen(false); setMedicalEditOpen(true); }}>
               Edit
             </Button>
             <Button variant="destructive" onClick={() => deleteMedicalRecord(selectedMedicalRecord)} disabled={deleting}>
@@ -2170,8 +2176,7 @@ const AdminPetManagement = () => {
               <Button variant="outline" onClick={() => setMedicalEditOpen(false)}>
                 Cancel
               </Button>
-              <Button onClick={editMedicalRecord} disabled={submitting}
-              className="bg-green-700 hover:bg-green-800 text-white rounded-xl">
+              <Button variant="green" onClick={editMedicalRecord} disabled={submitting}>
                 {submitting ? 'Saving...' : 'Save'}
               </Button>
             </div>
@@ -2239,8 +2244,7 @@ const AdminPetManagement = () => {
               <Button variant="outline" onClick={() => setMedicalAddOpen(false)}>
                 Cancel
               </Button>
-              <Button onClick={addMedicalRecord} disabled={submitting}
-              className="bg-green-700 hover:bg-green-800 text-white rounded-xl">
+              <Button variant="green" onClick={addMedicalRecord} disabled={submitting}>
                 {submitting ? 'Adding...' : 'Add Record'}
               </Button>
             </div>
@@ -2264,8 +2268,11 @@ const AdminPetManagement = () => {
             <div><span className="font-medium">Owner:</span> {selectedVaccinationRecord.ownerName || '—'}</div>
             <div className="md:col-span-2"><span className="font-medium">Notes:</span> {selectedVaccinationRecord.notes || '—'}</div>
           </div>
-          <div className="flex items-center space-x-4 border-t border-default pt-4">
-            <Button onClick={() => { setVaccinationViewOpen(false); setVaccinationEditOpen(true); }}>
+          <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-200">
+            <Button variant="outline" onClick={() => setVaccinationViewOpen(false)}>
+              Close
+            </Button>
+            <Button variant="blue" onClick={() => { setVaccinationViewOpen(false); setVaccinationEditOpen(true); }}>
               Edit
             </Button>
             <Button variant="destructive" onClick={() => deleteVaccinationRecord(selectedVaccinationRecord)} disabled={deleting}>
@@ -2292,12 +2299,26 @@ const AdminPetManagement = () => {
             </div>
             <div>
               <label className="block text-xs text-slate-500 mb-1">Vaccine Type</label>
-              <input
+              <select
                 value={vaccinationForm.vaccineType}
                 onChange={(e) => setVaccinationForm({ ...vaccinationForm, vaccineType: e.target.value })}
                 className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
-              />
+              >
+                <option value="">Select</option>
+                <option value="anti-rabies">Anti-rabies</option>
+                <option value="others">Other</option>
+              </select>
             </div>
+            {showVaccineTypeOther && (
+              <div>
+                <label className="block text-xs text-slate-500 mb-1">Specify Vaccine Type</label>
+                <input
+                  value={vaccinationForm.vaccineTypeOther}
+                  onChange={(e) => setVaccinationForm({ ...vaccinationForm, vaccineTypeOther: e.target.value })}
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+                />
+              </div>
+            )}
             <div>
               <label className="block text-xs text-slate-500 mb-1">Vaccine Source</label>
               <input
@@ -2362,8 +2383,7 @@ const AdminPetManagement = () => {
               <Button variant="outline" onClick={() => setVaccinationEditOpen(false)}>
                 Cancel
               </Button>
-              <Button onClick={editVaccinationRecord} disabled={submitting}
-              className="bg-green-700 hover:bg-green-800 text-white rounded-xl">
+              <Button variant="green" onClick={editVaccinationRecord} disabled={submitting}>
                 {submitting ? 'Saving...' : 'Save'}
               </Button>
             </div>
@@ -2403,12 +2423,26 @@ const AdminPetManagement = () => {
             </div>
             <div>
               <label className="block text-xs text-slate-500 mb-1">Vaccine Type</label>
-              <input
+              <select
                 value={vaccinationForm.vaccineType}
                 onChange={(e) => setVaccinationForm({ ...vaccinationForm, vaccineType: e.target.value })}
                 className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
-              />
+              >
+                <option value="">Select</option>
+                <option value="anti-rabies">Anti-rabies</option>
+                <option value="others">Other</option>
+              </select>
             </div>
+            {showVaccineTypeOther && (
+              <div>
+                <label className="block text-xs text-slate-500 mb-1">Specify Vaccine Type</label>
+                <input
+                  value={vaccinationForm.vaccineTypeOther}
+                  onChange={(e) => setVaccinationForm({ ...vaccinationForm, vaccineTypeOther: e.target.value })}
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+                />
+              </div>
+            )}
             <div>
               <label className="block text-xs text-slate-500 mb-1">Vaccine Source</label>
               <input
@@ -2473,8 +2507,7 @@ const AdminPetManagement = () => {
               <Button variant="outline" onClick={() => setVaccinationAddOpen(false)}>
                 Cancel
               </Button>
-              <Button onClick={addVaccinationRecord} disabled={submitting}
-              className="bg-green-700 hover:bg-green-800 text-white rounded-xl">
+              <Button variant="green" onClick={addVaccinationRecord} disabled={submitting}>
                 {submitting ? 'Adding...' : 'Add Record'}
               </Button>
             </div>

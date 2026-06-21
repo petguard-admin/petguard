@@ -1,16 +1,17 @@
 import React from "react";
 import { Button } from "./ui/Button";
 
-const HealthInfo = ({ items = [] }) => {
+const HealthInfo = ({ items = [], onItemClick, compact = false }) => {
   return (
     <section className="py-8">
       <div className="container mx-auto px-4">
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className={`${compact ? 'grid grid-cols-2 gap-4 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-6' : 'flex gap-6 overflow-x-auto pb-4 snap-x snap-mandatory md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-6 md:overflow-visible md:pb-0'}`}>
           {items.length ? (
             items.map((item) => (
               <div
                 key={item.id}
-                className="group bg-white rounded-2xl border border-green-100 overflow-hidden hover:shadow-md transition-all duration-300"
+                className={`${compact ? '' : 'w-[300px] snap-start flex-shrink-0 md:w-auto'} group bg-white rounded-2xl border border-green-100 overflow-hidden hover:shadow-md transition-all duration-300 cursor-pointer`}
+                onClick={() => onItemClick && onItemClick(item)}
               >
                 {/* Image */}
                 <div className="h-48 bg-green-50 overflow-hidden">
