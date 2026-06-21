@@ -1,7 +1,7 @@
 import { database } from './firebase';
 import { ref, get, set, update, remove } from 'firebase/database';
 import { authService } from './authService';
-import { auth } from './auth';
+import { auth } from '../auth';
 
 const normalizeEmail = (email) => String(email || '').trim().toLowerCase();
 const normalizePhone = (phone) => String(phone || '').replace(/\s+/g, '').trim();
@@ -14,7 +14,7 @@ const emailKey = (email) => {
 };
 
 // Backend API URL - configure this based on your deployment
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:3000';
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:3001';
 
 export const adminService = {
   async verifyAdmin() {
