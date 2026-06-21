@@ -3,6 +3,7 @@ const cors = require('cors');
 const admin = require('firebase-admin');
 const dotenv = require('dotenv');
 const path = require('path');
+const nodemailer = require('nodemailer');
 
 dotenv.config({ path: path.join(__dirname, '.env') });
 
@@ -42,6 +43,17 @@ try {
   console.error('Full error:', error);
   process.exit(1);
 }
+
+// Email transporter configuration
+const transporter = nodemailer.createTransport({
+  host: process.env.EMAIL_HOST || 'smtp.gmail.com',
+  port: process.env.EMAIL_PORT || 587,
+  secure: false,
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASSWORD
+  }
+});
 
 // Helper functions
 const normalizeEmail = (email) => String(email || '').trim().toLowerCase();
@@ -88,8 +100,7 @@ const logAudit = async (action, targetId, targetType, adminUid, changes) => {
       targetType,
       performedBy: adminUid,
       changes,
-      timestamp: Date.now(),
-      ipAddress: req?.ip || 'unknown'
+      timestamp: Date.now()
     });
   } catch (error) {
     console.error('Audit logging error:', error.message);
@@ -159,8 +170,37 @@ app.post('/api/admin/create', verifyAdmin, async (req, res) => {
     await db.ref(`users/${userRecord.uid}`).set(adminData);
     await db.ref(`emailIndex/${eKey}`).set(userRecord.uid);
 
-    // Send email verification
-    await auth.generateEmailVerificationLink(normEmail);
+    // Send password reset email (this also serves as email verification)
+    const passwordResetLink = await auth.generatePasswordResetLink(normEmail);
+    
+    // Send email using nodemailer
+    try {
+      const mailOptions = {
+        from: process.env.EMAIL_FROM || 'PetGuard Admin <noreply@petguard.com>',
+        to: normEmail,
+        subject: 'Welcome to PetGuard - Set Your Password',
+        html: `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+            <h2 style="color: #166534;">Welcome to PetGuard Admin</h2>
+            <p>Hello ${firstname},</p>
+            <p>You have been invited to join PetGuard as an administrator.</p>
+            <p>To get started, please set your password by clicking the link below:</p>
+            <p>
+              <a href="${passwordResetLink}" style="background-color: #166534; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; display: inline-block;">Set Password</a>
+            </p>
+            <p>This link will expire in 1 hour.</p>
+            <p>If you did not request this invitation, please ignore this email.</p>
+            <p>Best regards,<br>PetGuard Team</p>
+          </div>
+        `
+      };
+      
+      await transporter.sendMail(mailOptions);
+      console.log('Password reset email sent to:', normEmail);
+    } catch (emailError) {
+      console.error('Error sending email:', emailError.message);
+      // Continue even if email fails - admin is still created
+    }
 
     // Log audit
     await logAudit('create', userRecord.uid, 'admin', adminUid, adminData);
