@@ -14,7 +14,7 @@ const emailKey = (email) => {
 };
 
 // Backend API URL - configure this based on your deployment
-const BACKEND_URL = 'http://localhost:3001';
+const BACKEND_URL = 'https://petguard-backend.onrender.com';
 
 export const adminService = {
   async verifyAdmin() {
