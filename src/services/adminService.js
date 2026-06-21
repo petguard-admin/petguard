@@ -1,7 +1,7 @@
 import { database } from './firebase';
 import { ref, get, set, update, remove } from 'firebase/database';
 import { authService } from './authService';
-import { auth } from './auth';
+import { auth } from '../auth';
 
 const normalizeEmail = (email) => String(email || '').trim().toLowerCase();
 const normalizePhone = (phone) => String(phone || '').replace(/\s+/g, '').trim();
