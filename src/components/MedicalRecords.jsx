@@ -53,10 +53,10 @@ const MedicalRecords = () => {
   const vaccinationPageSize = 10;
 
   const getOwnerId = React.useCallback(async () => {
-    if (!user) throw new Error('Not logged in.');
+    if (!user) throw new Error('Please log in to continue.');
     const db = getDatabase(app);
     const mapSnap = await get(ref(db, `ownerUidMap/${user.uid}`));
-    if (!mapSnap.exists()) throw new Error('No owner profile linked to this account.');
+    if (!mapSnap.exists()) throw new Error('No account found. Please contact support.');
     return String(mapSnap.val() || '');
   }, [user]);
 
@@ -93,7 +93,7 @@ const MedicalRecords = () => {
         setSelectedPetId(firstPetId);
       } catch (e) {
         if (!active) return;
-        setError(e?.message || 'Failed to load selected pet.');
+        setError('Could not load pet. Please try again.');
       }
     })();
 
@@ -124,7 +124,7 @@ const MedicalRecords = () => {
         setRecords(mine);
       } catch (e) {
         if (!active) return;
-        setError(e?.message || 'Failed to load medical records.');
+        setError('Could not load medical records. Please try again.');
       } finally {
         if (active) setRecordsLoading(false);
       }
@@ -319,7 +319,7 @@ const MedicalRecords = () => {
       setEditForm(null);
       await logAuditTrail('update', selectedRecord.id, editForm.recordType === 'vaccination' ? 'vaccination_record' : 'medical_record', selectedRecord, patch);
     } catch (err) {
-      setFormError(err?.message || 'Failed to update record.');
+      setFormError('Could not update record. Please try again.');
     } finally {
       setSavingEdit(false);
     }
@@ -340,7 +340,7 @@ const MedicalRecords = () => {
       setMessage('Record deleted.');
       await logAuditTrail('delete', rec.id, rec.recordType === 'vaccination' ? 'vaccination_record' : 'medical_record', rec, null);
     } catch (err) {
-      setError(err?.message || 'Failed to delete record.');
+      setError('Could not delete record. Please try again.');
     } finally {
       setDeletingId('');
     }
@@ -373,8 +373,9 @@ const MedicalRecords = () => {
         <div>
           <p className="text-sm text-muted-foreground">Records for your currently selected pet.</p>
         </div>
-        <Button 
-          onClick={() => setIsAddModalOpen(true)} 
+        <Button
+          variant="green"
+          onClick={() => setIsAddModalOpen(true)}
           disabled={!selectedPetId}
         >
           Add Record
@@ -443,9 +444,6 @@ const MedicalRecords = () => {
                     <option value="Cat">Cat</option>
                   </select>
                 </div>
-                <div className="flex items-end">
-                  <Button onClick={() => setIsAddModalOpen(true)}>Add New</Button>
-                </div>
               </div>
 
               {error ? <div className="mb-3 text-sm text-destructive">{error}</div> : null}
@@ -496,7 +494,7 @@ const MedicalRecords = () => {
                           <td className="py-2 pr-4 max-w-xs truncate">{r.notes ? r.notes.substring(0, 50) + (r.notes.length > 50 ? '...' : '') : '—'}</td>
                           <td className="py-2">
                             <div className="flex items-center gap-2">
-                              <Button variant="outline" size="sm" onClick={() => onView(r)}>
+                              <Button variant="blue" size="sm" onClick={() => onView(r)}>
                                 View
                               </Button>
                               <Button variant="outline" size="sm" onClick={() => onEdit(r)}>
@@ -560,9 +558,6 @@ const MedicalRecords = () => {
                     <option value="Cat">Cat</option>
                   </select>
                 </div>
-                <div className="flex items-end">
-                  <Button onClick={() => setIsAddModalOpen(true)}>Add New</Button>
-                </div>
               </div>
 
               {error ? <div className="mb-3 text-sm text-destructive">{error}</div> : null}
@@ -623,7 +618,7 @@ const MedicalRecords = () => {
                           <td className="py-2 pr-4 max-w-xs truncate">{r.notes ? r.notes.substring(0, 50) + (r.notes.length > 50 ? '...' : '') : '—'}</td>
                           <td className="py-2">
                             <div className="flex items-center gap-2">
-                              <Button variant="outline" size="sm" onClick={() => onView(r)}>
+                              <Button variant="blue" size="sm" onClick={() => onView(r)}>
                                 View
                               </Button>
                               <Button variant="outline" size="sm" onClick={() => onEdit(r)}>

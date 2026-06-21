@@ -21,10 +21,10 @@ const Profile = () => {
   const [error, setError] = React.useState('');
 
   const getOwnerId = React.useCallback(async () => {
-    if (!user) throw new Error('Not logged in.');
+    if (!user) throw new Error('Please log in to continue.');
     const db = getDatabase(app);
     const mapSnap = await get(ref(db, `ownerUidMap/${user.uid}`));
-    if (!mapSnap.exists()) throw new Error('No owner profile linked to this account.');
+    if (!mapSnap.exists()) throw new Error('No account found. Please contact support.');
     return String(mapSnap.val() || '');
   }, [user]);
 
@@ -52,7 +52,7 @@ const Profile = () => {
         });
       } catch (e) {
         if (!active) return;
-        setError(e?.message || 'Failed to load profile.');
+        setError('Could not load profile. Please try again.');
       }
     })();
 
@@ -87,7 +87,7 @@ const Profile = () => {
       setMessage('Profile updated.');
       await logAuditTrail('update', ownerId, 'owner_profile', profile, form);
     } catch (err) {
-      setError(err?.message || 'Failed to update profile.');
+      setError('Could not update profile. Please try again.');
     } finally {
       setSaving(false);
     }
@@ -102,7 +102,7 @@ const Profile = () => {
       setMessage('Password reset email sent.');
       await logAuditTrail('view', user.uid, 'password_reset', null, { email: user.email });
     } catch (err) {
-      setError(err?.message || 'Failed to send reset link.');
+      setError('Could not send reset link. Please try again.');
     }
   };
 
@@ -126,7 +126,7 @@ const Profile = () => {
       await logout();
       await logAuditTrail('delete', ownerId, 'owner_account', profile, null);
     } catch (err) {
-      setError(err?.message || 'Failed to delete account.');
+      setError('Could not delete account. Please try again.');
     } finally {
       setDeleting(false);
     }
@@ -201,12 +201,29 @@ const Profile = () => {
           </div>
           <div>
             <label className="block text-xs text-slate-500 mb-1">Barangay</label>
-            <input
+            <select
               name="barangay"
               value={form.barangay}
               onChange={onChange}
               className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
-            />
+            >
+              <option value="">Select</option>
+              <option value="Poblacion 1">Poblacion 1</option>
+              <option value="Poblacion 2">Poblacion 2</option>
+              <option value="Poblacion 3">Poblacion 3</option>
+              <option value="Poblacion 4">Poblacion 4</option>
+              <option value="Poblacion 5">Poblacion 5</option>
+              <option value="Poblacion 6">Poblacion 6</option>
+              <option value="Poblacion 7">Poblacion 7</option>
+              <option value="Poblacion 8">Poblacion 8</option>
+              <option value="Balansay">Balansay</option>
+              <option value="Fatima">Fatima</option>
+              <option value="Payompon">Payompon</option>
+              <option value="San Luis">San Luis</option>
+              <option value="Talabaan">Talabaan</option>
+              <option value="Tangkalan">Tangkalan</option>
+              <option value="Tayamaan">Tayamaan</option>
+            </select>
           </div>
           <div>
             <label className="block text-xs text-slate-500 mb-1">Gender</label>
@@ -237,21 +254,20 @@ const Profile = () => {
           <Button
             variant="outline"
             onClick={resetPassword}
-            className="rounded-xl"
           >
             Reset password
           </Button>
           <Button
+            variant="green"
             onClick={saveProfile}
             disabled={saving}
-            className="bg-green-700 hover:bg-green-800 text-white rounded-xl"
           >
             {saving ? 'Saving...' : 'Save changes'}
           </Button>
         </div>
 
         <div className="mt-6 flex flex-wrap gap-2">
-          <Button variant="destructive" onClick={logout}>
+          <Button variant="outline" onClick={logout}>
             Logout
           </Button>
           <Button variant="destructive" onClick={deleteAccount} disabled={deleting}>

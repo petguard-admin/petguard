@@ -2,7 +2,6 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Button } from "./ui/Button";
 import { useAuth } from "../AuthContext";
-import { PawPrint } from "lucide-react";
 
 const Navbar = () => {
   const { user, logout, loading, roleLoading, isAdmin } = useAuth();
@@ -16,9 +15,11 @@ const Navbar = () => {
           to="/"
           className="flex items-center gap-2 text-2xl font-bold text-slate-900"
         >
-          <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-green-700 text-white">
-            <PawPrint size={20} />
-          </div>
+          <img
+            src="/src/img/OMV_logo.png"
+            alt="OMV Logo"
+            className="w-10 h-10 rounded-xl"
+          />
           <span>
             Pet<span className="text-green-700">Guard</span>
           </span>
@@ -72,21 +73,20 @@ const Navbar = () => {
             <span className="text-sm text-slate-500">Loading...</span>
           ) : user ? (
             <>
-              <Button
-                variant="outline"
-                size="sm"
-                asChild
-                className="border-green-700 text-green-700 hover:bg-green-50 rounded-xl"
-              >
-                <Link to={isAdmin ? "/admin/profile" : "/profile"}>
+              <Link to={isAdmin ? "/admin/profile" : "/profile"}>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="border-green-700 text-green-700 hover:bg-green-50 rounded-xl hidden md:block"
+                >
                   Profile
-                </Link>
-              </Button>
+                </Button>
+              </Link>
 
               <Button
                 size="sm"
                 onClick={logout}
-                className="bg-green-700 hover:bg-green-800 text-white rounded-xl"
+                className="bg-green-700 hover:bg-green-800 text-white rounded-xl hidden md:block"
               >
                 Logout
               </Button>

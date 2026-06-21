@@ -39,7 +39,7 @@ const AdminReports = () => {
     setError('');
     try {
       const user = auth.currentUser;
-      if (!user) throw new Error('Not authenticated.');
+      if (!user) throw new Error('Please log in to continue.');
 
       const db = getDatabase(app);
       const [ownersSnap, petsSnap, medicalSnap] = await Promise.all([
@@ -107,7 +107,7 @@ const AdminReports = () => {
       setVaccinationRecords(arr);
     } catch (e) {
       setVaccinationRecords([]);
-      setError(e?.message || 'Failed to load vaccination records.');
+      setError('Could not load vaccination records. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -333,7 +333,7 @@ const AdminReports = () => {
       document.body.removeChild(link);
       await logAuditTrail('export', selectedYear, 'vaccination_report', null, { year: selectedYear, recordCount: filteredRecords.length });
     } catch (e) {
-      setError(e?.message || 'Failed to export data.');
+      setError('Could not export data. Please try again.');
     } finally {
       setExporting(false);
     }
@@ -344,28 +344,22 @@ const AdminReports = () => {
       <div className="flex flex-col gap-4">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
           <h2 className="text-lg font-semibold">Vaccination Report</h2>
-          <div className="flex flex-col md:flex-row md:items-center gap-2">
-            <div>
-              <label className="block text-sm font-medium mb-1" htmlFor="yearSelect">Year</label>
-              <select
-                id="yearSelect"
-                value={selectedYear}
-                onChange={(e) => setSelectedYear(e.target.value)}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
-              >
-                {availableYears.map((year) => (
-                  <option key={year} value={year}>{year}</option>
-                ))}
-              </select>
-            </div>
-            <div className="flex items-center gap-2">
-              <Button onClick={exportToExcel} disabled={exporting || loading || groupedRecords.length === 0}>
-                {exporting ? 'Exporting...' : 'Save as Excel'}
-              </Button>
-              <Button onClick={fetchVaccinationRecords} disabled={loading}>
-                {loading ? 'Loading...' : 'Refresh'}
-              </Button>
-            </div>
+          <div className="flex items-center gap-2">
+            <select
+              value={selectedYear}
+              onChange={(e) => setSelectedYear(e.target.value)}
+              className="rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+            >
+              {availableYears.map((year) => (
+                <option key={year} value={year}>{year}</option>
+              ))}
+            </select>
+            <Button variant="green" onClick={exportToExcel} disabled={exporting || loading || groupedRecords.length === 0}>
+              {exporting ? 'Exporting...' : 'Save as Excel'}
+            </Button>
+            <Button variant="outline" onClick={fetchVaccinationRecords} disabled={loading}>
+              {loading ? 'Loading...' : 'Refresh'}
+            </Button>
           </div>
         </div>
 

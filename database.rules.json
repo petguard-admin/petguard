@@ -70,10 +70,10 @@
 
     "auditTrail": {
       ".read": "auth != null && auth.token.admin === true",
-      ".write": "auth != null && auth.token.admin === true",
+      ".write": "auth != null",
       "$recordId": {
         ".read": "auth != null && auth.token.admin === true",
-        ".write": "auth != null && auth.token.admin === true && !data.exists()",
+        ".write": "auth != null && !data.exists()",
         ".validate": "newData.hasChildren(['timestamp', 'userId', 'userRole', 'actionType', 'targetRecordId', 'targetRecordType'])"
       }
     }

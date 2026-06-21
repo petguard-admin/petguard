@@ -60,7 +60,7 @@ const AdminUserManagement = () => {
     setError('');
     try {
       const user = auth.currentUser;
-      if (!user) throw new Error('Not authenticated.');
+      if (!user) throw new Error('Please log in to continue.');
 
       const db = getDatabase(app);
       const [ownersSnap, petsSnap] = await Promise.all([
@@ -99,7 +99,7 @@ const AdminUserManagement = () => {
       setUsers(arr);
     } catch (e) {
       setUsers([]);
-      setError(e?.message || 'Failed to load users.');
+      setError('Could not load users. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -113,7 +113,7 @@ const AdminUserManagement = () => {
       } catch (e) {
         if (!cancelled) {
           setUsers([]);
-          setError(e?.message || 'Failed to load users.');
+          setError('Could not load users. Please try again.');
         }
       }
     };
@@ -261,20 +261,20 @@ const AdminUserManagement = () => {
     setSubmitting(true);
     try {
       const user = auth.currentUser;
-      if (!user) throw new Error('Not authenticated.');
+      if (!user) throw new Error('Please log in to continue.');
 
       const db = getDatabase(app);
       const phone = normalizePhone(form.phone);
-      if (!phone) throw new Error('Phone no. is required.');
+      if (!phone) throw new Error('Please enter a phone number.');
 
       const phoneSnap = await get(ref(db, `phoneIndex/${phone}`));
-      if (phoneSnap.exists()) throw new Error('Phone number already exists.');
+      if (phoneSnap.exists()) throw new Error('This phone number is already registered.');
 
       const email = normalizeEmail(form.email);
       const eKey = email ? emailKey(email) : '';
       if (email) {
         const emailSnap = await get(ref(db, `emailIndex/${eKey}`));
-        if (emailSnap.exists()) throw new Error('Email already exists in database.');
+        if (emailSnap.exists()) throw new Error('This email is already registered.');
       }
 
       const ownerId = genOwnerId();
@@ -300,11 +300,11 @@ const AdminUserManagement = () => {
 
       await update(ref(db), multi);
 
-      setFormMessage(`Owner pre-registered. OwnerId: ${ownerId}`.trim());
+      setFormMessage('Owner pre-registered successfully.');
       await fetchOwners();
       await logAuditTrail('create', ownerId, 'owner', null, payload);
     } catch (e) {
-      setFormError(e?.message || 'Failed to create owner.');
+      setFormError('Could not create owner. Please try again.');
     } finally {
       setSubmitting(false);
     }
@@ -323,7 +323,7 @@ const AdminUserManagement = () => {
     setSubmitting(true);
     try {
       const user = auth.currentUser;
-      if (!user) throw new Error('Not authenticated.');
+      if (!user) throw new Error('Please log in to continue.');
 
       const db = getDatabase(app);
       const ownerId = String(selected.ownerId);
@@ -332,12 +332,12 @@ const AdminUserManagement = () => {
       const owner = ownerSnap.val() || {};
 
       const nextPhone = normalizePhone(form.phone);
-      if (!nextPhone) throw new Error('Phone no. is required.');
+      if (!nextPhone) throw new Error('Please enter a phone number.');
       const prevPhone = normalizePhone(owner.phoneNumber || owner.phone);
       if (nextPhone !== prevPhone) {
         const phoneSnap = await get(ref(db, `phoneIndex/${nextPhone}`));
         if (phoneSnap.exists() && String(phoneSnap.val() || '') !== ownerId) {
-          throw new Error('Phone number already exists.');
+          throw new Error('This phone number is already registered.');
         }
       }
 
@@ -348,7 +348,7 @@ const AdminUserManagement = () => {
       if (nextEmail && nextEmail !== prevEmail) {
         const emailSnap = await get(ref(db, `emailIndex/${nextEmailKey}`));
         if (emailSnap.exists() && String(emailSnap.val() || '') !== ownerId) {
-          throw new Error('Email already exists in database.');
+          throw new Error('This email is already registered.');
         }
       }
 
@@ -379,7 +379,7 @@ const AdminUserManagement = () => {
       await fetchOwners();
       await logAuditTrail('update', ownerId, 'owner', owner, { firstname: form.firstname, lastname: form.lastname, phone: nextPhone, email: nextEmail, barangay: form.barangay, gender: form.gender, birthday: form.birthday });
     } catch (e) {
-      setFormError(e?.message || 'Failed to save.');
+      setFormError('Could not save. Please try again.');
     } finally {
       setSubmitting(false);
     }
@@ -391,11 +391,11 @@ const AdminUserManagement = () => {
     setError('');
     try {
       const user = auth.currentUser;
-      if (!user) throw new Error('Not authenticated.');
+      if (!user) throw new Error('Please log in to continue.');
 
       const db = getDatabase(app);
       const ownerId = String(u.ownerId || '');
-      if (!ownerId) throw new Error('ownerId is required.');
+      if (!ownerId) throw new Error('Invalid owner information.');
 
       const ownerSnap = await get(ref(db, `owners/${ownerId}`));
       if (!ownerSnap.exists()) throw new Error('Owner not found.');
@@ -415,7 +415,7 @@ const AdminUserManagement = () => {
       await fetchOwners();
       await logAuditTrail('delete', ownerId, 'owner', owner, null);
     } catch (e) {
-      setError(e?.message || 'Failed to delete.');
+      setError('Could not delete. Please try again.');
     }
   };
 
@@ -465,7 +465,7 @@ const AdminUserManagement = () => {
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <Button onClick={onNewUser}>New User</Button>
+            <Button variant="green" onClick={onNewUser}>New User</Button>
           </div>
         </div>
 
@@ -556,7 +556,7 @@ const AdminUserManagement = () => {
                         <td className="py-3 px-4">{fmtDate(u.createdAt)}</td>
                         <td className="py-3 px-4">
                           <div className="flex flex-wrap gap-2">
-                            <Button variant="outline" size="sm" onClick={() => onView(u)} disabled={!canMutate}>
+                            <Button variant="blue" size="sm" onClick={() => onView(u)} disabled={!canMutate}>
                               View
                             </Button>
                             <Button variant="outline" size="sm" onClick={() => onEdit(u)} disabled={!canMutate}>
@@ -579,7 +579,7 @@ const AdminUserManagement = () => {
         {viewOpen && selected ? (
           <Modal open={viewOpen} title="Owner Details" onClose={() => setViewOpen(false)} maxWidthClassName="max-w-lg">
             <div className="text-sm text-muted-foreground mb-4">Status: {selected.accountStatus === 'active' ? 'Active' : 'Inactive'}</div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
               <div><span className="font-medium">Firstname:</span> {selected.firstname || '—'}</div>
               <div><span className="font-medium">Lastname:</span> {selected.lastname || '—'}</div>
@@ -590,6 +590,18 @@ const AdminUserManagement = () => {
               <div><span className="font-medium">Birthday:</span> {selected.birthday || '—'}</div>
               <div><span className="font-medium">Registered:</span> {fmtDate(selected.createdAt)}</div>
               <div><span className="font-medium">Pets:</span> {selected.pets ?? 0}</div>
+            </div>
+
+            <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-200">
+              <Button variant="outline" onClick={() => setViewOpen(false)}>
+                Close
+              </Button>
+              <Button variant="blue" onClick={() => { setViewOpen(false); onEdit(selected); }}>
+                Edit
+              </Button>
+              <Button variant="destructive" onClick={() => { setViewOpen(false); onDelete(selected); }}>
+                Delete
+              </Button>
             </div>
           </Modal>
         ) : null}
@@ -652,12 +664,29 @@ const AdminUserManagement = () => {
                   </div>
                   <div>
                     <label className="block text-xs text-slate-500 mb-1">Barangay</label>
-                    <input
+                    <select
                       name="barangay"
                       value={form.barangay}
                       onChange={onChange}
                       className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
-                    />
+                    >
+                      <option value="">Select</option>
+                      <option value="Poblacion 1">Poblacion 1</option>
+                      <option value="Poblacion 2">Poblacion 2</option>
+                      <option value="Poblacion 3">Poblacion 3</option>
+                      <option value="Poblacion 4">Poblacion 4</option>
+                      <option value="Poblacion 5">Poblacion 5</option>
+                      <option value="Poblacion 6">Poblacion 6</option>
+                      <option value="Poblacion 7">Poblacion 7</option>
+                      <option value="Poblacion 8">Poblacion 8</option>
+                      <option value="Balansay">Balansay</option>
+                      <option value="Fatima">Fatima</option>
+                      <option value="Payompon">Payompon</option>
+                      <option value="San Luis">San Luis</option>
+                      <option value="Talabaan">Talabaan</option>
+                      <option value="Tangkalan">Tangkalan</option>
+                      <option value="Tayamaan">Tayamaan</option>
+                    </select>
                   </div>
                   <div>
                     <label className="block text-xs text-slate-500 mb-1">Gender</label>
@@ -688,14 +717,13 @@ const AdminUserManagement = () => {
                   <Button
                     variant="outline"
                     onClick={() => setEditOpen(false)}
-                    className="rounded-xl"
                   >
                     Cancel
                   </Button>
                   <Button
+                    variant="green"
                     onClick={saveEdit}
                     disabled={submitting}
-                    className="bg-green-700 hover:bg-green-800 text-white rounded-xl"
                   >
                     {submitting ? 'Saving...' : 'Save changes'}
                   </Button>
@@ -765,12 +793,29 @@ const AdminUserManagement = () => {
                   </div>
                   <div>
                     <label className="block text-xs text-slate-500 mb-1">Barangay</label>
-                    <input
+                    <select
                       name="barangay"
                       value={form.barangay}
                       onChange={onChange}
                       className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
-                    />
+                    >
+                      <option value="">Select</option>
+                      <option value="Poblacion 1">Poblacion 1</option>
+                      <option value="Poblacion 2">Poblacion 2</option>
+                      <option value="Poblacion 3">Poblacion 3</option>
+                      <option value="Poblacion 4">Poblacion 4</option>
+                      <option value="Poblacion 5">Poblacion 5</option>
+                      <option value="Poblacion 6">Poblacion 6</option>
+                      <option value="Poblacion 7">Poblacion 7</option>
+                      <option value="Poblacion 8">Poblacion 8</option>
+                      <option value="Balansay">Balansay</option>
+                      <option value="Fatima">Fatima</option>
+                      <option value="Payompon">Payompon</option>
+                      <option value="San Luis">San Luis</option>
+                      <option value="Talabaan">Talabaan</option>
+                      <option value="Tangkalan">Tangkalan</option>
+                      <option value="Tayamaan">Tayamaan</option>
+                    </select>
                   </div>
                   <div>
                     <label className="block text-xs text-slate-500 mb-1">Gender</label>
@@ -801,14 +846,13 @@ const AdminUserManagement = () => {
                   <Button
                     variant="outline"
                     onClick={closeAdd}
-                    className="rounded-xl"
                   >
                     Cancel
                   </Button>
                   <Button
+                    variant="green"
                     onClick={preRegisterOwner}
                     disabled={submitting}
-                    className="bg-green-700 hover:bg-green-800 text-white rounded-xl"
                   >
                     {submitting ? 'Saving...' : 'Pre-register Owner'}
                   </Button>

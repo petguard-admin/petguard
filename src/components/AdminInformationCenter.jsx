@@ -49,7 +49,7 @@ const AdminInformationCenter = () => {
       setItems(arr);
     } catch (e) {
       setItems([]);
-      setError(e?.message || 'Failed to load announcements.');
+      setError('Could not load announcements. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -116,7 +116,7 @@ const AdminInformationCenter = () => {
       return;
     }
     if (!user) {
-      setFormError('Not authenticated.');
+      setFormError('Please log in to continue.');
       return;
     }
 
@@ -139,7 +139,7 @@ const AdminInformationCenter = () => {
       await load();
       setAddOpen(false);
     } catch (e) {
-      setFormError(e?.message || 'Failed to create item.');
+      setFormError('Could not create announcement. Please try again.');
     } finally {
       setSubmitting(false);
     }
@@ -171,7 +171,7 @@ const AdminInformationCenter = () => {
       setEditOpen(false);
       setSelected(null);
     } catch (e) {
-      setFormError(e?.message || 'Failed to update item.');
+      setFormError('Could not update announcement. Please try again.');
     } finally {
       setSubmitting(false);
     }
@@ -188,7 +188,7 @@ const AdminInformationCenter = () => {
       });
       await load();
     } catch (e) {
-      setError(e?.message || 'Failed to update publish status.');
+      setError('Could not update publish status. Please try again.');
     }
   };
 
@@ -200,7 +200,7 @@ const AdminInformationCenter = () => {
       await remove(ref(db, `announcements/${row.id}`));
       await load();
     } catch (e) {
-      setError(e?.message || 'Failed to delete item.');
+      setError('Could not delete announcement. Please try again.');
     }
   };
 
@@ -251,7 +251,7 @@ const AdminInformationCenter = () => {
           </div>
           <div className="flex items-center gap-2">
             <Button type="button" variant="outline" onClick={load} disabled={loading}>Refresh</Button>
-            <Button type="button" onClick={openAdd}>Add New</Button>
+            <Button type="button" variant="green" onClick={openAdd}>Add New</Button>
           </div>
         </div>
 
@@ -285,11 +285,11 @@ const AdminInformationCenter = () => {
                       <td className="py-3 px-4">{fmtDate(row.createdAt)}</td>
                       <td className="py-3 px-4">
                         <div className="flex flex-wrap gap-2">
-                          <Button size="sm" variant="secondary" type="button" onClick={() => openEdit(row)}>Edit</Button>
+                          <Button size="sm" variant="blue" type="button" onClick={() => openEdit(row)}>Edit</Button>
                           <Button size="sm" variant="outline" type="button" onClick={() => togglePublish(row)}>
                             {row.isPublished ? 'Unpublish' : 'Publish'}
                           </Button>
-                          <Button size="sm" variant="ghost" type="button" onClick={() => doDelete(row)}>Delete</Button>
+                          <Button size="sm" variant="destructive" type="button" onClick={() => doDelete(row)}>Delete</Button>
                         </div>
                       </td>
                     </tr>
@@ -377,14 +377,13 @@ const AdminInformationCenter = () => {
                 variant="outline"
                 onClick={closeAdd}
                 disabled={submitting}
-                className="rounded-xl"
               >
                 Cancel
               </Button>
               <Button
+                variant="green"
                 onClick={createItem}
                 disabled={submitting}
-                className="bg-green-700 hover:bg-green-800 text-white rounded-xl"
               >
                 {submitting ? 'Saving...' : 'Save'}
               </Button>
@@ -465,14 +464,13 @@ const AdminInformationCenter = () => {
                 variant="outline"
                 onClick={closeEdit}
                 disabled={submitting}
-                className="rounded-xl"
               >
                 Cancel
               </Button>
               <Button
+                variant="green"
                 onClick={saveEdit}
                 disabled={submitting}
-                className="bg-green-700 hover:bg-green-800 text-white rounded-xl"
               >
                 {submitting ? 'Saving...' : 'Save'}
               </Button>
