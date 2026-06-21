@@ -2,8 +2,9 @@ const express = require('express');
 const cors = require('cors');
 const admin = require('firebase-admin');
 const dotenv = require('dotenv');
+const path = require('path');
 
-dotenv.config();
+dotenv.config({ path: path.join(__dirname, '.env') });
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -13,20 +14,34 @@ app.use(cors());
 app.use(express.json());
 
 // Initialize Firebase Admin SDK
-let serviceAccount;
+let db, auth;
 try {
-  serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_KEY);
+  console.log('Loading Firebase service account key...');
+  console.log('Environment variable exists:', !!process.env.FIREBASE_SERVICE_ACCOUNT_KEY);
+  console.log('Environment variable length:', process.env.FIREBASE_SERVICE_ACCOUNT_KEY?.length);
+  
+  if (!process.env.FIREBASE_SERVICE_ACCOUNT_KEY) {
+    throw new Error('FIREBASE_SERVICE_ACCOUNT_KEY environment variable is not set');
+  }
+  
+  const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_KEY);
+  console.log('Service account loaded successfully');
+  console.log('Project ID:', serviceAccount.project_id);
+  
+  admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+    databaseURL: process.env.FIREBASE_DATABASE_URL
+  });
+  
+  db = admin.database();
+  auth = admin.auth();
+  
+  console.log('Firebase initialized successfully');
 } catch (error) {
-  console.error('Error parsing FIREBASE_SERVICE_ACCOUNT_KEY:', error.message);
+  console.error('Error initializing Firebase:', error.message);
+  console.error('Full error:', error);
   process.exit(1);
 }
-
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-  databaseURL: process.env.FIREBASE_DATABASE_URL
-});
-
-const db = admin.database();
 
 // Helper functions
 const normalizeEmail = (email) => String(email || '').trim().toLowerCase();
@@ -48,7 +63,7 @@ const verifyAdmin = async (req, res, next) => {
     }
 
     const token = authHeader.split('Bearer ')[1];
-    const decodedToken = await admin.auth().verifyIdToken(token);
+    const decodedToken = await auth.verifyIdToken(token);
     
     if (!decodedToken.admin) {
       return res.status(403).json({ error: 'Forbidden: Admin access required' });
@@ -112,7 +127,7 @@ app.post('/api/admin/create', verifyAdmin, async (req, res) => {
 
     // Create admin user in Firebase Auth
     const tempPassword = Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-8).toUpperCase();
-    const userRecord = await admin.auth().createUser({
+    const userRecord = await auth.createUser({
       email: normEmail,
       emailVerified: false,
       password: tempPassword,
@@ -121,7 +136,7 @@ app.post('/api/admin/create', verifyAdmin, async (req, res) => {
     });
 
     // Set custom claims
-    await admin.auth().setCustomUserClaims(userRecord.uid, {
+    await auth.setCustomUserClaims(userRecord.uid, {
       admin: true,
       role: 'admin'
     });
@@ -145,7 +160,7 @@ app.post('/api/admin/create', verifyAdmin, async (req, res) => {
     await db.ref(`emailIndex/${eKey}`).set(userRecord.uid);
 
     // Send email verification
-    await admin.auth().generateEmailVerificationLink(normEmail);
+    await auth.generateEmailVerificationLink(normEmail);
 
     // Log audit
     await logAudit('create', userRecord.uid, 'admin', adminUid, adminData);
@@ -212,7 +227,7 @@ app.delete('/api/admin/:uid', verifyAdmin, async (req, res) => {
     }
 
     // Delete from Firebase Auth
-    await admin.auth().deleteUser(uid);
+    await auth.deleteUser(uid);
 
     // Delete from database
     await db.ref(`users/${uid}`).remove();
