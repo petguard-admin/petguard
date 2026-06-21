@@ -14,7 +14,7 @@ const emailKey = (email) => {
 };
 
 // Backend API URL - configure this based on your deployment
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:3001';
+const BACKEND_URL = 'http://localhost:3001';
 
 export const adminService = {
   async verifyAdmin() {
