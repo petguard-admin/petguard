@@ -100,7 +100,6 @@ const Profile = () => {
     try {
       await sendPasswordResetEmail(auth, user.email);
       setMessage('Password reset email sent.');
-      await logAuditTrail('view', user.uid, 'password_reset', null, { email: user.email });
     } catch (err) {
       setError('Could not send reset link. Please try again.');
     }
@@ -167,7 +166,7 @@ const Profile = () => {
             <span className="font-medium">Email:</span> {user.email}
           </div>
           <div>
-            <span className="font-medium">Name:</span> {user.displayName || '—'}
+            <span className="font-medium">Name:</span> {profile ? `${profile.firstname || ''} ${profile.lastname || ''}`.trim() || '—' : '—'}
           </div>
         </div>
 
@@ -178,7 +177,7 @@ const Profile = () => {
               name="firstname"
               value={form.firstname}
               onChange={onChange}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
             />
           </div>
           <div>
@@ -187,7 +186,7 @@ const Profile = () => {
               name="lastname"
               value={form.lastname}
               onChange={onChange}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
             />
           </div>
           <div>
@@ -196,7 +195,7 @@ const Profile = () => {
               name="phone"
               value={form.phone}
               onChange={onChange}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
             />
           </div>
           <div>
@@ -205,7 +204,7 @@ const Profile = () => {
               name="barangay"
               value={form.barangay}
               onChange={onChange}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
             >
               <option value="">Select</option>
               <option value="Poblacion 1">Poblacion 1</option>
@@ -231,7 +230,7 @@ const Profile = () => {
               name="gender"
               value={form.gender}
               onChange={onChange}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
             >
               <option value="">Select</option>
               <option value="Male">Male</option>
@@ -245,7 +244,7 @@ const Profile = () => {
               type="date"
               value={form.birthday}
               onChange={onChange}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
             />
           </div>
         </div>

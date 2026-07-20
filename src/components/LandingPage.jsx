@@ -103,8 +103,8 @@ const LandingPage = () => {
             to={item.to}
             className={`block rounded-xl px-4 py-3 text-sm font-medium transition-all ${
               active
-                ? "bg-green-700 text-white shadow-sm"
-                : "text-slate-700 hover:bg-green-50 hover:text-green-700"
+                ? "bg-emerald-700 text-white shadow-sm"
+                : "text-slate-700 hover:bg-emerald-50 hover:text-emerald-700"
             }`}
           >
             {item.label}
@@ -127,7 +127,7 @@ const LandingPage = () => {
       <Navbar />
 
       {/* Mobile Menu */}
-      {user && !mobileOpen && (
+      {user && !mobileOpen && !modalOpen && (
         <div className="md:hidden fixed top-20 left-4 z-60">
           <button
             type="button"
@@ -165,21 +165,27 @@ const LandingPage = () => {
       )}
 
       {/* Hero */}
-      <section className="border-b border-green-100 bg-white">
-        <Hero />
-      </section>
+      <Hero />
 
       {/* Main */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 space-y-20">
         {loading ? (
           <div className="space-y-10 animate-pulse">
-            <div className="h-8 bg-green-100 rounded-lg w-1/4"></div>
+            <div>
+              <div className="h-8 bg-emerald-100 rounded-lg w-1/4 mb-2" />
+              <div className="h-4 bg-slate-100 rounded-lg w-1/3" />
+            </div>
             <div className="grid md:grid-cols-3 gap-6">
               {[...Array(6)].map((_, i) => (
-                <div
-                  key={i}
-                  className="h-64 rounded-2xl bg-white border border-green-100"
-                />
+                <div key={i} className="rounded-2xl bg-white shadow-sm overflow-hidden">
+                  <div className="h-48 bg-slate-100" />
+                  <div className="p-5 space-y-3">
+                    <div className="h-3 bg-slate-100 rounded w-1/4" />
+                    <div className="h-5 bg-slate-100 rounded w-3/4" />
+                    <div className="h-3 bg-slate-100 rounded w-full" />
+                    <div className="h-3 bg-slate-100 rounded w-2/3" />
+                  </div>
+                </div>
               ))}
             </div>
           </div>
@@ -200,7 +206,7 @@ const LandingPage = () => {
                 {items.filter((i) => String(i.type || "") === "announcement").length > 6 && (
                   <button
                     onClick={() => setViewAllAnnouncements(!viewAllAnnouncements)}
-                    className="text-green-600 hover:text-green-700 font-semibold text-sm"
+                    className="hidden md:block text-green-600 hover:text-green-700 font-semibold text-sm"
                   >
                     {viewAllAnnouncements ? 'Show less' : 'View all'}
                   </button>
@@ -208,7 +214,7 @@ const LandingPage = () => {
               </div>
 
               <div className="bg-white rounded-3xl border border-green-100 shadow-sm p-6 md:p-8 -mx-4 md:mx-0">
-                <Announcements items={announcementItems} onItemClick={handleItemClick} compact={viewAllAnnouncements} />
+                <Announcements items={announcementItems} onItemClick={handleItemClick} compact={viewAllAnnouncements} alwaysScrollOnMobile />
               </div>
             </section>
 
@@ -227,7 +233,7 @@ const LandingPage = () => {
                 {items.filter((i) => String(i.type || "") === "health").length > 6 && (
                   <button
                     onClick={() => setViewAllHealthInfo(!viewAllHealthInfo)}
-                    className="text-green-600 hover:text-green-700 font-semibold text-sm"
+                    className="hidden md:block text-green-600 hover:text-green-700 font-semibold text-sm"
                   >
                     {viewAllHealthInfo ? 'Show less' : 'View all'}
                   </button>
@@ -235,7 +241,7 @@ const LandingPage = () => {
               </div>
 
               <div className="bg-white rounded-3xl border border-green-100 shadow-sm p-6 md:p-8 -mx-4 md:mx-0">
-                <HealthInfo items={healthItems} onItemClick={handleItemClick} compact={viewAllHealthInfo} />
+                <HealthInfo items={healthItems} onItemClick={handleItemClick} compact={viewAllHealthInfo} alwaysScrollOnMobile />
               </div>
             </section>
           </>
@@ -252,10 +258,10 @@ const LandingPage = () => {
 
       {/* Modal */}
       {modalOpen && selectedItem && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-3xl shadow-xl max-w-2xl w-full max-h-[90vh] flex flex-col">
+        <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] flex flex-col border border-slate-200/60">
             {selectedItem.imageUrl && (
-              <div className="h-96 overflow-hidden rounded-t-3xl">
+              <div className="h-72 md:h-96 overflow-hidden rounded-t-2xl">
                 <img
                   src={selectedItem.imageUrl}
                   alt={selectedItem.title}
@@ -263,9 +269,9 @@ const LandingPage = () => {
                 />
               </div>
             )}
-            <div className="p-6 border-b border-gray-200">
-              <h3 className="text-2xl font-bold text-slate-900">{selectedItem.title}</h3>
-              <p className="text-sm text-slate-500 mt-1">
+            <div className="px-6 py-4 border-b border-slate-100">
+              <h3 className="text-xl font-bold text-slate-900">{selectedItem.title}</h3>
+              <p className="text-sm text-slate-400 mt-1">
                 {selectedItem.createdAt ? new Date(selectedItem.createdAt).toLocaleDateString() : ''}
               </p>
             </div>
@@ -275,14 +281,14 @@ const LandingPage = () => {
                   <div dangerouslySetInnerHTML={{ __html: selectedItem.content }} />
                 )}
                 {selectedItem.description && (
-                  <p className="text-slate-700 whitespace-pre-wrap">{selectedItem.description}</p>
+                  <p className="text-slate-600 whitespace-pre-wrap leading-relaxed">{selectedItem.description}</p>
                 )}
               </div>
             </div>
-            <div className="p-6 border-t border-gray-200 flex justify-end">
+            <div className="px-6 py-4 border-t border-slate-100 bg-slate-50/50 rounded-b-2xl flex justify-end">
               <button
                 onClick={handleCloseModal}
-                className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                className="px-5 py-2 bg-slate-800 text-white text-sm font-semibold rounded-lg hover:bg-slate-700 active:scale-[0.97] transition-all duration-150"
               >
                 Close
               </button>

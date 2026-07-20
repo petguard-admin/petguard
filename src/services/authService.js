@@ -39,9 +39,17 @@ export const authService = {
   async getUserRole() {
     const user = auth.currentUser;
     if (!user) return { isAdmin: false, role: '' };
-    const tokenResult = await getIdTokenResult(user, true);
-    const isAdmin = tokenResult.claims?.admin === true;
-    return { isAdmin, role: isAdmin ? 'admin' : '' };
+    
+    // Check role from database instead of custom claims
+    const userSnap = await get(ref(database, `users/${user.uid}`));
+    if (userSnap.exists()) {
+      const userData = userSnap.val();
+      const role = userData.role || '';
+      const isAdmin = role === 'admin';
+      return { isAdmin, role };
+    }
+    
+    return { isAdmin: false, role: '' };
   },
 
   async register(email, password, profile = {}) {
@@ -113,95 +121,6 @@ export const authService = {
     
     await update(ref(database, `owners/${ownerId}`), allowed);
     return { ok: true };
-  },
-
-  async linkOwnerByPhone(profile) {
-    const user = auth.currentUser;
-    if (!user) throw new Error('Not authenticated');
-    
-    const { email, phoneNumber, firstname, lastname, barangay, gender, birthday } = profile;
-    const phone = normalizePhone(phoneNumber || profile.phone);
-    const normEmail = normalizeEmail(email);
-    
-    if (!normEmail) throw new Error('Email is required.');
-    if (!phone) throw new Error('Phone number is required.');
-    
-    const existingMapSnap = await get(ref(database, `ownerUidMap/${user.uid}`));
-    if (existingMapSnap.exists()) {
-      throw new Error('This account is already linked to an owner.');
-    }
-    
-    const key = emailKey(normEmail);
-    const emailIdxSnap = await get(ref(database, `emailIndex/${key}`));
-    if (emailIdxSnap.exists()) {
-      const existingOwnerId = emailIdxSnap.val();
-      const existingOwnerSnap = await get(ref(database, `owners/${existingOwnerId}`));
-      const existingOwner = existingOwnerSnap.exists() ? existingOwnerSnap.val() : null;
-      if (existingOwner?.uid && existingOwner.uid !== user.uid) {
-        throw new Error('Email already exists in database.');
-      }
-    }
-    
-    const phoneSnap = await get(ref(database, `phoneIndex/${phone}`));
-    
-    if (phoneSnap.exists()) {
-      const ownerId = phoneSnap.val();
-      const ownerRef = ref(database, `owners/${ownerId}`);
-      const ownerSnap = await get(ownerRef);
-      
-      if (!ownerSnap.exists()) {
-        throw new Error('Phone index is corrupted (owner not found).');
-      }
-      
-      const owner = ownerSnap.val();
-      if (owner.uid && owner.uid !== user.uid) {
-        throw new Error('This phone number is already linked to another account.');
-      }
-      
-      const updates = {
-        email: normEmail,
-        uid: user.uid,
-        hasLoginAccess: true,
-        phoneNumber: phone,
-        phone: phone,
-        updatedAt: Date.now()
-      };
-      
-      if (String(firstname || '').trim()) updates.firstname = String(firstname).trim();
-      if (String(lastname || '').trim()) updates.lastname = String(lastname).trim();
-      if (String(barangay || '').trim()) updates.barangay = String(barangay).trim();
-      if (String(gender || '').trim()) updates.gender = String(gender).trim();
-      if (String(birthday || '').trim()) updates.birthday = String(birthday).trim();
-      
-      await update(ownerRef, updates);
-      await set(ref(database, `ownerUidMap/${user.uid}`), ownerId);
-      await set(ref(database, `emailIndex/${key}`), ownerId);
-      
-      return { ownerId, linkedExistingOwner: true };
-    }
-    
-    const ownerId = genOwnerId();
-    const ownerPayload = {
-      ownerId,
-      phoneNumber: phone,
-      email: normEmail,
-      uid: user.uid,
-      hasLoginAccess: true,
-      createdAt: Date.now()
-    };
-    
-    if (firstname != null) ownerPayload.firstname = String(firstname);
-    if (lastname != null) ownerPayload.lastname = String(lastname);
-    if (String(barangay || '').trim()) ownerPayload.barangay = String(barangay).trim();
-    if (String(gender || '').trim()) ownerPayload.gender = String(gender).trim();
-    if (String(birthday || '').trim()) ownerPayload.birthday = String(birthday).trim();
-    
-    await set(ref(database, `owners/${ownerId}`), ownerPayload);
-    await set(ref(database, `phoneIndex/${phone}`), ownerId);
-    await set(ref(database, `ownerUidMap/${user.uid}`), ownerId);
-    await set(ref(database, `emailIndex/${key}`), ownerId);
-    
-    return { ownerId, linkedExistingOwner: false };
   },
 
   async bootstrapProfile(profile) {

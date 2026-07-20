@@ -237,12 +237,12 @@ const AdminInformationCenter = () => {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search title/content..."
-              className="w-full md:w-80 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full md:w-80 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
             />
             <select
               value={typeFilter}
               onChange={(e) => setTypeFilter(e.target.value)}
-              className="w-full md:w-44 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full md:w-44 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
             >
               <option value="all">All types</option>
               <option value="announcement">Announcement</option>
@@ -259,44 +259,62 @@ const AdminInformationCenter = () => {
           <div className="rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">{error}</div>
         ) : null}
 
-        <div className="rounded-lg border border-border bg-card shadow-sm overflow-hidden">
+        <div className="w-full min-w-0 rounded-xl border border-slate-200 bg-white shadow-md overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="min-w-full text-sm border-collapse">
+            <table className="min-w-full text-sm border-collapse min-w-[420px]">
               <thead>
-                <tr className="bg-slate-50 border-b border-slate-200">
-                  <th className="py-3 px-4 text-left font-semibold">Title</th>
-                  <th className="py-3 px-4 text-left font-semibold">Type</th>
-                  <th className="py-3 px-4 text-left font-semibold">Published</th>
-                  <th className="py-3 px-4 text-left font-semibold">Created</th>
-                  <th className="py-3 px-4 text-left font-semibold">Actions</th>
+                <tr className="bg-gradient-to-r from-slate-800 to-slate-700">
+                  <th className="py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap">Title</th>
+                  <th className="py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap">Type</th>
+                  <th className="py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap">Published</th>
+                  <th className="py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap">Created</th>
+                  <th className="py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {loading ? (
                   <tr>
-                    <td className="py-8 text-center text-slate-500" colSpan={5}>Loading...</td>
+                    <td className="py-12 text-center text-slate-400" colSpan={5}>
+                      <div className="flex flex-col items-center gap-2">
+                        <div className="h-5 w-5 animate-spin rounded-full border-2 border-slate-300 border-t-emerald-600"></div>
+                        <span className="text-sm">Loading...</span>
+                      </div>
+                    </td>
                   </tr>
                 ) : filtered.length ? (
                   filtered.map((row) => (
-                    <tr key={row.id} className="border-b border-slate-200 hover:bg-slate-50 transition-colors">
+                    <tr key={row.id} className="border-b border-slate-100 hover:bg-emerald-50/50 transition-colors even:bg-slate-50/50">
                       <td className="py-3 px-4 font-medium">{row.title || '—'}</td>
-                      <td className="py-3 px-4">{row.type || '—'}</td>
-                      <td className="py-3 px-4">{row.isPublished ? 'Yes' : 'No'}</td>
+                      <td className="py-3 px-4">
+                        <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${row.type === 'announcement' ? 'bg-blue-100 text-blue-700' : 'bg-amber-100 text-amber-700'}`}>
+                          {row.type || '—'}
+                        </span>
+                      </td>
+                      <td className="py-3 px-4">
+                        <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${row.isPublished ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-500'}`}>
+                          {row.isPublished ? 'Published' : 'Draft'}
+                        </span>
+                      </td>
                       <td className="py-3 px-4">{fmtDate(row.createdAt)}</td>
                       <td className="py-3 px-4">
-                        <div className="flex flex-wrap gap-2">
-                          <Button size="sm" variant="blue" type="button" onClick={() => openEdit(row)}>Edit</Button>
-                          <Button size="sm" variant="outline" type="button" onClick={() => togglePublish(row)}>
+                        <div className="flex flex-wrap gap-1">
+                          <Button size="xs" variant="blue" type="button" onClick={() => openEdit(row)}>Edit</Button>
+                          <Button size="xs" variant="outline" type="button" onClick={() => togglePublish(row)}>
                             {row.isPublished ? 'Unpublish' : 'Publish'}
                           </Button>
-                          <Button size="sm" variant="destructive" type="button" onClick={() => doDelete(row)}>Delete</Button>
+                          <Button size="xs" variant="destructive" type="button" onClick={() => doDelete(row)}>Delete</Button>
                         </div>
                       </td>
                     </tr>
                   ))
                 ) : (
                   <tr>
-                    <td className="py-8 text-center text-slate-500" colSpan={5}>No items found.</td>
+                    <td className="py-12 text-center text-slate-400" colSpan={5}>
+                      <div className="flex flex-col items-center gap-1">
+                        <span className="text-sm font-medium">No items found</span>
+                        <span className="text-xs text-slate-300">Create new content to get started</span>
+                      </div>
+                    </td>
                   </tr>
                 )}
               </tbody>
@@ -327,7 +345,7 @@ const AdminInformationCenter = () => {
                   name="title"
                   value={form.title}
                   onChange={(e) => setForm((p) => ({ ...p, title: e.target.value }))}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                 />
               </div>
               <div>
@@ -336,7 +354,7 @@ const AdminInformationCenter = () => {
                   name="type"
                   value={form.type}
                   onChange={(e) => setForm((p) => ({ ...p, type: e.target.value }))}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                 >
                   <option value="announcement">announcement</option>
                   <option value="health">health</option>
@@ -357,7 +375,7 @@ const AdminInformationCenter = () => {
                   rows={4}
                   value={form.content}
                   onChange={(e) => setForm((p) => ({ ...p, content: e.target.value }))}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                 />
               </div>
               <div className="md:col-span-2 flex items-center gap-2">
@@ -366,7 +384,7 @@ const AdminInformationCenter = () => {
                   type="checkbox"
                   checked={form.isPublished === true}
                   onChange={(e) => setForm((p) => ({ ...p, isPublished: e.target.checked }))}
-                  className="rounded border-gray-300 text-green-600 focus:ring-green-500"
+                  className="rounded border-gray-300 text-green-600 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                 />
                 <label className="text-sm">Published</label>
               </div>
@@ -414,7 +432,7 @@ const AdminInformationCenter = () => {
                   name="title"
                   value={form.title}
                   onChange={(e) => setForm((p) => ({ ...p, title: e.target.value }))}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                 />
               </div>
               <div>
@@ -423,7 +441,7 @@ const AdminInformationCenter = () => {
                   name="type"
                   value={form.type}
                   onChange={(e) => setForm((p) => ({ ...p, type: e.target.value }))}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                 >
                   <option value="announcement">announcement</option>
                   <option value="health">health</option>
@@ -444,7 +462,7 @@ const AdminInformationCenter = () => {
                   rows={4}
                   value={form.content}
                   onChange={(e) => setForm((p) => ({ ...p, content: e.target.value }))}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                 />
               </div>
               <div className="md:col-span-2 flex items-center gap-2">
@@ -453,7 +471,7 @@ const AdminInformationCenter = () => {
                   type="checkbox"
                   checked={form.isPublished === true}
                   onChange={(e) => setForm((p) => ({ ...p, isPublished: e.target.checked }))}
-                  className="rounded border-gray-300 text-green-600 focus:ring-green-500"
+                  className="rounded border-gray-300 text-green-600 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                 />
                 <label className="text-sm">Published</label>
               </div>

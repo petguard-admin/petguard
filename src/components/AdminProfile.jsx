@@ -82,7 +82,6 @@ const AdminProfile = () => {
     try {
       await sendPasswordResetEmail(auth, user.email);
       setMessage('Password reset email sent.');
-      await logAuditTrail('view', user.uid, 'password_reset', null, { email: user.email });
     } catch (err) {
       setError(err?.message || 'Failed to send reset link.');
     }
@@ -127,7 +126,7 @@ const AdminProfile = () => {
               name="firstname"
               value={form.firstname}
               onChange={onChange}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
             />
           </div>
           <div>
@@ -136,7 +135,7 @@ const AdminProfile = () => {
               name="lastname"
               value={form.lastname}
               onChange={onChange}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
             />
           </div>
           <div className="md:col-span-2">
@@ -145,7 +144,7 @@ const AdminProfile = () => {
               name="phone"
               value={form.phone}
               onChange={onChange}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
             />
           </div>
         </div>

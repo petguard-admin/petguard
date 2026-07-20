@@ -184,13 +184,14 @@ export const ownerService = {
     const multi = {};
     const phone = normalizePhone(owner.phoneNumber || owner.phone);
     if (phone) multi[`phoneIndex/${phone}`] = null;
-    
+
+    const email = normalizeEmail(owner.email);
+    if (email) multi[`emailIndex/${emailKey(email)}`] = null;
+
     if (owner.uid) {
       multi[`ownerUidMap/${owner.uid}`] = null;
-      const email = normalizeEmail(owner.email);
-      if (email) multi[`emailIndex/${emailKey(email)}`] = null;
     }
-    
+
     multi[`petsByOwner/${ownerId}`] = null;
     multi[`selectedPetByOwner/${ownerId}`] = null;
     multi[`owners/${ownerId}`] = null;

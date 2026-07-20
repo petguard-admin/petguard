@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { getDatabase, get, ref, update } from 'firebase/database';
+import { getDatabase, get, ref, set, update } from 'firebase/database';
 
 import AdminSidebarLayout from './AdminSidebarLayout';
 import { Button } from './ui/Button';
@@ -8,6 +8,7 @@ import Modal from './Modal';
 import { auth } from '../auth';
 import app from '../firebaseConfig';
 import { logAuditTrail } from '../utils/auditLogger';
+import { authService } from '../services/authService';
 
 const normalizeEmail = (email) => String(email || '').trim().toLowerCase();
 
@@ -248,7 +249,7 @@ const AdminUserManagement = () => {
     return '';
   };
 
-  const preRegisterOwner = async () => {
+  const addOwner = async () => {
     setFormError('');
     setFormMessage('');
 
@@ -263,48 +264,108 @@ const AdminUserManagement = () => {
       const user = auth.currentUser;
       if (!user) throw new Error('Please log in to continue.');
 
-      const db = getDatabase(app);
-      const phone = normalizePhone(form.phone);
-      if (!phone) throw new Error('Please enter a phone number.');
-
-      const phoneSnap = await get(ref(db, `phoneIndex/${phone}`));
-      if (phoneSnap.exists()) throw new Error('This phone number is already registered.');
-
-      const email = normalizeEmail(form.email);
-      const eKey = email ? emailKey(email) : '';
-      if (email) {
-        const emailSnap = await get(ref(db, `emailIndex/${eKey}`));
-        if (emailSnap.exists()) throw new Error('This email is already registered.');
+      const userSnap = await get(ref(getDatabase(), `users/${user.uid}`));
+      if (!userSnap.exists() || userSnap.val().role !== 'admin') {
+        throw new Error('You do not have permission to create user accounts.');
       }
 
+      if (!form.email.trim()) {
+        throw new Error('Email is required.');
+      }
+
+      const email = form.email.trim().toLowerCase();
+      const normalizedPhone = normalizePhone(form.phone);
+      if (!normalizedPhone) throw new Error('Phone number is required.');
+
+      const db = getDatabase();
+
+      const phoneSnap = await get(ref(db, `phoneIndex/${normalizedPhone}`));
+      if (phoneSnap.exists()) {
+        throw new Error('Phone number already exists.');
+      }
+
+      const eKey = emailKey(email);
+      const emailSnap = await get(ref(db, `emailIndex/${eKey}`));
+      if (emailSnap.exists()) {
+        throw new Error('Email already exists.');
+      }
+
+      const tempPassword = Math.random().toString(36).slice(-6) + Math.random().toString(36).slice(-4).toUpperCase();
+
+      const apiKey = app.options.apiKey;
+      const response = await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${apiKey}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email,
+          password: tempPassword,
+          returnSecureToken: true,
+        }),
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        if (data.error?.message?.includes('EMAIL_EXISTS')) {
+          throw new Error('An account with this email already exists in Firebase Auth. Please delete it from the Firebase Console first, then try again.');
+        }
+        throw new Error(data.error?.message || 'Failed to create user account');
+      }
+
+      const uid = data.localId;
       const ownerId = genOwnerId();
-      const now = Date.now();
-      const payload = {
+
+      const ownerRecord = {
         ownerId,
         firstname: form.firstname,
         lastname: form.lastname,
-        phoneNumber: phone,
-        phone,
-        email: email || '',
+        email,
+        phone: normalizedPhone,
+        phoneNumber: normalizedPhone,
         barangay: form.barangay,
         gender: form.gender,
         birthday: form.birthday,
+        uid,
         hasLoginAccess: false,
-        createdAt: now,
+        createdAt: Date.now(),
+        createdBy: 'admin',
       };
 
-      const multi = {};
-      multi[`owners/${ownerId}`] = payload;
-      multi[`phoneIndex/${phone}`] = ownerId;
-      if (email) multi[`emailIndex/${eKey}`] = ownerId;
+      await set(ref(db, `owners/${ownerId}`), ownerRecord);
+      await set(ref(db, `ownerUidMap/${uid}`), ownerId);
+      await set(ref(db, `phoneIndex/${normalizedPhone}`), ownerId);
+      await set(ref(db, `emailIndex/${eKey}`), ownerId);
+      await set(ref(db, `users/${uid}`), { role: 'owner', email, createdAt: Date.now() });
 
-      await update(ref(db), multi);
+      await authService.sendPasswordReset(email);
 
-      setFormMessage('Owner pre-registered successfully.');
+      setFormMessage(
+        `Owner account created successfully. A password setup email has been sent to ${email}. ` +
+        `The owner must click the link in the email to set their password and activate their account.`
+      );
       await fetchOwners();
-      await logAuditTrail('create', ownerId, 'owner', null, payload);
+      await logAuditTrail('create', ownerId, 'owner', null, {
+        firstname: form.firstname,
+        lastname: form.lastname,
+        email
+      });
+      setTimeout(() => {
+        setAddOpen(false);
+        setFormMessage('');
+        setFormError('');
+        setForm({
+          firstname: '',
+          lastname: '',
+          email: '',
+          phone: '',
+          barangay: '',
+          gender: '',
+          birthday: '',
+        });
+      }, 1500);
     } catch (e) {
-      setFormError('Could not create owner. Please try again.');
+      setFormError(e?.message || 'Could not create owner. Please try again.');
     } finally {
       setSubmitting(false);
     }
@@ -378,6 +439,9 @@ const AdminUserManagement = () => {
       setFormMessage('Saved.');
       await fetchOwners();
       await logAuditTrail('update', ownerId, 'owner', owner, { firstname: form.firstname, lastname: form.lastname, phone: nextPhone, email: nextEmail, barangay: form.barangay, gender: form.gender, birthday: form.birthday });
+      setTimeout(() => {
+        closeEdit();
+      }, 1500);
     } catch (e) {
       setFormError('Could not save. Please try again.');
     } finally {
@@ -446,7 +510,7 @@ const AdminUserManagement = () => {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search by name, email, phone, barangay"
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
               />
             </div>
             <div>
@@ -455,7 +519,7 @@ const AdminUserManagement = () => {
                 id="barangayFilter"
                 value={barangayFilter}
                 onChange={(e) => setBarangayFilter(e.target.value)}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
               >
                 <option value="">All</option>
                 {uniqueBarangays.map((barangay) => (
@@ -473,96 +537,106 @@ const AdminUserManagement = () => {
           <div className="rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">{error}</div>
         ) : null}
 
-        <div className="rounded-lg border border-border bg-card shadow-sm overflow-hidden">
+        <div className="w-full min-w-0 rounded-xl border border-slate-200 bg-white shadow-md overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full text-sm border-collapse">
-              <thead>
-                <tr className="bg-slate-50 border-b border-slate-200">
-                  <th className="py-3 px-4 text-left font-semibold">
-                    <button type="button" onClick={() => toggleSort('name')} className="hover:text-green-700 transition-colors">
+            <table className="w-full text-sm border-collapse min-w-[800px]">
+              <thead className="sticky top-0 z-10">
+                <tr className="bg-gradient-to-r from-slate-800 to-slate-700">
+                  <th className="py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap">
+                    <button type="button" onClick={() => toggleSort('name')} className="inline-flex items-center gap-1 text-slate-100 hover:text-white transition-colors">
                       Name
                     </button>
                   </th>
-                  <th className="py-3 px-4 text-left font-semibold">
-                    <button type="button" onClick={() => toggleSort('email')} className="hover:text-green-700 transition-colors">
+                  <th className="py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap">
+                    <button type="button" onClick={() => toggleSort('email')} className="inline-flex items-center gap-1 text-slate-100 hover:text-white transition-colors">
                       Email
                     </button>
                   </th>
-                  <th className="py-3 px-4 text-left font-semibold">
-                    <button type="button" onClick={() => toggleSort('phone')} className="hover:text-green-700 transition-colors">
+                  <th className="py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap hidden md:table-cell">
+                    <button type="button" onClick={() => toggleSort('phone')} className="inline-flex items-center gap-1 text-slate-100 hover:text-white transition-colors">
                       Phone
                     </button>
                   </th>
-                  <th className="py-3 px-4 text-left font-semibold">
-                    <button type="button" onClick={() => toggleSort('barangay')} className="hover:text-green-700 transition-colors">
+                  <th className="py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap hidden md:table-cell">
+                    <button type="button" onClick={() => toggleSort('barangay')} className="inline-flex items-center gap-1 text-slate-100 hover:text-white transition-colors">
                       Barangay
                     </button>
                   </th>
-                  <th className="py-3 px-4 text-left font-semibold">
-                    <button type="button" onClick={() => toggleSort('gender')} className="hover:text-green-700 transition-colors">
+                  <th className="py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap hidden lg:table-cell">
+                    <button type="button" onClick={() => toggleSort('gender')} className="inline-flex items-center gap-1 text-slate-100 hover:text-white transition-colors">
                       Gender
                     </button>
                   </th>
-                  <th className="py-3 px-4 text-left font-semibold">
-                    <button type="button" onClick={() => toggleSort('birthday')} className="hover:text-green-700 transition-colors">
+                  <th className="py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap hidden lg:table-cell">
+                    <button type="button" onClick={() => toggleSort('birthday')} className="inline-flex items-center gap-1 text-slate-100 hover:text-white transition-colors">
                       Birthday
                     </button>
                   </th>
-                  <th className="py-3 px-4 text-left font-semibold">
-                    <button type="button" onClick={() => toggleSort('pets')} className="hover:text-green-700 transition-colors">
+                  <th className="py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap hidden md:table-cell">
+                    <button type="button" onClick={() => toggleSort('pets')} className="inline-flex items-center gap-1 text-slate-100 hover:text-white transition-colors">
                       No. of Pets
                     </button>
                   </th>
-                  <th className="py-3 px-4 text-left font-semibold">
-                    <button type="button" onClick={() => toggleSort('status')} className="hover:text-green-700 transition-colors">
+                  <th className="py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap">
+                    <button type="button" onClick={() => toggleSort('status')} className="inline-flex items-center gap-1 text-slate-100 hover:text-white transition-colors">
                       Status
                     </button>
                   </th>
-                  <th className="py-3 px-4 text-left font-semibold">
-                    <button type="button" onClick={() => toggleSort('createdAt')} className="hover:text-green-700 transition-colors">
+                  <th className="py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap hidden lg:table-cell">
+                    <button type="button" onClick={() => toggleSort('createdAt')} className="inline-flex items-center gap-1 text-slate-100 hover:text-white transition-colors">
                       Date of Registration
                     </button>
                   </th>
-                  <th className="py-3 px-4 text-left font-semibold">Actions</th>
+                  <th className="py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {loading ? (
                   <tr>
-                    <td colSpan={10} className="py-8 text-center text-slate-500">
-                      Loading...
+                    <td colSpan={10} className="py-10 text-center text-slate-400 text-sm">
+                      <div className="flex flex-col items-center gap-2">
+                        <svg className="animate-spin h-5 w-5 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>
+                        <span>Loading...</span>
+                      </div>
                     </td>
                   </tr>
                 ) : pageItems.length === 0 ? (
                   <tr>
-                    <td colSpan={10} className="py-8 text-center text-slate-500">
-                      No users found.
+                    <td colSpan={10} className="py-12 text-center text-slate-400">
+                      <div className="flex flex-col items-center gap-1">
+                        <svg className="h-8 w-8 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+                        <span className="text-sm font-medium">No users found.</span>
+                      </div>
                     </td>
                   </tr>
                 ) : (
-                  pageItems.map((u) => {
+                  pageItems.map((u, idx) => {
                     const name = `${u.firstname || ''} ${u.lastname || ''}`.trim() || '—';
                     const canMutate = Boolean(u.ownerId);
                     return (
-                      <tr key={u.uid || u.ownerId} className="border-b border-slate-200 hover:bg-slate-50 transition-colors">
-                        <td className="py-3 px-4 font-medium whitespace-nowrap">{name}</td>
-                        <td className="py-3 px-4">{u.email || '—'}</td>
-                        <td className="py-3 px-4">{u.phone || '—'}</td>
-                        <td className="py-3 px-4">{u.barangay || '—'}</td>
-                        <td className="py-3 px-4">{u.gender || '—'}</td>
-                        <td className="py-3 px-4">{u.birthday || '—'}</td>
-                        <td className="py-3 px-4">{u.pets ?? 0}</td>
-                        <td className="py-3 px-4">{u.accountStatus === 'active' ? 'Active' : 'Inactive'}</td>
-                        <td className="py-3 px-4">{fmtDate(u.createdAt)}</td>
+                      <tr key={u.uid || u.ownerId} className={`border-b border-slate-100 hover:bg-emerald-50/50 transition-colors ${idx % 2 === 0 ? 'bg-white' : 'bg-slate-50/50'}`}>
+                        <td className="py-3 px-4 font-medium text-slate-800 whitespace-nowrap">{name}</td>
+                        <td className="py-3 px-4 text-slate-600">{u.email || '—'}</td>
+                        <td className="py-3 px-4 text-slate-600 hidden md:table-cell">{u.phone || '—'}</td>
+                        <td className="py-3 px-4 text-slate-600 hidden md:table-cell">{u.barangay || '—'}</td>
+                        <td className="py-3 px-4 text-slate-600 hidden lg:table-cell">{u.gender || '—'}</td>
+                        <td className="py-3 px-4 text-slate-600 hidden lg:table-cell">{u.birthday || '—'}</td>
+                        <td className="py-3 px-4 text-slate-600 text-center hidden md:table-cell">{u.pets ?? 0}</td>
                         <td className="py-3 px-4">
-                          <div className="flex flex-wrap gap-2">
-                            <Button variant="blue" size="sm" onClick={() => onView(u)} disabled={!canMutate}>
+                          <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${u.accountStatus === 'active' ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'}`}>
+                            {u.accountStatus === 'active' ? 'Active' : 'Inactive'}
+                          </span>
+                        </td>
+                        <td className="py-3 px-4 text-slate-600 hidden lg:table-cell">{fmtDate(u.createdAt)}</td>
+                        <td className="py-3 px-4">
+                          <div className="flex flex-wrap gap-1">
+                            <Button variant="blue" size="xs" onClick={() => onView(u)} disabled={!canMutate}>
                               View
                             </Button>
-                            <Button variant="outline" size="sm" onClick={() => onEdit(u)} disabled={!canMutate}>
+                            <Button variant="outline" size="xs" onClick={() => onEdit(u)} disabled={!canMutate}>
                               Edit
                             </Button>
-                            <Button variant="destructive" size="sm" onClick={() => onDelete(u)} disabled={!canMutate}>
+                            <Button variant="destructive" size="xs" onClick={() => onDelete(u)} disabled={!canMutate}>
                               Delete
                             </Button>
                           </div>
@@ -631,7 +705,7 @@ const AdminUserManagement = () => {
                       name="firstname"
                       value={form.firstname}
                       onChange={onChange}
-                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                     />
                   </div>
                   <div>
@@ -640,7 +714,7 @@ const AdminUserManagement = () => {
                       name="lastname"
                       value={form.lastname}
                       onChange={onChange}
-                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                     />
                   </div>
                   <div className="md:col-span-2">
@@ -650,7 +724,7 @@ const AdminUserManagement = () => {
                       type="email"
                       value={form.email}
                       onChange={onChange}
-                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                     />
                   </div>
                   <div>
@@ -659,7 +733,7 @@ const AdminUserManagement = () => {
                       name="phone"
                       value={form.phone}
                       onChange={onChange}
-                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                     />
                   </div>
                   <div>
@@ -668,7 +742,7 @@ const AdminUserManagement = () => {
                       name="barangay"
                       value={form.barangay}
                       onChange={onChange}
-                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                     >
                       <option value="">Select</option>
                       <option value="Poblacion 1">Poblacion 1</option>
@@ -694,7 +768,7 @@ const AdminUserManagement = () => {
                       name="gender"
                       value={form.gender}
                       onChange={onChange}
-                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                     >
                       <option value="">Select</option>
                       <option value="Male">Male</option>
@@ -708,7 +782,7 @@ const AdminUserManagement = () => {
                       type="date"
                       value={form.birthday}
                       onChange={onChange}
-                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                     />
                   </div>
                 </div>
@@ -738,7 +812,7 @@ const AdminUserManagement = () => {
             <div className="max-h-[70vh] overflow-y-auto pr-2 pl-2">
               <div className="space-y-4">
                 <div className="text-sm text-slate-500 mb-4">
-                  Pre-register an owner using phone number. No login account is created.
+                  Add a new owner account. A password setup email will be sent to the owner.
                 </div>
 
                 {formError ? (
@@ -760,7 +834,7 @@ const AdminUserManagement = () => {
                       name="firstname"
                       value={form.firstname}
                       onChange={onChange}
-                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                     />
                   </div>
                   <div>
@@ -769,17 +843,17 @@ const AdminUserManagement = () => {
                       name="lastname"
                       value={form.lastname}
                       onChange={onChange}
-                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                     />
                   </div>
                   <div className="md:col-span-2">
-                    <label className="block text-xs text-slate-500 mb-1">Email (optional)</label>
+                    <label className="block text-xs text-slate-500 mb-1">Email</label>
                     <input
                       name="email"
                       type="email"
                       value={form.email}
                       onChange={onChange}
-                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                     />
                   </div>
                   <div>
@@ -788,7 +862,7 @@ const AdminUserManagement = () => {
                       name="phone"
                       value={form.phone}
                       onChange={onChange}
-                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                     />
                   </div>
                   <div>
@@ -797,7 +871,7 @@ const AdminUserManagement = () => {
                       name="barangay"
                       value={form.barangay}
                       onChange={onChange}
-                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                     >
                       <option value="">Select</option>
                       <option value="Poblacion 1">Poblacion 1</option>
@@ -823,7 +897,7 @@ const AdminUserManagement = () => {
                       name="gender"
                       value={form.gender}
                       onChange={onChange}
-                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                     >
                       <option value="">Select</option>
                       <option value="Male">Male</option>
@@ -837,7 +911,7 @@ const AdminUserManagement = () => {
                       type="date"
                       value={form.birthday}
                       onChange={onChange}
-                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                     />
                   </div>
                 </div>
@@ -851,10 +925,10 @@ const AdminUserManagement = () => {
                   </Button>
                   <Button
                     variant="green"
-                    onClick={preRegisterOwner}
+                    onClick={addOwner}
                     disabled={submitting}
                   >
-                    {submitting ? 'Saving...' : 'Pre-register Owner'}
+                    {submitting ? 'Saving...' : 'Add Owner'}
                   </Button>
                 </div>
               </div>
@@ -868,10 +942,10 @@ const AdminUserManagement = () => {
             {filteredSorted.length}
           </div>
           <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm" onClick={() => setPage(1)} disabled={safePage === 1}>
+            <Button variant="outline" size="xs" onClick={() => setPage(1)} disabled={safePage === 1}>
               First
             </Button>
-            <Button variant="outline" size="sm" onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={safePage === 1}>
+            <Button variant="outline" size="xs" onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={safePage === 1}>
               Prev
             </Button>
             <div className="text-sm">
@@ -879,13 +953,13 @@ const AdminUserManagement = () => {
             </div>
             <Button
               variant="outline"
-              size="sm"
+              size="xs"
               onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
               disabled={safePage === totalPages}
             >
               Next
             </Button>
-            <Button variant="outline" size="sm" onClick={() => setPage(totalPages)} disabled={safePage === totalPages}>
+            <Button variant="outline" size="xs" onClick={() => setPage(totalPages)} disabled={safePage === totalPages}>
               Last
             </Button>
           </div>

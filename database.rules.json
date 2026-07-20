@@ -5,38 +5,38 @@
 
     "announcements": {
       ".read": "auth != null",
-      ".write": "auth != null && auth.token.admin === true",
+      ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'admin'",
       "$id": {
         ".read": "auth != null",
-        ".write": "auth != null && auth.token.admin === true"
+        ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'admin'"
       }
     },
 
     "ownerUidMap": {
       "$uid": {
-        ".read": "auth != null && (auth.uid === $uid || auth.token.admin === true)",
-        ".write": "auth != null && (auth.uid === $uid || auth.token.admin === true)"
+        ".read": "auth != null && (auth.uid === $uid || root.child('users').child(auth.uid).child('role').val() === 'admin')",
+        ".write": "auth != null && (auth.uid === $uid || root.child('users').child(auth.uid).child('role').val() === 'admin')"
       }
     },
 
     "owners": {
       "$ownerId": {
-        ".read": "auth != null && (auth.token.admin === true || root.child('ownerUidMap').child(auth.uid).val() === $ownerId)",
-        ".write": "auth != null && (auth.token.admin === true || root.child('ownerUidMap').child(auth.uid).val() === $ownerId)"
+        ".read": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'admin' || root.child('ownerUidMap').child(auth.uid).val() === $ownerId)",
+        ".write": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'admin' || root.child('ownerUidMap').child(auth.uid).val() === $ownerId || (!data.exists() && newData.child('uid').val() === auth.uid) || (!data.child('uid').exists() && newData.child('uid').val() === auth.uid))"
       }
     },
 
     "petsByOwner": {
       "$ownerId": {
-        ".read": "auth != null && (auth.token.admin === true || root.child('ownerUidMap').child(auth.uid).val() === $ownerId)",
-        ".write": "auth != null && (auth.token.admin === true || root.child('ownerUidMap').child(auth.uid).val() === $ownerId)"
+        ".read": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'admin' || root.child('ownerUidMap').child(auth.uid).val() === $ownerId)",
+        ".write": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'admin' || root.child('ownerUidMap').child(auth.uid).val() === $ownerId)"
       }
     },
 
     "selectedPetByOwner": {
       "$ownerId": {
-        ".read": "auth != null && (auth.token.admin === true || root.child('ownerUidMap').child(auth.uid).val() === $ownerId)",
-        ".write": "auth != null && (auth.token.admin === true || root.child('ownerUidMap').child(auth.uid).val() === $ownerId)"
+        ".read": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'admin' || root.child('ownerUidMap').child(auth.uid).val() === $ownerId)",
+        ".write": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'admin' || root.child('ownerUidMap').child(auth.uid).val() === $ownerId)"
       }
     },
 
@@ -49,32 +49,31 @@
 
     "users": {
       "$uid": {
-        ".read": "auth != null && auth.token.admin === true",
-        ".write": "auth != null && auth.token.admin === true"
+        ".read": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'admin'",
+        ".write": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'admin' || auth.uid === $uid)"
       }
     },
 
     "emailIndex": {
       "$emailKey": {
         ".read": "true",
-        ".write": "auth != null && auth.token.admin === true"
+        ".write": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'admin' || !data.exists())"
       }
     },
 
     "phoneIndex": {
       "$phone": {
-        ".read": "auth != null && auth.token.admin === true",
-        ".write": "auth != null && auth.token.admin === true"
+        ".read": "auth != null",
+        ".write": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'admin' || !data.exists())"
       }
     },
 
     "auditTrail": {
-      ".read": "auth != null && auth.token.admin === true",
+      ".read": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'admin'",
       ".write": "auth != null",
       "$recordId": {
-        ".read": "auth != null && auth.token.admin === true",
-        ".write": "auth != null && !data.exists()",
-        ".validate": "newData.hasChildren(['timestamp', 'userId', 'userRole', 'actionType', 'targetRecordId', 'targetRecordType'])"
+        ".read": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'admin'",
+        ".write": "auth != null && !data.exists()"
       }
     }
   }

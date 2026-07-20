@@ -128,7 +128,6 @@ const MyPets = () => {
       setSelectedPetId(petId);
       setEditing(false);
       setIsEditModalOpen(false);
-      await logAuditTrail('view', petId, 'pet', null, { action: 'select_pet' });
     } catch (e) {
       setError('Could not switch pet. Please try again.');
     }
@@ -304,7 +303,7 @@ const MyPets = () => {
   <OwnerSidebarLayout title="My Pets">
     
     {/* Header */}
-    <div className="flex items-center justify-between mb-8">
+    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-8">
       <div>
         <p className="text-slate-600 text-sm">
           Manage your pets and select an active profile.
@@ -401,7 +400,7 @@ const MyPets = () => {
           {selectedPet ? (
             <>
               {/* Top Section */}
-              <div className="flex items-start justify-between mb-6">
+              <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-6">
                 <div className="flex items-center gap-4">
                   <div className="w-20 h-20 rounded-2xl bg-green-100 overflow-hidden">
                     {selectedPet.image ? (
@@ -515,7 +514,7 @@ const MyPets = () => {
                   name="petName"
                   value={editForm.petName}
                   onChange={onEditChange}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                 />
               </div>
               
@@ -526,7 +525,7 @@ const MyPets = () => {
                   name="species"
                   value={editForm.species}
                   onChange={onEditChange}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                 >
                   <option value="">Select</option>
                   <option value="Dog">Dog</option>
@@ -541,7 +540,7 @@ const MyPets = () => {
                   name="sex"
                   value={editForm.sex}
                   onChange={onEditChange}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                 >
                   <option value="">Select</option>
                   <option value="Male">Male</option>
@@ -556,7 +555,7 @@ const MyPets = () => {
                   name="breed"
                   value={editForm.breed}
                   onChange={onEditChange}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                 />
               </div>
               
@@ -567,7 +566,7 @@ const MyPets = () => {
                   name="animalColor"
                   value={editForm.animalColor}
                   onChange={onEditChange}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                 />
               </div>
               
@@ -580,7 +579,7 @@ const MyPets = () => {
                   step="0.1"
                   value={editForm.weightKgs}
                   onChange={onEditChange}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                 />
               </div>
               
@@ -592,7 +591,7 @@ const MyPets = () => {
                   type="date"
                   value={editForm.dateOfBirth}
                   onChange={onEditChange}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                 />
               </div>
               
@@ -603,7 +602,7 @@ const MyPets = () => {
                   name="spayedNeutered"
                   value={editForm.spayedNeutered}
                   onChange={onEditChange}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                 >
                   <option value="">Select</option>
                   <option value="Yes">Yes</option>
@@ -619,7 +618,7 @@ const MyPets = () => {
                   name="petOrigin"
                   value={editForm.petOrigin}
                   onChange={onEditChange}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                 >
                   <option value="">Select</option>
                   <option value="local">Local</option>
@@ -630,7 +629,7 @@ const MyPets = () => {
                     name="petOriginOther"
                     value={editForm.petOriginOther}
                     onChange={onEditChange}
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 mt-2"
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors mt-2"
                     placeholder="Specify origin"
                   />
                 )}
@@ -643,7 +642,7 @@ const MyPets = () => {
                   name="ownership"
                   value={editForm.ownership}
                   onChange={onEditChange}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                 >
                   <option value="">Select</option>
                   <option value="household">Household</option>
@@ -655,7 +654,7 @@ const MyPets = () => {
                     name="ownershipOther"
                     value={editForm.ownershipOther}
                     onChange={onEditChange}
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 mt-2"
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors mt-2"
                     placeholder="Specify ownership"
                   />
                 )}
@@ -668,7 +667,7 @@ const MyPets = () => {
                   name="tagType"
                   value={editForm.tagType}
                   onChange={onEditChange}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                 >
                   <option value="">Select</option>
                   <option value="collar tag">Collar Tag</option>
@@ -682,7 +681,7 @@ const MyPets = () => {
                     name="tagTypeOther"
                     value={editForm.tagTypeOther}
                     onChange={onEditChange}
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 mt-2"
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors mt-2"
                     placeholder="Specify tag type"
                   />
                 )}
@@ -695,7 +694,7 @@ const MyPets = () => {
                   name="tagNumber"
                   value={editForm.tagNumber}
                   onChange={onEditChange}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                 />
               </div>
               
@@ -706,7 +705,7 @@ const MyPets = () => {
                   name="habitat"
                   value={editForm.habitat}
                   onChange={onEditChange}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                 >
                   <option value="">Select</option>
                   <option value="caged">Caged</option>
@@ -723,7 +722,7 @@ const MyPets = () => {
                   name="contactWithOtherAnimals"
                   value={editForm.contactWithOtherAnimals}
                   onChange={onEditChange}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                 >
                   <option value="">Select</option>
                   <option value="frequent">Frequent</option>
@@ -744,7 +743,7 @@ const MyPets = () => {
                       name="pregnant"
                       checked={editForm.pregnant}
                       onChange={onEditChange}
-                      className="rounded border-gray-300 text-green-600 focus:ring-green-500"
+                      className="rounded border-gray-300 text-green-600 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                     />
                     Pregnant
                   </label>
@@ -754,7 +753,7 @@ const MyPets = () => {
                       name="lactating"
                       checked={editForm.lactating}
                       onChange={onEditChange}
-                      className="rounded border-gray-300 text-green-600 focus:ring-green-500"
+                      className="rounded border-gray-300 text-green-600 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                     />
                     Lactating with puppies
                   </label>
@@ -768,7 +767,7 @@ const MyPets = () => {
                       min="0"
                       value={editForm.puppyCount}
                       onChange={onEditChange}
-                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                       placeholder="Enter number"
                     />
                   </div>

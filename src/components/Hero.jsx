@@ -19,7 +19,7 @@ const Hero = () => {
             </h1>
 
             <p className="mt-6 text-lg text-slate-600 leading-relaxed max-w-xl mx-auto lg:mx-0">
-              Manage your pet’s health with ease—track medical records,
+              Manage your pet's health with ease—track medical records,
               monitor wellness, receive expert advice, and stay updated with
               important pet care information.
             </p>

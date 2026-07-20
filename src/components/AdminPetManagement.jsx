@@ -728,6 +728,9 @@ const AdminPetManagement = () => {
       setFormMessage('Saved.');
       await fetchPets();
       await logAuditTrail('update', selected.petId, 'pet', selected, form);
+      setTimeout(() => {
+        closeEdit();
+      }, 1500);
     } catch (e) {
       setFormError('Could not save. Please try again.');
     } finally {
@@ -900,7 +903,7 @@ const AdminPetManagement = () => {
         vaccinatedBy: vaccinationForm.vaccinatedBy,
         reason: vaccinationForm.reason,
         hasDisease: vaccinationForm.hasDisease,
-        disease: vaccinationForm.hasDisease ? vaccinationForm.disease : '',
+        disease: vaccinationForm.hasDisease ? vaccinationForm.disease : null,
         notes: vaccinationForm.notes,
         createdAt: Date.now(),
       });
@@ -940,7 +943,7 @@ const AdminPetManagement = () => {
         vaccinatedBy: vaccinationForm.vaccinatedBy,
         reason: vaccinationForm.reason,
         hasDisease: vaccinationForm.hasDisease,
-        disease: vaccinationForm.hasDisease ? vaccinationForm.disease : '',
+        disease: vaccinationForm.hasDisease ? vaccinationForm.disease : null,
         notes: vaccinationForm.notes,
         updatedAt: Date.now(),
       });
@@ -1028,7 +1031,7 @@ const AdminPetManagement = () => {
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                     placeholder="Search by pet, owner, tag, barangay"
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                   />
                 </div>
                 <div className="w-full md:w-56">
@@ -1037,7 +1040,7 @@ const AdminPetManagement = () => {
                     id="speciesFilter"
                     value={speciesFilter}
                     onChange={(e) => setSpeciesFilter(e.target.value)}
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                   >
                     <option value="">All</option>
                     <option value="Dog">Dog</option>
@@ -1052,85 +1055,94 @@ const AdminPetManagement = () => {
 
             {error ? <div className="rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">{error}</div> : null}
 
-            <div className="rounded-lg border border-border bg-card shadow-sm overflow-hidden">
+            <div className="w-full min-w-0 rounded-xl border border-slate-200 bg-white shadow-md overflow-hidden">
               <div className="overflow-x-auto">
-                <table className="w-full text-sm border-collapse">
-                  <thead>
-                    <tr className="bg-slate-50 border-b border-slate-200">
-                      <th className="py-3 px-4 text-left font-semibold">
-                        <button type="button" onClick={() => toggleSort('petName')} className="hover:text-green-700 transition-colors">
+                <table className="w-full text-sm border-collapse min-w-[700px]">
+                  <thead className="sticky top-0 z-10">
+                    <tr className="bg-gradient-to-r from-slate-800 to-slate-700">
+                      <th className="py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap">
+                        <button type="button" onClick={() => toggleSort('petName')} className="inline-flex items-center gap-1 text-slate-100 hover:text-white transition-colors">
                           Pet
                         </button>
                       </th>
-                      <th className="py-3 px-4 text-left font-semibold">
-                        <button type="button" onClick={() => toggleSort('species')} className="hover:text-green-700 transition-colors">
+                      <th className="py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap">
+                        <button type="button" onClick={() => toggleSort('species')} className="inline-flex items-center gap-1 text-slate-100 hover:text-white transition-colors">
                           Species
                         </button>
                       </th>
-                      <th className="py-3 px-4 text-left font-semibold">
-                        <button type="button" onClick={() => toggleSort('breed')} className="hover:text-green-700 transition-colors">
+                      <th className="hidden lg:table-cell py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap">
+                        <button type="button" onClick={() => toggleSort('breed')} className="inline-flex items-center gap-1 text-slate-100 hover:text-white transition-colors">
                           Breed
                         </button>
                       </th>
-                      <th className="py-3 px-4 text-left font-semibold">
-                        <button type="button" onClick={() => toggleSort('sex')} className="hover:text-green-700 transition-colors">
+                      <th className="hidden md:table-cell py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap">
+                        <button type="button" onClick={() => toggleSort('sex')} className="inline-flex items-center gap-1 text-slate-100 hover:text-white transition-colors">
                           Sex
                         </button>
                       </th>
-                      <th className="py-3 px-4 text-left font-semibold">
-                        <button type="button" onClick={() => toggleSort('age')} className="hover:text-green-700 transition-colors">
+                      <th className="py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap">
+                        <button type="button" onClick={() => toggleSort('age')} className="inline-flex items-center gap-1 text-slate-100 hover:text-white transition-colors">
                           Age
                         </button>
                       </th>
-                      <th className="py-3 px-4 text-left font-semibold">
-                        <button type="button" onClick={() => toggleSort('tag')} className="hover:text-green-700 transition-colors">
+                      <th className="hidden lg:table-cell py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap">
+                        <button type="button" onClick={() => toggleSort('tag')} className="inline-flex items-center gap-1 text-slate-100 hover:text-white transition-colors">
                           Tag
                         </button>
                       </th>
-                      <th className="py-3 px-4 text-left font-semibold">
-                        <button type="button" onClick={() => toggleSort('barangay')} className="hover:text-green-700 transition-colors">
+                      <th className="py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap">
+                        <button type="button" onClick={() => toggleSort('barangay')} className="inline-flex items-center gap-1 text-slate-100 hover:text-white transition-colors">
                           Barangay
                         </button>
                       </th>
-                      <th className="py-3 px-4 text-left font-semibold">
-                        <button type="button" onClick={() => toggleSort('owner')} className="hover:text-green-700 transition-colors">
+                      <th className="hidden md:table-cell py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap">
+                        <button type="button" onClick={() => toggleSort('owner')} className="inline-flex items-center gap-1 text-slate-100 hover:text-white transition-colors">
                           Owner
                         </button>
                       </th>
-                      <th className="py-3 px-4 text-left font-semibold">Actions</th>
+                      <th className="py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap">Actions</th>
                     </tr>
                   </thead>
                   <tbody>
                     {loading ? (
                       <tr>
-                        <td colSpan={9} className="py-8 text-center text-slate-500">
-                          Loading...
+                        <td colSpan={9} className="py-10 text-center text-slate-400 text-sm">
+                          <div className="flex flex-col items-center gap-2">
+                            <svg className="animate-spin h-5 w-5 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>
+                            <span>Loading...</span>
+                          </div>
                         </td>
                       </tr>
                     ) : pageItems.length ? (
-                      pageItems.map((p) => (
-                        <tr key={`${p.ownerId}_${p.petId}`} className="border-b border-slate-200 hover:bg-slate-50 transition-colors">
+                      pageItems.map((p, idx) => (
+                        <tr key={`${p.ownerId}_${p.petId}`} className={`border-b border-slate-100 hover:bg-emerald-50/50 transition-colors ${idx % 2 === 0 ? 'bg-white' : 'bg-slate-50/50'}`}>
                           <td className="py-3 px-4">
-                            <button type="button" className="text-green-700 hover:underline font-medium" onClick={() => onView(p)}>
+                            <button type="button" className="text-emerald-700 hover:text-emerald-800 hover:underline font-medium" onClick={() => onView(p)}>
                               {p.petName || '—'}
                             </button>
                           </td>
-                          <td className="py-3 px-4">{p.species || '—'}</td>
-                          <td className="py-3 px-4">{p.breed || '—'}</td>
-                          <td className="py-3 px-4">{p.sex || '—'}</td>
-                          <td className="py-3 px-4">{calcAge(p.dateOfBirth)}</td>
-                          <td className="py-3 px-4">{tagLabel(p)}</td>
-                          <td className="py-3 px-4">{p.barangay || '—'}</td>
-                          <td className="py-3 px-4">{p.ownerName || '—'}</td>
+                          <td className="py-3 px-4 text-slate-600">
+                            <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${p.species === 'Dog' ? 'bg-blue-100 text-blue-700' : 'bg-amber-100 text-amber-700'}`}>
+                              {p.species || '—'}
+                            </span>
+                          </td>
+                          <td className="hidden lg:table-cell py-3 px-4 text-slate-600">{p.breed || '—'}</td>
+                          <td className="hidden md:table-cell py-3 px-4 text-slate-600">{p.sex || '—'}</td>
+                          <td className="py-3 px-4 text-slate-600">{calcAge(p.dateOfBirth)}</td>
+                          <td className="hidden lg:table-cell py-3 px-4">
+                            <span className="inline-flex items-center rounded-full bg-slate-100 text-slate-600 px-2.5 py-0.5 text-xs font-semibold">{tagLabel(p)}</span>
+                          </td>
+                          <td className="py-3 px-4 text-slate-600">{p.barangay || '—'}</td>
+                          <td className="hidden md:table-cell py-3 px-4 text-slate-600">{p.ownerName || '—'}</td>
                           <td className="py-3 px-4">
-                            <div className="flex items-center gap-2">
-                              <Button variant="blue" size="sm" onClick={() => onView(p)}>
+                            <div className="flex flex-wrap gap-1">
+                              <Button variant="blue" size="xs" onClick={() => onView(p)}>
                                 View
                               </Button>
-                              <Button variant="outline" size="sm" onClick={() => onEdit(p)}>
+                              <Button variant="outline" size="xs" onClick={() => onEdit(p)}>
                                 Edit
                               </Button>
-                              <Button variant="destructive" size="sm" onClick={() => doDelete(p)} disabled={deleting}>
+                              <Button variant="destructive" size="xs" onClick={() => doDelete(p)} disabled={deleting}>
                                 Delete
                               </Button>
                             </div>
@@ -1139,8 +1151,11 @@ const AdminPetManagement = () => {
                       ))
                     ) : (
                       <tr>
-                        <td colSpan={9} className="py-8 text-center text-slate-500">
-                          No pets found.
+                        <td colSpan={9} className="py-12 text-center text-slate-400">
+                          <div className="flex flex-col items-center gap-1">
+                            <svg className="h-8 w-8 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
+                            <span className="text-sm font-medium">No pets found.</span>
+                          </div>
                         </td>
                       </tr>
                     )}
@@ -1155,10 +1170,10 @@ const AdminPetManagement = () => {
             {filteredSorted.length}
           </div>
           <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm" onClick={() => setPage(1)} disabled={safePage === 1}>
+            <Button variant="outline" size="xs" onClick={() => setPage(1)} disabled={safePage === 1}>
               First
             </Button>
-            <Button variant="outline" size="sm" onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={safePage === 1}>
+            <Button variant="outline" size="xs" onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={safePage === 1}>
               Prev
             </Button>
             <div className="text-sm">
@@ -1166,13 +1181,13 @@ const AdminPetManagement = () => {
             </div>
             <Button
               variant="outline"
-              size="sm"
+              size="xs"
               onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
               disabled={safePage === totalPages}
             >
               Next
             </Button>
-            <Button variant="outline" size="sm" onClick={() => setPage(totalPages)} disabled={safePage === totalPages}>
+            <Button variant="outline" size="xs" onClick={() => setPage(totalPages)} disabled={safePage === totalPages}>
               Last
             </Button>
           </div>
@@ -1192,7 +1207,7 @@ const AdminPetManagement = () => {
                     value={medicalSearch}
                     onChange={(e) => setMedicalSearch(e.target.value)}
                     placeholder="Search by pet, date, veterinarian"
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                   />
                 </div>
                 <div>
@@ -1201,7 +1216,7 @@ const AdminPetManagement = () => {
                     id="medicalSpeciesFilter"
                     value={medicalSpeciesFilter}
                     onChange={(e) => setMedicalSpeciesFilter(e.target.value)}
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                   >
                     <option value="">All</option>
                     <option value="Dog">Dog</option>
@@ -1216,75 +1231,95 @@ const AdminPetManagement = () => {
 
             {error ? <div className="rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">{error}</div> : null}
 
-            <div className="rounded-lg border border-border bg-card shadow-sm overflow-hidden">
+            <div className="w-full min-w-0 rounded-xl border border-slate-200 bg-white shadow-md overflow-hidden">
               <div className="overflow-x-auto">
-                <table className="w-full text-sm border-collapse">
-                  <thead>
-                    <tr className="bg-slate-50 border-b border-slate-200">
-                      <th className="py-3 px-4 text-left font-semibold">
-                        <button type="button" onClick={() => setMedicalSortKey('petName')} className="hover:text-green-700 transition-colors">
+                <table className="w-full text-sm border-collapse min-w-[700px]">
+                  <thead className="sticky top-0 z-10">
+                    <tr className="bg-gradient-to-r from-slate-800 to-slate-700">
+                      <th className="py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap">
+                        <button type="button" onClick={() => setMedicalSortKey('petName')} className="inline-flex items-center gap-1 text-slate-100 hover:text-white transition-colors">
                           Pet
                         </button>
                       </th>
-                      <th className="py-3 px-4 text-left font-semibold">
-                        <button type="button" onClick={() => setMedicalSortKey('species')} className="hover:text-green-700 transition-colors">
+                      <th className="py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap">
+                        <button type="button" onClick={() => setMedicalSortKey('species')} className="inline-flex items-center gap-1 text-slate-100 hover:text-white transition-colors">
                           Species
                         </button>
                       </th>
-                      <th className="py-3 px-4 text-left font-semibold">
-                        <button type="button" onClick={() => setMedicalSortKey('date')} className="hover:text-green-700 transition-colors">
+                      <th className="py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap">
+                        <button type="button" onClick={() => setMedicalSortKey('date')} className="inline-flex items-center gap-1 text-slate-100 hover:text-white transition-colors">
                           Date
                         </button>
                       </th>
-                      <th className="py-3 px-4 text-left font-semibold">Results</th>
-                      <th className="py-3 px-4 text-left font-semibold">Veterinarian</th>
-                      <th className="py-3 px-4 text-left font-semibold">Notes</th>
-                      <th className="py-3 px-4 text-left font-semibold">
-                        <button type="button" onClick={() => setMedicalSortKey('barangay')} className="hover:text-green-700 transition-colors">
+                      <th className="py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap">Results</th>
+                      <th className="py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap">Veterinarian</th>
+                      <th className="hidden md:table-cell py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap">Notes</th>
+                      <th className="hidden lg:table-cell py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap">
+                        <button type="button" onClick={() => setMedicalSortKey('barangay')} className="inline-flex items-center gap-1 text-slate-100 hover:text-white transition-colors">
                           Barangay
                         </button>
                       </th>
-                      <th className="py-3 px-4 text-left font-semibold">
-                        <button type="button" onClick={() => setMedicalSortKey('ownerName')} className="hover:text-green-700 transition-colors">
+                      <th className="hidden md:table-cell py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap">
+                        <button type="button" onClick={() => setMedicalSortKey('ownerName')} className="inline-flex items-center gap-1 text-slate-100 hover:text-white transition-colors">
                           Owner
                         </button>
                       </th>
-                      <th className="py-3 px-4 text-left font-semibold">Actions</th>
+                      <th className="py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap">Actions</th>
                     </tr>
                   </thead>
                   <tbody>
                     {loading ? (
                       <tr>
-                        <td colSpan={9} className="py-8 text-center text-slate-500">
-                          Loading...
+                        <td colSpan={9} className="py-10 text-center text-slate-400 text-sm">
+                          <div className="flex flex-col items-center gap-2">
+                            <svg className="animate-spin h-5 w-5 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>
+                            <span>Loading...</span>
+                          </div>
                         </td>
                       </tr>
                     ) : medicalPageItems.length === 0 ? (
                       <tr>
-                        <td colSpan={9} className="py-8 text-center text-slate-500">
-                          No medical records found.
+                        <td colSpan={9} className="py-12 text-center text-slate-400">
+                          <div className="flex flex-col items-center gap-1">
+                            <svg className="h-8 w-8 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                            <span className="text-sm font-medium">No medical records found.</span>
+                          </div>
                         </td>
                       </tr>
                     ) : (
-                      medicalPageItems.map((r) => (
-                        <tr key={r.recordId} className="border-b border-slate-200 hover:bg-slate-50 transition-colors">
-                          <td className="py-3 px-4">{r.petName || '—'}</td>
-                          <td className="py-3 px-4">{r.species || '—'}</td>
-                          <td className="py-3 px-4">{r.date || '—'}</td>
-                          <td className="py-3 px-4 max-w-xs truncate">{r.results ? r.results.substring(0, 50) + (r.results.length > 50 ? '...' : '') : '—'}</td>
-                          <td className="py-3 px-4">{r.veterinarian || '—'}</td>
-                          <td className="py-3 px-4 max-w-xs truncate">{r.notes ? r.notes.substring(0, 50) + (r.notes.length > 50 ? '...' : '') : '—'}</td>
-                          <td className="py-3 px-4">{r.barangay || '—'}</td>
-                          <td className="py-3 px-4">{r.ownerName || '—'}</td>
+                      medicalPageItems.map((r, idx) => (
+                        <tr key={r.recordId} className={`border-b border-slate-100 hover:bg-emerald-50/50 transition-colors ${idx % 2 === 0 ? 'bg-white' : 'bg-slate-50/50'}`}>
+                          <td className="py-3 px-4 text-slate-600">{r.petName || '—'}</td>
+                          <td className="py-3 px-4 text-slate-600">
+                            <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${r.species === 'Dog' ? 'bg-blue-100 text-blue-700' : 'bg-amber-100 text-amber-700'}`}>
+                              {r.species || '—'}
+                            </span>
+                          </td>
+                          <td className="py-3 px-4 text-slate-600">{r.date || '—'}</td>
+                          <td className="py-3 px-4 max-w-xs truncate text-slate-500 text-xs" title={r.results}>{r.results ? r.results.substring(0, 50) + (r.results.length > 50 ? '...' : '') : '—'}</td>
+                          <td className="py-3 px-4 text-slate-600">{r.veterinarian || '—'}</td>
+                          <td className="hidden md:table-cell py-3 px-4 max-w-xs truncate text-slate-500 text-xs" title={r.notes}>{r.notes ? r.notes.substring(0, 50) + (r.notes.length > 50 ? '...' : '') : '—'}</td>
+                          <td className="hidden lg:table-cell py-3 px-4 text-slate-600">{r.barangay || '—'}</td>
+                          <td className="hidden md:table-cell py-3 px-4 text-slate-600">{r.ownerName || '—'}</td>
                           <td className="py-3 px-4">
-                            <div className="flex items-center gap-2">
-                              <Button variant="blue" size="sm" onClick={() => { setSelectedMedicalRecord(r); setMedicalViewOpen(true); }}>
+                            <div className="flex flex-wrap gap-1">
+                              <Button variant="blue" size="xs" onClick={() => { setSelectedMedicalRecord(r); setMedicalViewOpen(true); }}>
                                 View
                               </Button>
-                              <Button variant="outline" size="sm" onClick={() => { setSelectedMedicalRecord(r); setMedicalEditOpen(true); }}>
+                              <Button variant="outline" size="xs" onClick={() => {
+                                setSelectedMedicalRecord(r);
+                                setMedicalForm({
+                                  petId: r.petId || '',
+                                  date: r.date || '',
+                                  results: r.results || '',
+                                  veterinarian: r.veterinarian || '',
+                                  notes: r.notes || '',
+                                });
+                                setMedicalEditOpen(true);
+                              }}>
                                 Edit
                               </Button>
-                              <Button variant="destructive" size="sm" onClick={() => deleteMedicalRecord(r)} disabled={deleting}>
+                              <Button variant="destructive" size="xs" onClick={() => deleteMedicalRecord(r)} disabled={deleting}>
                                 Delete
                               </Button>
                             </div>
@@ -1303,10 +1338,10 @@ const AdminPetManagement = () => {
                 {filteredMedicalRecords.length}
               </div>
               <div className="flex items-center gap-2">
-                <Button variant="outline" size="sm" onClick={() => setMedicalPage(1)} disabled={medicalSafePage === 1}>
+                <Button variant="outline" size="xs" onClick={() => setMedicalPage(1)} disabled={medicalSafePage === 1}>
                   First
                 </Button>
-                <Button variant="outline" size="sm" onClick={() => setMedicalPage((p) => Math.max(1, p - 1))} disabled={medicalSafePage === 1}>
+                <Button variant="outline" size="xs" onClick={() => setMedicalPage((p) => Math.max(1, p - 1))} disabled={medicalSafePage === 1}>
                   Prev
                 </Button>
                 <div className="text-sm">
@@ -1314,13 +1349,13 @@ const AdminPetManagement = () => {
                 </div>
                 <Button
                   variant="outline"
-                  size="sm"
+                  size="xs"
                   onClick={() => setMedicalPage((p) => Math.min(medicalTotalPages, p + 1))}
                   disabled={medicalSafePage === medicalTotalPages}
                 >
                   Next
                 </Button>
-                <Button variant="outline" size="sm" onClick={() => setMedicalPage(medicalTotalPages)} disabled={medicalSafePage === medicalTotalPages}>
+                <Button variant="outline" size="xs" onClick={() => setMedicalPage(medicalTotalPages)} disabled={medicalSafePage === medicalTotalPages}>
                   Last
                 </Button>
               </div>
@@ -1340,7 +1375,7 @@ const AdminPetManagement = () => {
                     value={vaccinationSearch}
                     onChange={(e) => setVaccinationSearch(e.target.value)}
                     placeholder="Search by pet, date, vaccine type"
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                   />
                 </div>
                 <div>
@@ -1349,7 +1384,7 @@ const AdminPetManagement = () => {
                     id="vaccinationSpeciesFilter"
                     value={vaccinationSpeciesFilter}
                     onChange={(e) => setVaccinationSpeciesFilter(e.target.value)}
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                   >
                     <option value="">All</option>
                     <option value="Dog">Dog</option>
@@ -1364,81 +1399,106 @@ const AdminPetManagement = () => {
 
             {error ? <div className="rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">{error}</div> : null}
 
-            <div className="rounded-lg border border-border bg-card shadow-sm overflow-hidden">
+            <div className="w-full min-w-0 rounded-xl border border-slate-200 bg-white shadow-md overflow-hidden">
               <div className="overflow-x-auto">
-                <table className="w-full text-sm border-collapse">
-                  <thead>
-                    <tr className="bg-slate-50 border-b border-slate-200">
-                      <th className="py-3 px-4 text-left font-semibold">
-                        <button type="button" onClick={() => setVaccinationSortKey('petName')} className="hover:text-green-700 transition-colors">
+                <table className="w-full text-sm border-collapse min-w-[900px]">
+                  <thead className="sticky top-0 z-10">
+                    <tr className="bg-gradient-to-r from-slate-800 to-slate-700">
+                      <th className="py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap">
+                        <button type="button" onClick={() => setVaccinationSortKey('petName')} className="inline-flex items-center gap-1 text-slate-100 hover:text-white transition-colors">
                           Pet
                         </button>
                       </th>
-                      <th className="py-3 px-4 text-left font-semibold">
-                        <button type="button" onClick={() => setVaccinationSortKey('species')} className="hover:text-green-700 transition-colors">
+                      <th className="py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap">
+                        <button type="button" onClick={() => setVaccinationSortKey('species')} className="inline-flex items-center gap-1 text-slate-100 hover:text-white transition-colors">
                           Species
                         </button>
                       </th>
-                      <th className="py-3 px-4 text-left font-semibold">
-                        <button type="button" onClick={() => setVaccinationSortKey('date')} className="hover:text-green-700 transition-colors">
+                      <th className="py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap">
+                        <button type="button" onClick={() => setVaccinationSortKey('date')} className="inline-flex items-center gap-1 text-slate-100 hover:text-white transition-colors">
                           Date
                         </button>
                       </th>
-                      <th className="py-3 px-4 text-left font-semibold">Vaccine Type</th>
-                      <th className="py-3 px-4 text-left font-semibold">Source</th>
-                      <th className="py-3 px-4 text-left font-semibold">Vaccinated By</th>
-                      <th className="py-3 px-4 text-left font-semibold">Reason</th>
-                      <th className="py-3 px-4 text-left font-semibold">Disease</th>
-                      <th className="py-3 px-4 text-left font-semibold">Notes</th>
-                      <th className="py-3 px-4 text-left font-semibold">
-                        <button type="button" onClick={() => setVaccinationSortKey('barangay')} className="hover:text-green-700 transition-colors">
+                      <th className="py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap">Vaccine Type</th>
+                      <th className="hidden lg:table-cell py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap">Source</th>
+                      <th className="hidden md:table-cell py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap">Vaccinated By</th>
+                      <th className="hidden lg:table-cell py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap">Reason</th>
+                      <th className="hidden xl:table-cell py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap">Disease</th>
+                      <th className="hidden xl:table-cell py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap">Notes</th>
+                      <th className="hidden lg:table-cell py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap">
+                        <button type="button" onClick={() => setVaccinationSortKey('barangay')} className="inline-flex items-center gap-1 text-slate-100 hover:text-white transition-colors">
                           Barangay
                         </button>
                       </th>
-                      <th className="py-3 px-4 text-left font-semibold">
-                        <button type="button" onClick={() => setVaccinationSortKey('ownerName')} className="hover:text-green-700 transition-colors">
+                      <th className="py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap">
+                        <button type="button" onClick={() => setVaccinationSortKey('ownerName')} className="inline-flex items-center gap-1 text-slate-100 hover:text-white transition-colors">
                           Owner
                         </button>
                       </th>
-                      <th className="py-3 px-4 text-left font-semibold">Actions</th>
+                      <th className="py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap">Actions</th>
                     </tr>
                   </thead>
                   <tbody>
                     {loading ? (
                       <tr>
-                        <td colSpan={10} className="py-8 text-center text-slate-500">
-                          Loading...
+                        <td colSpan={12} className="py-10 text-center text-slate-400 text-sm">
+                          <div className="flex flex-col items-center gap-2">
+                            <svg className="animate-spin h-5 w-5 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>
+                            <span>Loading...</span>
+                          </div>
                         </td>
                       </tr>
                     ) : vaccinationPageItems.length === 0 ? (
                       <tr>
-                        <td colSpan={10} className="py-8 text-center text-slate-500">
-                          No vaccination records found.
+                        <td colSpan={12} className="py-12 text-center text-slate-400">
+                          <div className="flex flex-col items-center gap-1">
+                            <svg className="h-8 w-8 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+                            <span className="text-sm font-medium">No vaccination records found.</span>
+                          </div>
                         </td>
                       </tr>
                     ) : (
-                      vaccinationPageItems.map((r) => (
-                        <tr key={r.recordId} className="border-b border-slate-200 hover:bg-slate-50 transition-colors">
-                          <td className="py-3 px-4">{r.petName || '—'}</td>
-                          <td className="py-3 px-4">{r.species || '—'}</td>
-                          <td className="py-3 px-4">{r.date || '—'}</td>
-                          <td className="py-3 px-4">{r.vaccineType || '—'}</td>
-                          <td className="py-3 px-4">{r.vaccineSource || '—'}</td>
-                          <td className="py-3 px-4">{r.vaccinatedBy || '—'}</td>
-                          <td className="py-3 px-4">{r.reason || '—'}</td>
-                          <td className="py-3 px-4">{r.disease || 'N/A'}</td>
-                          <td className="py-3 px-4 max-w-xs truncate">{r.notes ? r.notes.substring(0, 50) + (r.notes.length > 50 ? '...' : '') : '—'}</td>
-                          <td className="py-3 px-4">{r.barangay || '—'}</td>
-                          <td className="py-3 px-4">{r.ownerName || '—'}</td>
+                      vaccinationPageItems.map((r, idx) => (
+                        <tr key={r.recordId} className={`border-b border-slate-100 hover:bg-emerald-50/50 transition-colors ${idx % 2 === 0 ? 'bg-white' : 'bg-slate-50/50'}`}>
+                          <td className="py-3 px-4 text-slate-600">{r.petName || '—'}</td>
+                          <td className="py-3 px-4 text-slate-600">
+                            <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${r.species === 'Dog' ? 'bg-blue-100 text-blue-700' : 'bg-amber-100 text-amber-700'}`}>
+                              {r.species || '—'}
+                            </span>
+                          </td>
+                          <td className="py-3 px-4 text-slate-600">{r.date || '—'}</td>
+                          <td className="py-3 px-4 text-slate-600">{r.vaccineType || '—'}</td>
+                          <td className="hidden lg:table-cell py-3 px-4 text-slate-600">{r.vaccineSource || '—'}</td>
+                          <td className="hidden md:table-cell py-3 px-4 text-slate-600">{r.vaccinatedBy || '—'}</td>
+                          <td className="hidden lg:table-cell py-3 px-4 text-slate-600">{r.reason || '—'}</td>
+                          <td className="hidden xl:table-cell py-3 px-4 text-slate-600">{r.disease || 'N/A'}</td>
+                          <td className="hidden xl:table-cell py-3 px-4 max-w-xs truncate text-slate-500 text-xs" title={r.notes}>{r.notes ? r.notes.substring(0, 50) + (r.notes.length > 50 ? '...' : '') : '—'}</td>
+                          <td className="hidden lg:table-cell py-3 px-4 text-slate-600">{r.barangay || '—'}</td>
+                          <td className="py-3 px-4 text-slate-600">{r.ownerName || '—'}</td>
                           <td className="py-3 px-4">
-                            <div className="flex items-center gap-2">
-                              <Button variant="blue" size="sm" onClick={() => { setSelectedVaccinationRecord(r); setVaccinationViewOpen(true); }}>
+                            <div className="flex flex-wrap gap-1">
+                              <Button variant="blue" size="xs" onClick={() => { setSelectedVaccinationRecord(r); setVaccinationViewOpen(true); }}>
                                 View
                               </Button>
-                              <Button variant="outline" size="sm" onClick={() => { setSelectedVaccinationRecord(r); setVaccinationEditOpen(true); }}>
+                              <Button variant="outline" size="xs" onClick={() => {
+                                setSelectedVaccinationRecord(r);
+                                setVaccinationForm({
+                                  petId: r.petId || '',
+                                  date: r.date || '',
+                                  vaccineType: r.vaccineType || '',
+                                  vaccineTypeOther: r.vaccineType === 'others' ? r.vaccineType : '',
+                                  vaccineSource: r.vaccineSource || '',
+                                  vaccinatedBy: r.vaccinatedBy || '',
+                                  reason: r.reason || '',
+                                  hasDisease: r.hasDisease || false,
+                                  disease: r.disease || '',
+                                  notes: r.notes || '',
+                                });
+                                setVaccinationEditOpen(true);
+                              }}>
                                 Edit
                               </Button>
-                              <Button variant="destructive" size="sm" onClick={() => deleteVaccinationRecord(r)} disabled={deleting}>
+                              <Button variant="destructive" size="xs" onClick={() => deleteVaccinationRecord(r)} disabled={deleting}>
                                 Delete
                               </Button>
                             </div>
@@ -1457,10 +1517,10 @@ const AdminPetManagement = () => {
                 {filteredVaccinationRecords.length}
               </div>
               <div className="flex items-center gap-2">
-                <Button variant="outline" size="sm" onClick={() => setVaccinationPage(1)} disabled={vaccinationSafePage === 1}>
+                <Button variant="outline" size="xs" onClick={() => setVaccinationPage(1)} disabled={vaccinationSafePage === 1}>
                   First
                 </Button>
-                <Button variant="outline" size="sm" onClick={() => setVaccinationPage((p) => Math.max(1, p - 1))} disabled={vaccinationSafePage === 1}>
+                <Button variant="outline" size="xs" onClick={() => setVaccinationPage((p) => Math.max(1, p - 1))} disabled={vaccinationSafePage === 1}>
                   Prev
                 </Button>
                 <div className="text-sm">
@@ -1468,13 +1528,13 @@ const AdminPetManagement = () => {
                 </div>
                 <Button
                   variant="outline"
-                  size="sm"
+                  size="xs"
                   onClick={() => setVaccinationPage((p) => Math.min(vaccinationTotalPages, p + 1))}
                   disabled={vaccinationSafePage === vaccinationTotalPages}
                 >
                   Next
                 </Button>
-                <Button variant="outline" size="sm" onClick={() => setVaccinationPage(vaccinationTotalPages)} disabled={vaccinationSafePage === vaccinationTotalPages}>
+                <Button variant="outline" size="xs" onClick={() => setVaccinationPage(vaccinationTotalPages)} disabled={vaccinationSafePage === vaccinationTotalPages}>
                   Last
                 </Button>
               </div>
@@ -1533,7 +1593,7 @@ const AdminPetManagement = () => {
                   name="petName"
                   value={form.petName}
                   onChange={(e) => setForm((p) => ({ ...p, petName: e.target.value }))}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                 />
               </div>
               <div>
@@ -1542,7 +1602,7 @@ const AdminPetManagement = () => {
                   name="species"
                   value={form.species}
                   onChange={(e) => setForm((p) => ({ ...p, species: e.target.value }))}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                 >
                   <option value="">Select</option>
                   <option value="Dog">Dog</option>
@@ -1555,7 +1615,7 @@ const AdminPetManagement = () => {
                   name="sex"
                   value={form.sex}
                   onChange={(e) => setForm((p) => ({ ...p, sex: e.target.value }))}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                 >
                   <option value="">Select</option>
                   <option value="Male">Male</option>
@@ -1568,7 +1628,7 @@ const AdminPetManagement = () => {
                   name="breed"
                   value={form.breed}
                   onChange={(e) => setForm((p) => ({ ...p, breed: e.target.value }))}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                 />
               </div>
               <div>
@@ -1577,7 +1637,7 @@ const AdminPetManagement = () => {
                   name="animalColor"
                   value={form.animalColor}
                   onChange={(e) => setForm((p) => ({ ...p, animalColor: e.target.value }))}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                 />
               </div>
               <div>
@@ -1588,7 +1648,7 @@ const AdminPetManagement = () => {
                   step="0.1"
                   value={form.weightKgs}
                   onChange={(e) => setForm((p) => ({ ...p, weightKgs: e.target.value }))}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                 />
               </div>
               <div>
@@ -1598,7 +1658,7 @@ const AdminPetManagement = () => {
                   type="date"
                   value={form.dateOfBirth}
                   onChange={(e) => setForm((p) => ({ ...p, dateOfBirth: e.target.value }))}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                 />
               </div>
               <div>
@@ -1607,7 +1667,7 @@ const AdminPetManagement = () => {
                   name="spayedNeutered"
                   value={form.spayedNeutered}
                   onChange={(e) => setForm((p) => ({ ...p, spayedNeutered: e.target.value }))}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                 >
                   <option value="">Select</option>
                   <option value="Yes">Yes</option>
@@ -1621,7 +1681,7 @@ const AdminPetManagement = () => {
                   name="petOrigin"
                   value={form.petOrigin}
                   onChange={(e) => setForm((p) => ({ ...p, petOrigin: e.target.value }))}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                 >
                   <option value="">Select</option>
                   <option value="local">Local</option>
@@ -1632,7 +1692,7 @@ const AdminPetManagement = () => {
                     name="petOriginOther"
                     value={form.petOriginOther}
                     onChange={(e) => setForm((p) => ({ ...p, petOriginOther: e.target.value }))}
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 mt-2"
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors mt-2"
                     placeholder="Specify origin"
                   />
                 )}
@@ -1643,7 +1703,7 @@ const AdminPetManagement = () => {
                   name="ownership"
                   value={form.ownership}
                   onChange={(e) => setForm((p) => ({ ...p, ownership: e.target.value }))}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                 >
                   <option value="">Select</option>
                   <option value="household">Household</option>
@@ -1655,7 +1715,7 @@ const AdminPetManagement = () => {
                     name="ownershipOther"
                     value={form.ownershipOther}
                     onChange={(e) => setForm((p) => ({ ...p, ownershipOther: e.target.value }))}
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 mt-2"
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors mt-2"
                     placeholder="Specify ownership"
                   />
                 )}
@@ -1666,7 +1726,7 @@ const AdminPetManagement = () => {
                   name="tagType"
                   value={form.tagType}
                   onChange={(e) => setForm((p) => ({ ...p, tagType: e.target.value }))}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                 >
                   <option value="">Select</option>
                   <option value="collar tag">Collar Tag</option>
@@ -1680,7 +1740,7 @@ const AdminPetManagement = () => {
                     name="tagTypeOther"
                     value={form.tagTypeOther}
                     onChange={(e) => setForm((p) => ({ ...p, tagTypeOther: e.target.value }))}
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 mt-2"
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors mt-2"
                     placeholder="Specify tag type"
                   />
                 )}
@@ -1691,7 +1751,7 @@ const AdminPetManagement = () => {
                   name="tagNumber"
                   value={form.tagNumber}
                   onChange={(e) => setForm((p) => ({ ...p, tagNumber: e.target.value }))}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                 />
               </div>
               <div className="md:col-span-2">
@@ -1700,7 +1760,7 @@ const AdminPetManagement = () => {
                   name="habitat"
                   value={form.habitat}
                   onChange={(e) => setForm((p) => ({ ...p, habitat: e.target.value }))}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                 >
                   <option value="">Select</option>
                   <option value="caged">Caged</option>
@@ -1715,7 +1775,7 @@ const AdminPetManagement = () => {
                   name="contactWithOtherAnimals"
                   value={form.contactWithOtherAnimals}
                   onChange={(e) => setForm((p) => ({ ...p, contactWithOtherAnimals: e.target.value }))}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                 >
                   <option value="">Select</option>
                   <option value="frequent">Frequent</option>
@@ -1736,7 +1796,7 @@ const AdminPetManagement = () => {
                       name="pregnant"
                       checked={form.pregnant}
                       onChange={(e) => setForm((p) => ({ ...p, pregnant: e.target.checked }))}
-                      className="rounded border-gray-300 text-green-600 focus:ring-green-500"
+                      className="rounded border-gray-300 text-green-600 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                     />
                     Pregnant
                   </label>
@@ -1746,7 +1806,7 @@ const AdminPetManagement = () => {
                       name="lactating"
                       checked={form.lactating}
                       onChange={(e) => setForm((p) => ({ ...p, lactating: e.target.checked }))}
-                      className="rounded border-gray-300 text-green-600 focus:ring-green-500"
+                      className="rounded border-gray-300 text-green-600 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                     />
                     Lactating with puppies
                   </label>
@@ -1760,7 +1820,7 @@ const AdminPetManagement = () => {
                       min="0"
                       value={form.puppyCount}
                       onChange={(e) => setForm((p) => ({ ...p, puppyCount: e.target.value }))}
-                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                       placeholder="Enter number"
                     />
                   </div>
@@ -1805,7 +1865,7 @@ const AdminPetManagement = () => {
                     const found = owners.find((o) => o.ownerId === id) || null;
                     setSelectedOwner(found);
                   }}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                 >
                   <option value="">Select</option>
                   {owners
@@ -1849,7 +1909,7 @@ const AdminPetManagement = () => {
                     name="petName"
                     value={form.petName}
                     onChange={(e) => setForm((p) => ({ ...p, petName: e.target.value }))}
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                   />
                 </div>
                 <div>
@@ -1858,7 +1918,7 @@ const AdminPetManagement = () => {
                     name="species"
                     value={form.species}
                     onChange={(e) => setForm((p) => ({ ...p, species: e.target.value }))}
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                   >
                     <option value="">Select</option>
                     <option value="Dog">Dog</option>
@@ -1871,7 +1931,7 @@ const AdminPetManagement = () => {
                     name="sex"
                     value={form.sex}
                     onChange={(e) => setForm((p) => ({ ...p, sex: e.target.value }))}
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                   >
                     <option value="">Select</option>
                     <option value="Male">Male</option>
@@ -1884,7 +1944,7 @@ const AdminPetManagement = () => {
                     name="breed"
                     value={form.breed}
                     onChange={(e) => setForm((p) => ({ ...p, breed: e.target.value }))}
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                   />
                 </div>
                 <div>
@@ -1893,7 +1953,7 @@ const AdminPetManagement = () => {
                     name="animalColor"
                     value={form.animalColor}
                     onChange={(e) => setForm((p) => ({ ...p, animalColor: e.target.value }))}
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                   />
                 </div>
                 <div>
@@ -1904,7 +1964,7 @@ const AdminPetManagement = () => {
                     step="0.1"
                     value={form.weightKgs}
                     onChange={(e) => setForm((p) => ({ ...p, weightKgs: e.target.value }))}
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                   />
                 </div>
                 <div>
@@ -1914,7 +1974,7 @@ const AdminPetManagement = () => {
                     type="date"
                     value={form.dateOfBirth}
                     onChange={(e) => setForm((p) => ({ ...p, dateOfBirth: e.target.value }))}
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                   />
                 </div>
                 <div>
@@ -1923,7 +1983,7 @@ const AdminPetManagement = () => {
                     name="spayedNeutered"
                     value={form.spayedNeutered}
                     onChange={(e) => setForm((p) => ({ ...p, spayedNeutered: e.target.value }))}
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                   >
                     <option value="">Select</option>
                     <option value="Yes">Yes</option>
@@ -1937,7 +1997,7 @@ const AdminPetManagement = () => {
                     name="petOrigin"
                     value={form.petOrigin}
                     onChange={(e) => setForm((p) => ({ ...p, petOrigin: e.target.value }))}
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                   >
                     <option value="">Select</option>
                     <option value="local">Local</option>
@@ -1948,7 +2008,7 @@ const AdminPetManagement = () => {
                       name="petOriginOther"
                       value={form.petOriginOther}
                       onChange={(e) => setForm((p) => ({ ...p, petOriginOther: e.target.value }))}
-                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 mt-2"
+                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors mt-2"
                       placeholder="Specify origin"
                     />
                   )}
@@ -1959,7 +2019,7 @@ const AdminPetManagement = () => {
                     name="ownership"
                     value={form.ownership}
                     onChange={(e) => setForm((p) => ({ ...p, ownership: e.target.value }))}
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                   >
                     <option value="">Select</option>
                     <option value="household">Household</option>
@@ -1971,7 +2031,7 @@ const AdminPetManagement = () => {
                       name="ownershipOther"
                       value={form.ownershipOther}
                       onChange={(e) => setForm((p) => ({ ...p, ownershipOther: e.target.value }))}
-                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 mt-2"
+                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors mt-2"
                       placeholder="Specify ownership"
                     />
                   )}
@@ -1982,7 +2042,7 @@ const AdminPetManagement = () => {
                     name="tagType"
                     value={form.tagType}
                     onChange={(e) => setForm((p) => ({ ...p, tagType: e.target.value }))}
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                   >
                     <option value="">Select</option>
                     <option value="collar tag">Collar Tag</option>
@@ -1996,7 +2056,7 @@ const AdminPetManagement = () => {
                       name="tagTypeOther"
                       value={form.tagTypeOther}
                       onChange={(e) => setForm((p) => ({ ...p, tagTypeOther: e.target.value }))}
-                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 mt-2"
+                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors mt-2"
                       placeholder="Specify tag type"
                     />
                   )}
@@ -2007,7 +2067,7 @@ const AdminPetManagement = () => {
                     name="tagNumber"
                     value={form.tagNumber}
                     onChange={(e) => setForm((p) => ({ ...p, tagNumber: e.target.value }))}
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                   />
                 </div>
                 <div className="md:col-span-2">
@@ -2016,7 +2076,7 @@ const AdminPetManagement = () => {
                     name="habitat"
                     value={form.habitat}
                     onChange={(e) => setForm((p) => ({ ...p, habitat: e.target.value }))}
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                   >
                     <option value="">Select</option>
                     <option value="caged">Caged</option>
@@ -2031,7 +2091,7 @@ const AdminPetManagement = () => {
                     name="contactWithOtherAnimals"
                     value={form.contactWithOtherAnimals}
                     onChange={(e) => setForm((p) => ({ ...p, contactWithOtherAnimals: e.target.value }))}
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                   >
                     <option value="">Select</option>
                     <option value="frequent">Frequent</option>
@@ -2052,7 +2112,7 @@ const AdminPetManagement = () => {
                         name="pregnant"
                         checked={form.pregnant}
                         onChange={(e) => setForm((p) => ({ ...p, pregnant: e.target.checked }))}
-                        className="rounded border-gray-300 text-green-600 focus:ring-green-500"
+                        className="rounded border-gray-300 text-green-600 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                       />
                       Pregnant
                     </label>
@@ -2062,7 +2122,7 @@ const AdminPetManagement = () => {
                         name="lactating"
                         checked={form.lactating}
                         onChange={(e) => setForm((p) => ({ ...p, lactating: e.target.checked }))}
-                        className="rounded border-gray-300 text-green-600 focus:ring-green-500"
+                        className="rounded border-gray-300 text-green-600 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                       />
                       Lactating with puppies
                     </label>
@@ -2076,7 +2136,7 @@ const AdminPetManagement = () => {
                         min="0"
                         value={form.puppyCount}
                         onChange={(e) => setForm((p) => ({ ...p, puppyCount: e.target.value }))}
-                        className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                        className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                         placeholder="Enter number"
                       />
                     </div>
@@ -2121,7 +2181,17 @@ const AdminPetManagement = () => {
             <Button variant="outline" onClick={() => setMedicalViewOpen(false)}>
               Close
             </Button>
-            <Button variant="blue" onClick={() => { setMedicalViewOpen(false); setMedicalEditOpen(true); }}>
+            <Button variant="blue" onClick={() => {
+              setMedicalViewOpen(false);
+              setMedicalForm({
+                petId: selectedMedicalRecord.petId || '',
+                date: selectedMedicalRecord.date || '',
+                results: selectedMedicalRecord.results || '',
+                veterinarian: selectedMedicalRecord.veterinarian || '',
+                notes: selectedMedicalRecord.notes || '',
+              });
+              setMedicalEditOpen(true);
+            }}>
               Edit
             </Button>
             <Button variant="destructive" onClick={() => deleteMedicalRecord(selectedMedicalRecord)} disabled={deleting}>
@@ -2143,7 +2213,7 @@ const AdminPetManagement = () => {
                 type="date"
                 value={medicalForm.date}
                 onChange={(e) => setMedicalForm({ ...medicalForm, date: e.target.value })}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
               />
             </div>
             <div>
@@ -2151,7 +2221,7 @@ const AdminPetManagement = () => {
               <textarea
                 value={medicalForm.results}
                 onChange={(e) => setMedicalForm({ ...medicalForm, results: e.target.value })}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                 rows={3}
               />
             </div>
@@ -2160,7 +2230,7 @@ const AdminPetManagement = () => {
               <input
                 value={medicalForm.veterinarian}
                 onChange={(e) => setMedicalForm({ ...medicalForm, veterinarian: e.target.value })}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
               />
             </div>
             <div>
@@ -2168,7 +2238,7 @@ const AdminPetManagement = () => {
               <textarea
                 value={medicalForm.notes}
                 onChange={(e) => setMedicalForm({ ...medicalForm, notes: e.target.value })}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                 rows={3}
               />
             </div>
@@ -2195,7 +2265,7 @@ const AdminPetManagement = () => {
               <select
                 value={medicalForm.petId}
                 onChange={(e) => setMedicalForm({ ...medicalForm, petId: e.target.value })}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
               >
                 <option value="">Select a pet</option>
                 {pets.map((p) => (
@@ -2211,7 +2281,7 @@ const AdminPetManagement = () => {
                 type="date"
                 value={medicalForm.date}
                 onChange={(e) => setMedicalForm({ ...medicalForm, date: e.target.value })}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
               />
             </div>
             <div>
@@ -2219,7 +2289,7 @@ const AdminPetManagement = () => {
               <textarea
                 value={medicalForm.results}
                 onChange={(e) => setMedicalForm({ ...medicalForm, results: e.target.value })}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                 rows={3}
               />
             </div>
@@ -2228,7 +2298,7 @@ const AdminPetManagement = () => {
               <input
                 value={medicalForm.veterinarian}
                 onChange={(e) => setMedicalForm({ ...medicalForm, veterinarian: e.target.value })}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
               />
             </div>
             <div>
@@ -2236,7 +2306,7 @@ const AdminPetManagement = () => {
               <textarea
                 value={medicalForm.notes}
                 onChange={(e) => setMedicalForm({ ...medicalForm, notes: e.target.value })}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                 rows={3}
               />
             </div>
@@ -2272,7 +2342,22 @@ const AdminPetManagement = () => {
             <Button variant="outline" onClick={() => setVaccinationViewOpen(false)}>
               Close
             </Button>
-            <Button variant="blue" onClick={() => { setVaccinationViewOpen(false); setVaccinationEditOpen(true); }}>
+            <Button variant="blue" onClick={() => {
+              setVaccinationViewOpen(false);
+              setVaccinationForm({
+                petId: selectedVaccinationRecord.petId || '',
+                date: selectedVaccinationRecord.date || '',
+                vaccineType: selectedVaccinationRecord.vaccineType || '',
+                vaccineTypeOther: selectedVaccinationRecord.vaccineType === 'others' ? selectedVaccinationRecord.vaccineType : '',
+                vaccineSource: selectedVaccinationRecord.vaccineSource || '',
+                vaccinatedBy: selectedVaccinationRecord.vaccinatedBy || '',
+                reason: selectedVaccinationRecord.reason || '',
+                hasDisease: selectedVaccinationRecord.hasDisease || false,
+                disease: selectedVaccinationRecord.disease || '',
+                notes: selectedVaccinationRecord.notes || '',
+              });
+              setVaccinationEditOpen(true);
+            }}>
               Edit
             </Button>
             <Button variant="destructive" onClick={() => deleteVaccinationRecord(selectedVaccinationRecord)} disabled={deleting}>
@@ -2294,7 +2379,7 @@ const AdminPetManagement = () => {
                 type="date"
                 value={vaccinationForm.date}
                 onChange={(e) => setVaccinationForm({ ...vaccinationForm, date: e.target.value })}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
               />
             </div>
             <div>
@@ -2302,7 +2387,7 @@ const AdminPetManagement = () => {
               <select
                 value={vaccinationForm.vaccineType}
                 onChange={(e) => setVaccinationForm({ ...vaccinationForm, vaccineType: e.target.value })}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
               >
                 <option value="">Select</option>
                 <option value="anti-rabies">Anti-rabies</option>
@@ -2315,7 +2400,7 @@ const AdminPetManagement = () => {
                 <input
                   value={vaccinationForm.vaccineTypeOther}
                   onChange={(e) => setVaccinationForm({ ...vaccinationForm, vaccineTypeOther: e.target.value })}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                 />
               </div>
             )}
@@ -2324,7 +2409,7 @@ const AdminPetManagement = () => {
               <input
                 value={vaccinationForm.vaccineSource}
                 onChange={(e) => setVaccinationForm({ ...vaccinationForm, vaccineSource: e.target.value })}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
               />
             </div>
             <div>
@@ -2332,7 +2417,7 @@ const AdminPetManagement = () => {
               <input
                 value={vaccinationForm.vaccinatedBy}
                 onChange={(e) => setVaccinationForm({ ...vaccinationForm, vaccinatedBy: e.target.value })}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
               />
             </div>
             <div>
@@ -2340,7 +2425,7 @@ const AdminPetManagement = () => {
               <select
                 value={vaccinationForm.reason}
                 onChange={(e) => setVaccinationForm({ ...vaccinationForm, reason: e.target.value })}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
               >
                 <option value="">Select</option>
                 <option value="Mass">Mass</option>
@@ -2353,7 +2438,7 @@ const AdminPetManagement = () => {
               <select
                 value={vaccinationForm.hasDisease ? 'yes' : 'no'}
                 onChange={(e) => setVaccinationForm({ ...vaccinationForm, hasDisease: e.target.value === 'yes' })}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
               >
                 <option value="no">No</option>
                 <option value="yes">Yes</option>
@@ -2365,7 +2450,7 @@ const AdminPetManagement = () => {
                 <input
                   value={vaccinationForm.disease}
                   onChange={(e) => setVaccinationForm({ ...vaccinationForm, disease: e.target.value })}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                   placeholder="Specify disease"
                 />
               </div>
@@ -2375,7 +2460,7 @@ const AdminPetManagement = () => {
               <textarea
                 value={vaccinationForm.notes}
                 onChange={(e) => setVaccinationForm({ ...vaccinationForm, notes: e.target.value })}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                 rows={3}
               />
             </div>
@@ -2402,7 +2487,7 @@ const AdminPetManagement = () => {
               <select
                 value={vaccinationForm.petId}
                 onChange={(e) => setVaccinationForm({ ...vaccinationForm, petId: e.target.value })}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
               >
                 <option value="">Select a pet</option>
                 {pets.map((p) => (
@@ -2418,7 +2503,7 @@ const AdminPetManagement = () => {
                 type="date"
                 value={vaccinationForm.date}
                 onChange={(e) => setVaccinationForm({ ...vaccinationForm, date: e.target.value })}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
               />
             </div>
             <div>
@@ -2426,7 +2511,7 @@ const AdminPetManagement = () => {
               <select
                 value={vaccinationForm.vaccineType}
                 onChange={(e) => setVaccinationForm({ ...vaccinationForm, vaccineType: e.target.value })}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
               >
                 <option value="">Select</option>
                 <option value="anti-rabies">Anti-rabies</option>
@@ -2439,7 +2524,7 @@ const AdminPetManagement = () => {
                 <input
                   value={vaccinationForm.vaccineTypeOther}
                   onChange={(e) => setVaccinationForm({ ...vaccinationForm, vaccineTypeOther: e.target.value })}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                 />
               </div>
             )}
@@ -2448,7 +2533,7 @@ const AdminPetManagement = () => {
               <input
                 value={vaccinationForm.vaccineSource}
                 onChange={(e) => setVaccinationForm({ ...vaccinationForm, vaccineSource: e.target.value })}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
               />
             </div>
             <div>
@@ -2456,7 +2541,7 @@ const AdminPetManagement = () => {
               <input
                 value={vaccinationForm.vaccinatedBy}
                 onChange={(e) => setVaccinationForm({ ...vaccinationForm, vaccinatedBy: e.target.value })}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
               />
             </div>
             <div>
@@ -2464,7 +2549,7 @@ const AdminPetManagement = () => {
               <select
                 value={vaccinationForm.reason}
                 onChange={(e) => setVaccinationForm({ ...vaccinationForm, reason: e.target.value })}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
               >
                 <option value="">Select</option>
                 <option value="Mass">Mass</option>
@@ -2477,7 +2562,7 @@ const AdminPetManagement = () => {
               <select
                 value={vaccinationForm.hasDisease ? 'yes' : 'no'}
                 onChange={(e) => setVaccinationForm({ ...vaccinationForm, hasDisease: e.target.value === 'yes' })}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
               >
                 <option value="no">No</option>
                 <option value="yes">Yes</option>
@@ -2489,7 +2574,7 @@ const AdminPetManagement = () => {
                 <input
                   value={vaccinationForm.disease}
                   onChange={(e) => setVaccinationForm({ ...vaccinationForm, disease: e.target.value })}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                   placeholder="Specify disease"
                 />
               </div>
@@ -2499,7 +2584,7 @@ const AdminPetManagement = () => {
               <textarea
                 value={vaccinationForm.notes}
                 onChange={(e) => setVaccinationForm({ ...vaccinationForm, notes: e.target.value })}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                 rows={3}
               />
             </div>
