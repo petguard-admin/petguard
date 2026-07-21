@@ -131,18 +131,18 @@ const AdminSidebarLayout = ({ title, children }) => {
         </aside>
 
         {/* Main Content */}
-        <main className="flex-1 px-3 py-8">
-          <div className="max-w-7xl mx-auto">
+        <main className="flex-1 min-w-0 px-3 sm:px-5 lg:px-8 py-6 sm:py-8">
+          <div className="max-w-[90rem] mx-auto w-full">
             {title && (
-              <div className="mb-8">
-                <h1 className="text-3xl font-bold text-slate-900">{title}</h1>
-                <p className="text-slate-500 mt-1">
+              <div className="mb-6 sm:mb-8">
+                <h1 className="text-2xl sm:text-3xl font-bold text-slate-900">{title}</h1>
+                <p className="text-slate-500 mt-1 text-sm sm:text-base">
                   Manage and monitor system information here.
                 </p>
               </div>
             )}
 
-            <div className="bg-white rounded-3xl border border-green-100 shadow-sm p-6">
+            <div className="bg-white rounded-2xl sm:rounded-3xl border border-green-100 shadow-sm p-4 sm:p-6 min-w-0">
               {children}
             </div>
           </div>

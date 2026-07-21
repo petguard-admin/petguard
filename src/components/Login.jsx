@@ -5,7 +5,6 @@ import { sendPasswordResetEmail, signInWithEmailAndPassword } from 'firebase/aut
 
 import { auth } from '../auth';
 import { Button } from './ui/Button';
-import { logAuditTrail } from '../utils/auditLogger';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -32,7 +31,6 @@ const Login = () => {
       const cred = await signInWithEmailAndPassword(auth, email, password);
       const tokenRes = await cred.user.getIdTokenResult(true);
       const isAdmin = tokenRes?.claims?.admin === true;
-      await logAuditTrail('view', cred.user.uid, isAdmin ? 'admin' : 'owner', null, { email });
       navigate(isAdmin ? '/admin' : '/');
     } catch (err) {
       setError(err?.message || 'Login failed.');
@@ -54,7 +52,6 @@ const Login = () => {
     try {
       await sendPasswordResetEmail(auth, email.trim());
       setMessage('Password reset email sent. Check your inbox.');
-      await logAuditTrail('view', email, 'password_reset', null, { email });
     } catch (err) {
       setError(err?.message || 'Failed to send password reset email.');
     } finally {
@@ -63,70 +60,129 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-emerald-100 px-4 py-10">
-      <div className="w-full max-w-md bg-white text-card-foreground rounded-2xl shadow-xl p-8">
-        <div className="flex flex-col items-center mb-6">
-          <img src="src/img/OMV_logo.png" alt="OMV Logo" className="h-20 w-auto mb-4" />
-          <h1 className="text-3xl font-bold text-slate-900">Welcome back</h1>
-          <p className="text-sm text-slate-600 mt-2">Sign in to continue</p>
+    <div className="min-h-screen flex bg-[#f7faf7]">
+      {/* Left Panel - Branding (hidden on small screens) */}
+      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-green-600 via-emerald-600 to-green-700 relative overflow-hidden">
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iLjA1Ij48cGF0aCBkPSJNMzYgMzRoLTJ2LTRoMnYtMmgtNHY2aDJ2Mmgydi0yaDJ2LTJoLTJ2LTJ6TTIyIDE4aC0ydjJoMnYtMnptMTItMTJoLTJ2MmgyVjZ6TTM0IDM4aDJ2NkgzNFYzOHoiLz48L2c+PC9nPjwvc3ZnPg==')] opacity-40" />
+        <div className="relative z-10 flex flex-col items-center justify-center w-full p-12">
+          <img
+            src="/src/img/hero-pet.png"
+            alt="Happy pets"
+            className="w-72 h-72 object-contain mb-8 drop-shadow-2xl"
+          />
+          <h2 className="text-3xl font-bold text-white text-center leading-tight">
+            Your pet's health,<br />simplified.
+          </h2>
+          <p className="text-green-100 text-center mt-3 max-w-sm text-base">
+            Track vaccinations, medical records, and keep your furry friends safe with PetGuard.
+          </p>
         </div>
+      </div>
 
-        {error ? (
-          <div className="mb-4 rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
-            {error}
-          </div>
-        ) : null}
-
-        {message ? (
-          <div className="mb-4 rounded-md border border-green-200 bg-green-50 px-3 py-2 text-sm text-green-800">
-            {message}
-          </div>
-        ) : null}
-
-        <form onSubmit={onSubmit} className="space-y-5">
-          <div>
-            <label className="block text-sm font-semibold mb-2 text-slate-700" htmlFor="email">Email</label>
-            <input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-              autoComplete="email"
-              placeholder="Enter your email"
-            />
+      {/* Right Panel - Form */}
+      <div className="flex-1 flex items-center justify-center px-4 py-8 sm:px-6 sm:py-12">
+        <div className="w-full max-w-md">
+          {/* Mobile logo */}
+          <div className="flex flex-col items-center mb-8 lg:hidden">
+            <Link to="/" className="flex items-center gap-2.5 mb-6">
+              <img src="/src/img/OMV_logo.png" alt="PetGuard" className="w-11 h-11 rounded-xl" />
+              <span className="text-2xl font-bold text-slate-900">
+                Pet<span className="text-green-700">Guard</span>
+              </span>
+            </Link>
           </div>
 
-          <div>
-            <label className="block text-sm font-semibold mb-2 text-slate-700" htmlFor="password">Password</label>
-            <input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-              autoComplete="current-password"
-              placeholder="Enter your password"
-            />
+          {/* Desktop logo */}
+          <div className="hidden lg:flex items-center gap-2.5 mb-8">
+            <img src="/src/img/OMV_logo.png" alt="PetGuard" className="w-10 h-10 rounded-xl" />
+            <span className="text-xl font-bold text-slate-900">
+              Pet<span className="text-green-700">Guard</span>
+            </span>
           </div>
 
-          <Button type="submit" className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-lg" disabled={submitting}>
-            {submitting ? 'Signing in...' : 'Sign in'}
-          </Button>
+          <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 sm:p-8">
+            <h1 className="text-2xl sm:text-[1.7rem] font-bold text-slate-900">Welcome back</h1>
+            <p className="text-slate-500 mt-1.5 text-sm">Sign in to your account to continue</p>
 
-          <button
-            type="button"
-            onClick={onForgotPassword}
-            disabled={resetting || submitting}
-            className="w-full text-sm text-green-600 hover:text-green-700 font-medium disabled:opacity-60"
-          >
-            {resetting ? 'Sending reset email...' : 'Forgot password?'}
-          </button>
-        </form>
+            {error && (
+              <div className="mt-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                {error}
+              </div>
+            )}
 
-        <p className="mt-6 text-sm text-slate-600 text-center">
-          Don't have an account? <Link to="/register" className="text-green-600 hover:text-green-700 font-semibold">Create one</Link>
-        </p>
+            {message && (
+              <div className="mt-4 rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700">
+                {message}
+              </div>
+            )}
+
+            <form onSubmit={onSubmit} className="mt-6 space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-1.5" htmlFor="email">
+                  Email address
+                </label>
+                <input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500/20 focus:border-green-500 focus:bg-white transition-all"
+                  autoComplete="email"
+                  placeholder="you@example.com"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-1.5" htmlFor="password">
+                  Password
+                </label>
+                <input
+                  id="password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500/20 focus:border-green-500 focus:bg-white transition-all"
+                  autoComplete="current-password"
+                  placeholder="Enter your password"
+                />
+              </div>
+
+              <div className="flex items-center justify-end">
+                <button
+                  type="button"
+                  onClick={onForgotPassword}
+                  disabled={resetting || submitting}
+                  className="text-sm font-medium text-green-600 hover:text-green-700 disabled:opacity-50 transition-colors"
+                >
+                  {resetting ? 'Sending...' : 'Forgot password?'}
+                </button>
+              </div>
+
+              <Button
+                type="submit"
+                className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2.5 rounded-xl transition-all shadow-sm shadow-green-600/20 hover:shadow-md hover:shadow-green-600/30"
+                disabled={submitting}
+              >
+                {submitting ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                    </svg>
+                    Signing in...
+                  </span>
+                ) : 'Sign in'}
+              </Button>
+            </form>
+          </div>
+
+          <p className="mt-6 text-sm text-slate-500 text-center">
+            Don't have an account?{' '}
+            <Link to="/register" className="font-semibold text-green-600 hover:text-green-700 transition-colors">
+              Create one
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   );

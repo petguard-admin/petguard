@@ -184,7 +184,7 @@ const AddMedicalRecordModal = ({
               <select
                 value={recordType}
                 onChange={(e) => setRecordType(e.target.value)}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
               >
                 <option value="vaccination">Vaccination</option>
                 <option value="medical">Medical</option>
@@ -201,7 +201,7 @@ const AddMedicalRecordModal = ({
                     type="date"
                     value={vaccinationForm.date}
                     onChange={(e) => setVaccinationForm((p) => ({ ...p, date: e.target.value }))}
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                   />
                 </div>
 
@@ -214,7 +214,7 @@ const AddMedicalRecordModal = ({
                       id="vSource"
                       value={vaccinationForm.vaccineSource}
                       onChange={(e) => setVaccinationForm((p) => ({ ...p, vaccineSource: e.target.value }))}
-                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                     >
                       <option value="">Select</option>
                       <option value="BAI">BAI</option>
@@ -230,7 +230,7 @@ const AddMedicalRecordModal = ({
                       <input
                         value={vaccinationForm.vaccineSourceOther}
                         onChange={(e) => setVaccinationForm((p) => ({ ...p, vaccineSourceOther: e.target.value }))}
-                        className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 mt-2"
+                        className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors mt-2"
                         placeholder="Specify source"
                       />
                     )}
@@ -243,7 +243,7 @@ const AddMedicalRecordModal = ({
                       id="vType"
                       value={vaccinationForm.vaccineType}
                       onChange={(e) => setVaccinationForm((p) => ({ ...p, vaccineType: e.target.value }))}
-                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                     >
                       <option value="">Select</option>
                       <option value="anti-rabies">Anti-Rabies</option>
@@ -253,7 +253,7 @@ const AddMedicalRecordModal = ({
                       <input
                         value={vaccinationForm.vaccineTypeOther}
                         onChange={(e) => setVaccinationForm((p) => ({ ...p, vaccineTypeOther: e.target.value }))}
-                        className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 mt-2"
+                        className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors mt-2"
                         placeholder="Specify type"
                       />
                     )}
@@ -270,7 +270,7 @@ const AddMedicalRecordModal = ({
                       type="text"
                       value={vaccinationForm.vaccineStock}
                       onChange={(e) => setVaccinationForm((p) => ({ ...p, vaccineStock: e.target.value }))}
-                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                       placeholder="Enter vaccine stock"
                     />
                   </div>
@@ -283,7 +283,7 @@ const AddMedicalRecordModal = ({
                       type="text"
                       value={vaccinationForm.vaccinatedBy}
                       onChange={(e) => setVaccinationForm((p) => ({ ...p, vaccinatedBy: e.target.value }))}
-                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                       placeholder="Enter vaccinated by"
                     />
                   </div>
@@ -297,7 +297,7 @@ const AddMedicalRecordModal = ({
                     id="vReason"
                     value={vaccinationForm.reason}
                     onChange={(e) => setVaccinationForm((p) => ({ ...p, reason: e.target.value }))}
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                   >
                     <option value="">Select</option>
                     <option value="Mass">Mass</option>
@@ -314,7 +314,7 @@ const AddMedicalRecordModal = ({
                     id="vHasDisease"
                     value={vaccinationForm.hasDisease ? 'yes' : 'no'}
                     onChange={(e) => setVaccinationForm((p) => ({ ...p, hasDisease: e.target.value === 'yes' }))}
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                   >
                     <option value="no">No</option>
                     <option value="yes">Yes</option>
@@ -331,7 +331,7 @@ const AddMedicalRecordModal = ({
                       type="text"
                       value={vaccinationForm.disease}
                       onChange={(e) => setVaccinationForm((p) => ({ ...p, disease: e.target.value }))}
-                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                       placeholder="Specify disease"
                     />
                   </div>
@@ -346,7 +346,7 @@ const AddMedicalRecordModal = ({
                     rows={4}
                     value={vaccinationForm.notes}
                     onChange={(e) => setVaccinationForm((p) => ({ ...p, notes: e.target.value }))}
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                   />
                 </div>
               </div>
@@ -361,7 +361,7 @@ const AddMedicalRecordModal = ({
                     type="date"
                     value={medicalForm.date}
                     onChange={(e) => setMedicalForm((p) => ({ ...p, date: e.target.value }))}
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                   />
                 </div>
 
@@ -374,7 +374,7 @@ const AddMedicalRecordModal = ({
                     rows={6}
                     value={medicalForm.results}
                     onChange={(e) => setMedicalForm((p) => ({ ...p, results: e.target.value }))}
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                   />
                 </div>
 
@@ -387,7 +387,7 @@ const AddMedicalRecordModal = ({
                     type="text"
                     value={medicalForm.veterinarian}
                     onChange={(e) => setMedicalForm((p) => ({ ...p, veterinarian: e.target.value }))}
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                     placeholder="Enter veterinarian name"
                   />
                 </div>
@@ -401,7 +401,7 @@ const AddMedicalRecordModal = ({
                     rows={4}
                     value={medicalForm.notes}
                     onChange={(e) => setMedicalForm((p) => ({ ...p, notes: e.target.value }))}
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                   />
                 </div>
               </div>

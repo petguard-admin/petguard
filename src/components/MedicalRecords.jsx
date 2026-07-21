@@ -297,7 +297,7 @@ const MedicalRecords = () => {
               vaccinatedBy: editForm.vaccinatedBy,
               reason: editForm.reason,
               hasDisease: editForm.hasDisease,
-              disease: editForm.hasDisease ? editForm.disease : '',
+              disease: editForm.hasDisease ? editForm.disease : null,
               notes: editForm.notes,
             }
           : {
@@ -369,7 +369,7 @@ const MedicalRecords = () => {
 
   return (
     <OwnerSidebarLayout title="Medical Records">
-      <div className="flex items-start justify-between gap-3 mb-6">
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-6">
         <div>
           <p className="text-sm text-muted-foreground">Records for your currently selected pet.</p>
         </div>
@@ -428,7 +428,7 @@ const MedicalRecords = () => {
                     value={medicalSearch}
                     onChange={(e) => setMedicalSearch(e.target.value)}
                     placeholder="Search by date, veterinarian, results"
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                   />
                 </div>
                 <div>
@@ -437,7 +437,7 @@ const MedicalRecords = () => {
                     id="medicalSpeciesFilter"
                     value={medicalSpeciesFilter}
                     onChange={(e) => setMedicalSpeciesFilter(e.target.value)}
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                   >
                     <option value="">All</option>
                     <option value="Dog">Dog</option>
@@ -449,67 +449,75 @@ const MedicalRecords = () => {
               {error ? <div className="mb-3 text-sm text-destructive">{error}</div> : null}
               {message ? <div className="mb-3 text-sm text-green-600">{message}</div> : null}
 
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="text-left border-b border-border">
-                      <th className="py-2 pr-4">
-                        <button type="button" onClick={() => setMedicalSortKey('date')} className="font-semibold hover:underline">
-                          Date
-                        </button>
-                      </th>
-                      <th className="py-2 pr-4">
-                        <button type="button" onClick={() => setMedicalSortKey('results')} className="font-semibold hover:underline">
-                          Results
-                        </button>
-                      </th>
-                      <th className="py-2 pr-4">
-                        <button type="button" onClick={() => setMedicalSortKey('veterinarian')} className="font-semibold hover:underline">
-                          Veterinarian
-                        </button>
-                      </th>
-                      <th className="py-2 pr-4">Notes</th>
-                      <th className="py-2">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {recordsLoading ? (
-                      <tr>
-                        <td colSpan={5} className="py-6 text-center text-muted-foreground">
-                          Loading...
-                        </td>
+              <div className="w-full min-w-0 rounded-xl border border-slate-200 bg-white shadow-md overflow-hidden">
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm border-collapse min-w-[450px]">
+                    <thead className="sticky top-0 z-10">
+                      <tr className="bg-gradient-to-r from-slate-800 to-slate-700">
+                        <th className="py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap">
+                          <button type="button" onClick={() => setMedicalSortKey('date')} className="inline-flex items-center gap-1 text-slate-100 hover:text-white transition-colors">
+                            Date
+                          </button>
+                        </th>
+                        <th className="py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap">
+                          <button type="button" onClick={() => setMedicalSortKey('results')} className="inline-flex items-center gap-1 text-slate-100 hover:text-white transition-colors">
+                            Results
+                          </button>
+                        </th>
+                        <th className="py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap">
+                          <button type="button" onClick={() => setMedicalSortKey('veterinarian')} className="inline-flex items-center gap-1 text-slate-100 hover:text-white transition-colors">
+                            Veterinarian
+                          </button>
+                        </th>
+                        <th className="py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap">Notes</th>
+                        <th className="py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap">Actions</th>
                       </tr>
-                    ) : medicalPageItems.length === 0 ? (
-                      <tr>
-                        <td colSpan={5} className="py-6 text-center text-muted-foreground">
-                          No medical records found.
-                        </td>
-                      </tr>
-                    ) : (
-                      medicalPageItems.map((r) => (
-                        <tr key={r.id} className="border-b border-border last:border-0">
-                          <td className="py-2 pr-4">{r.date || '—'}</td>
-                          <td className="py-2 pr-4 max-w-xs truncate">{r.results ? r.results.substring(0, 50) + (r.results.length > 50 ? '...' : '') : '—'}</td>
-                          <td className="py-2 pr-4">{r.veterinarian || '—'}</td>
-                          <td className="py-2 pr-4 max-w-xs truncate">{r.notes ? r.notes.substring(0, 50) + (r.notes.length > 50 ? '...' : '') : '—'}</td>
-                          <td className="py-2">
-                            <div className="flex items-center gap-2">
-                              <Button variant="blue" size="sm" onClick={() => onView(r)}>
-                                View
-                              </Button>
-                              <Button variant="outline" size="sm" onClick={() => onEdit(r)}>
-                                Edit
-                              </Button>
-                              <Button variant="destructive" size="sm" onClick={() => deleteRecord(r)} disabled={deletingId === r.id}>
-                                Delete
-                              </Button>
+                    </thead>
+                    <tbody>
+                      {recordsLoading ? (
+                        <tr>
+                          <td colSpan={5} className="py-10 text-center text-slate-400 text-sm">
+                            <div className="flex flex-col items-center gap-2">
+                              <svg className="animate-spin h-5 w-5 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>
+                              <span>Loading...</span>
                             </div>
                           </td>
                         </tr>
-                      ))
-                    )}
-                  </tbody>
-                </table>
+                      ) : medicalPageItems.length === 0 ? (
+                        <tr>
+                          <td colSpan={5} className="py-12 text-center text-slate-400">
+                            <div className="flex flex-col items-center gap-1">
+                              <svg className="h-8 w-8 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                              <span className="text-sm font-medium">No medical records found.</span>
+                            </div>
+                          </td>
+                        </tr>
+                      ) : (
+                        medicalPageItems.map((r, idx) => (
+                          <tr key={r.id} className={`border-b border-slate-100 last:border-0 hover:bg-emerald-50/50 transition-colors ${idx % 2 === 0 ? 'bg-white' : 'bg-slate-50/50'}`}>
+                            <td className="py-3 px-4 text-slate-600">{r.date || '—'}</td>
+                            <td className="py-3 px-4 max-w-xs truncate text-slate-500 text-xs" title={r.results}>{r.results ? r.results.substring(0, 50) + (r.results.length > 50 ? '...' : '') : '—'}</td>
+                            <td className="py-3 px-4 text-slate-600">{r.veterinarian || '—'}</td>
+                            <td className="py-3 px-4 max-w-xs truncate text-slate-500 text-xs" title={r.notes}>{r.notes ? r.notes.substring(0, 50) + (r.notes.length > 50 ? '...' : '') : '—'}</td>
+                            <td className="py-3 px-4">
+                              <div className="flex flex-wrap gap-1">
+                                <Button variant="blue" size="xs" onClick={() => onView(r)}>
+                                  View
+                                </Button>
+                                <Button variant="outline" size="xs" onClick={() => onEdit(r)}>
+                                  Edit
+                                </Button>
+                                <Button variant="destructive" size="xs" onClick={() => deleteRecord(r)} disabled={deletingId === r.id}>
+                                  Delete
+                                </Button>
+                              </div>
+                            </td>
+                          </tr>
+                        ))
+                      )}
+                    </tbody>
+                  </table>
+                </div>
               </div>
 
               <div className="mt-4 flex flex-col md:flex-row md:items-center md:justify-between gap-2">
@@ -517,13 +525,13 @@ const MedicalRecords = () => {
                   Showing {filteredMedical.length ? medicalStart + 1 : 0}-{Math.min(medicalStart + medicalPageSize, filteredMedical.length)} of {filteredMedical.length}
                 </div>
                 <div className="flex items-center gap-2">
-                  <Button variant="outline" size="sm" onClick={() => setMedicalPage((p) => Math.max(1, p - 1))} disabled={medicalSafePage <= 1}>
+                  <Button variant="outline" size="xs" onClick={() => setMedicalPage((p) => Math.max(1, p - 1))} disabled={medicalSafePage <= 1}>
                     Prev
                   </Button>
                   <div className="text-sm">
                     Page {medicalSafePage} / {medicalTotalPages}
                   </div>
-                  <Button variant="outline" size="sm" onClick={() => setMedicalPage((p) => Math.min(medicalTotalPages, p + 1))} disabled={medicalSafePage >= medicalTotalPages}>
+                  <Button variant="outline" size="xs" onClick={() => setMedicalPage((p) => Math.min(medicalTotalPages, p + 1))} disabled={medicalSafePage >= medicalTotalPages}>
                     Next
                   </Button>
                 </div>
@@ -542,7 +550,7 @@ const MedicalRecords = () => {
                     value={vaccinationSearch}
                     onChange={(e) => setVaccinationSearch(e.target.value)}
                     placeholder="Search by date, vaccine type, vaccinated by"
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                   />
                 </div>
                 <div>
@@ -551,7 +559,7 @@ const MedicalRecords = () => {
                     id="vaccinationSpeciesFilter"
                     value={vaccinationSpeciesFilter}
                     onChange={(e) => setVaccinationSpeciesFilter(e.target.value)}
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                   >
                     <option value="">All</option>
                     <option value="Dog">Dog</option>
@@ -563,77 +571,85 @@ const MedicalRecords = () => {
               {error ? <div className="mb-3 text-sm text-destructive">{error}</div> : null}
               {message ? <div className="mb-3 text-sm text-green-600">{message}</div> : null}
 
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="text-left border-b border-border">
-                      <th className="py-2 pr-4">
-                        <button type="button" onClick={() => setVaccinationSortKey('date')} className="font-semibold hover:underline">
-                          Date
-                        </button>
-                      </th>
-                      <th className="py-2 pr-4">
-                        <button type="button" onClick={() => setVaccinationSortKey('vaccineType')} className="font-semibold hover:underline">
-                          Vaccine Type
-                        </button>
-                      </th>
-                      <th className="py-2 pr-4">
-                        <button type="button" onClick={() => setVaccinationSortKey('vaccineSource')} className="font-semibold hover:underline">
-                          Source
-                        </button>
-                      </th>
-                      <th className="py-2 pr-4">
-                        <button type="button" onClick={() => setVaccinationSortKey('vaccinatedBy')} className="font-semibold hover:underline">
-                          Vaccinated By
-                        </button>
-                      </th>
-                      <th className="py-2 pr-4">Reason</th>
-                      <th className="py-2 pr-4">Disease</th>
-                      <th className="py-2 pr-4">Notes</th>
-                      <th className="py-2">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {recordsLoading ? (
-                      <tr>
-                        <td colSpan={8} className="py-6 text-center text-muted-foreground">
-                          Loading...
-                        </td>
+              <div className="w-full min-w-0 rounded-xl border border-slate-200 bg-white shadow-md overflow-hidden">
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm border-collapse min-w-[600px]">
+                    <thead className="sticky top-0 z-10">
+                      <tr className="bg-gradient-to-r from-slate-800 to-slate-700">
+                        <th className="py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap">
+                          <button type="button" onClick={() => setVaccinationSortKey('date')} className="inline-flex items-center gap-1 text-slate-100 hover:text-white transition-colors">
+                            Date
+                          </button>
+                        </th>
+                        <th className="py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap">
+                          <button type="button" onClick={() => setVaccinationSortKey('vaccineType')} className="inline-flex items-center gap-1 text-slate-100 hover:text-white transition-colors">
+                            Vaccine Type
+                          </button>
+                        </th>
+                        <th className="py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap hidden lg:table-cell">
+                          <button type="button" onClick={() => setVaccinationSortKey('vaccineSource')} className="inline-flex items-center gap-1 text-slate-100 hover:text-white transition-colors">
+                            Source
+                          </button>
+                        </th>
+                        <th className="py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap">
+                          <button type="button" onClick={() => setVaccinationSortKey('vaccinatedBy')} className="inline-flex items-center gap-1 text-slate-100 hover:text-white transition-colors">
+                            Vaccinated By
+                          </button>
+                        </th>
+                        <th className="py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap hidden md:table-cell">Reason</th>
+                        <th className="py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap hidden xl:table-cell">Disease</th>
+                        <th className="py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap hidden md:table-cell">Notes</th>
+                        <th className="py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap">Actions</th>
                       </tr>
-                    ) : vaccinationPageItems.length === 0 ? (
-                      <tr>
-                        <td colSpan={8} className="py-6 text-center text-muted-foreground">
-                          No vaccination records found.
-                        </td>
-                      </tr>
-                    ) : (
-                      vaccinationPageItems.map((r) => (
-                        <tr key={r.id} className="border-b border-border last:border-b-0">
-                          <td className="py-2 pr-4">{r.date || '—'}</td>
-                          <td className="py-2 pr-4">{r.vaccineType || '—'}</td>
-                          <td className="py-2 pr-4">{r.vaccineSource || '—'}</td>
-                          <td className="py-2 pr-4">{r.vaccinatedBy || '—'}</td>
-                          <td className="py-2 pr-4">{r.reason || '—'}</td>
-                          <td className="py-2 pr-4">{r.disease || 'N/A'}</td>
-                          <td className="py-2 pr-4 max-w-xs truncate">{r.notes ? r.notes.substring(0, 50) + (r.notes.length > 50 ? '...' : '') : '—'}</td>
-                          <td className="py-2">
-                            <div className="flex items-center gap-2">
-                              <Button variant="blue" size="sm" onClick={() => onView(r)}>
-                                View
-                              </Button>
-                              <Button variant="outline" size="sm" onClick={() => onEdit(r)}>
-                                Edit
-                              </Button>
-                              <Button variant="destructive" size="sm" onClick={() => deleteRecord(r)} disabled={deletingId === r.id}>
-                                Delete
-                              </Button>
+                    </thead>
+                    <tbody>
+                      {recordsLoading ? (
+                        <tr>
+                          <td colSpan={8} className="py-10 text-center text-slate-400 text-sm">
+                            <div className="flex flex-col items-center gap-2">
+                              <svg className="animate-spin h-5 w-5 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>
+                              <span>Loading...</span>
                             </div>
                           </td>
                         </tr>
-                      ))
-                    )}
-                  </tbody>
-                </table>
+                      ) : vaccinationPageItems.length === 0 ? (
+                        <tr>
+                          <td colSpan={8} className="py-12 text-center text-slate-400">
+                            <div className="flex flex-col items-center gap-1">
+                              <svg className="h-8 w-8 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+                              <span className="text-sm font-medium">No vaccination records found.</span>
+                            </div>
+                          </td>
+                        </tr>
+                      ) : (
+                        vaccinationPageItems.map((r, idx) => (
+                          <tr key={r.id} className={`border-b border-slate-100 last:border-b-0 hover:bg-emerald-50/50 transition-colors ${idx % 2 === 0 ? 'bg-white' : 'bg-slate-50/50'}`}>
+                            <td className="py-3 px-4 text-slate-600">{r.date || '—'}</td>
+                            <td className="py-3 px-4 text-slate-600">{r.vaccineType || '—'}</td>
+                            <td className="py-3 px-4 text-slate-600 hidden lg:table-cell">{r.vaccineSource || '—'}</td>
+                            <td className="py-3 px-4 text-slate-600">{r.vaccinatedBy || '—'}</td>
+                            <td className="py-3 px-4 text-slate-600 hidden md:table-cell">{r.reason || '—'}</td>
+                            <td className="py-3 px-4 text-slate-600 hidden xl:table-cell">{r.disease || 'N/A'}</td>
+                            <td className="py-3 px-4 max-w-xs truncate text-slate-500 text-xs hidden md:table-cell" title={r.notes}>{r.notes ? r.notes.substring(0, 50) + (r.notes.length > 50 ? '...' : '') : '—'}</td>
+                            <td className="py-3 px-4">
+                              <div className="flex flex-wrap gap-1">
+                                <Button variant="blue" size="xs" onClick={() => onView(r)}>
+                                  View
+                                </Button>
+                                <Button variant="outline" size="xs" onClick={() => onEdit(r)}>
+                                  Edit
+                                </Button>
+                                <Button variant="destructive" size="xs" onClick={() => deleteRecord(r)} disabled={deletingId === r.id}>
+                                  Delete
+                                </Button>
+                              </div>
+                            </td>
+                          </tr>
+                        ))
+                      )}
+                    </tbody>
+                  </table>
+                </div>
               </div>
 
               <div className="mt-4 flex flex-col md:flex-row md:items-center md:justify-between gap-2">
@@ -641,13 +657,13 @@ const MedicalRecords = () => {
                   Showing {filteredVaccination.length ? vaccinationStart + 1 : 0}-{Math.min(vaccinationStart + vaccinationPageSize, filteredVaccination.length)} of {filteredVaccination.length}
                 </div>
                 <div className="flex items-center gap-2">
-                  <Button variant="outline" size="sm" onClick={() => setVaccinationPage((p) => Math.max(1, p - 1))} disabled={vaccinationSafePage <= 1}>
+                  <Button variant="outline" size="xs" onClick={() => setVaccinationPage((p) => Math.max(1, p - 1))} disabled={vaccinationSafePage <= 1}>
                     Prev
                   </Button>
                   <div className="text-sm">
                     Page {vaccinationSafePage} / {vaccinationTotalPages}
                   </div>
-                  <Button variant="outline" size="sm" onClick={() => setVaccinationPage((p) => Math.min(vaccinationTotalPages, p + 1))} disabled={vaccinationSafePage >= vaccinationTotalPages}>
+                  <Button variant="outline" size="xs" onClick={() => setVaccinationPage((p) => Math.min(vaccinationTotalPages, p + 1))} disabled={vaccinationSafePage >= vaccinationTotalPages}>
                     Next
                   </Button>
                 </div>
@@ -726,7 +742,7 @@ const MedicalRecords = () => {
                     type="date"
                     value={editForm.date}
                     onChange={onEditChange}
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                   />
                 </div>
                 {editForm.recordType === 'vaccination' ? (
@@ -737,7 +753,7 @@ const MedicalRecords = () => {
                         name="vaccineType"
                         value={editForm.vaccineType}
                         onChange={onEditChange}
-                        className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                        className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                       />
                     </div>
                     <div>
@@ -746,7 +762,7 @@ const MedicalRecords = () => {
                         name="vaccineSource"
                         value={editForm.vaccineSource}
                         onChange={onEditChange}
-                        className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                        className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                       />
                     </div>
                     <div>
@@ -755,7 +771,7 @@ const MedicalRecords = () => {
                         name="vaccineStock"
                         value={editForm.vaccineStock}
                         onChange={onEditChange}
-                        className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                        className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                       />
                     </div>
                     <div>
@@ -764,7 +780,7 @@ const MedicalRecords = () => {
                         name="vaccinatedBy"
                         value={editForm.vaccinatedBy}
                         onChange={onEditChange}
-                        className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                        className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                       />
                     </div>
                     <div>
@@ -773,7 +789,7 @@ const MedicalRecords = () => {
                         name="reason"
                         value={editForm.reason}
                         onChange={onEditChange}
-                        className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                        className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                       >
                         <option value="">Select</option>
                         <option value="Mass">Mass</option>
@@ -787,7 +803,7 @@ const MedicalRecords = () => {
                         name="hasDisease"
                         value={editForm.hasDisease ? 'yes' : 'no'}
                         onChange={(e) => setEditForm({ ...editForm, hasDisease: e.target.value === 'yes' })}
-                        className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                        className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                       >
                         <option value="no">No</option>
                         <option value="yes">Yes</option>
@@ -800,7 +816,7 @@ const MedicalRecords = () => {
                           name="disease"
                           value={editForm.disease}
                           onChange={onEditChange}
-                          className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                          className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                           placeholder="Specify disease"
                         />
                       </div>
@@ -812,7 +828,7 @@ const MedicalRecords = () => {
                         rows={3}
                         value={editForm.notes}
                         onChange={onEditChange}
-                        className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                        className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                       />
                     </div>
                   </>
@@ -825,7 +841,7 @@ const MedicalRecords = () => {
                         rows={6}
                         value={editForm.results}
                         onChange={onEditChange}
-                        className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                        className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                       />
                     </div>
                     <div>
@@ -835,7 +851,7 @@ const MedicalRecords = () => {
                         type="text"
                         value={editForm.veterinarian}
                         onChange={onEditChange}
-                        className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                        className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                         placeholder="Enter veterinarian name"
                       />
                     </div>
@@ -846,7 +862,7 @@ const MedicalRecords = () => {
                         rows={4}
                         value={editForm.notes}
                         onChange={onEditChange}
-                        className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                        className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                       />
                     </div>
                   </>

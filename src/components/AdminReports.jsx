@@ -117,111 +117,26 @@ const AdminReports = () => {
     fetchVaccinationRecords();
   }, [fetchVaccinationRecords]);
 
-  const groupedRecords = React.useMemo(() => {
-    const grouped = {};
-    vaccinationRecords.forEach((record) => {
-      const ownerId = record.ownerId || record.ownerData?.ownerId;
-      const date = record.date;
-      let monthYear = '';
-      if (date) {
-        const d = new Date(date);
-        if (!Number.isNaN(d.getTime())) {
-          monthYear = `${d.getFullYear()}-${d.getMonth()}`;
-        }
-      }
-      const key = `${ownerId}_${monthYear}`;
-
-      if (!grouped[key]) {
-        grouped[key] = {
-          ownerId,
-          ownerData: record.ownerData,
-          monthYear,
-          pets: [],
-          dates: [],
-          vaccineTypes: [],
-          vaccineStocks: [],
-          vaccineSources: [],
-          diseases: [],
-          reasons: [],
-          notes: [],
-        };
-      }
-      grouped[key].pets.push({
+  const displayRecords = React.useMemo(() => {
+    return vaccinationRecords.map((record) => {
+      const owner = record.ownerData;
+      return {
+        reason: record.reason,
+        date: record.date,
+        barangay: owner?.barangay || '',
+        firstName: owner?.firstname || '',
+        lastName: owner?.lastname || '',
+        gender: owner?.gender || '',
+        birthday: owner?.birthday || null,
+        contactNo: owner?.phoneNumber || owner?.phone || '',
         species: record.species,
         sex: record.sex,
         age: record.age,
-      });
-      if (record.date && !grouped[key].dates.includes(record.date)) {
-        grouped[key].dates.push(record.date);
-      }
-      if (record.vaccineType && !grouped[key].vaccineTypes.includes(record.vaccineType)) {
-        grouped[key].vaccineTypes.push(record.vaccineType);
-      }
-      if (record.vaccineStock && !grouped[key].vaccineStocks.includes(record.vaccineStock)) {
-        grouped[key].vaccineStocks.push(record.vaccineStock);
-      }
-      if (record.vaccineSource && !grouped[key].vaccineSources.includes(record.vaccineSource)) {
-        grouped[key].vaccineSources.push(record.vaccineSource);
-      }
-      if (record.disease && !grouped[key].diseases.includes(record.disease)) {
-        grouped[key].diseases.push(record.disease);
-      }
-      if (record.reason && !grouped[key].reasons.includes(record.reason)) {
-        grouped[key].reasons.push(record.reason);
-      }
-      if (record.notes && !grouped[key].notes.includes(record.notes)) {
-        grouped[key].notes.push(record.notes);
-      }
-    });
-
-    return Object.values(grouped).map((group) => {
-      const species = new Set(group.pets.map((p) => p.species).filter(Boolean));
-      const speciesList = Array.from(species);
-      const speciesDisplay = speciesList.length > 0 ? speciesList.join(', ') : '—';
-
-      const sexList = group.pets.map((p) => p.sex).filter(Boolean);
-      const sexDisplay = sexList.length > 0 ? sexList.join('; ') : '—';
-
-      const ageList = group.pets.map((p) => p.age).filter(Boolean);
-      const ageDisplay = ageList.length > 0 ? ageList.join(', ') : '—';
-
-      const animalRegistered = 'Yes';
-      const noOfHeads = group.pets.length;
-
-      const owner = group.ownerData;
-      const firstName = owner?.firstname || '';
-      const lastName = owner?.lastname || '';
-      const gender = owner?.gender || '';
-      const birthday = owner?.birthday || null;
-      const contactNo = owner?.phoneNumber || owner?.phone || '';
-      const barangay = owner?.barangay || '';
-
-      const dateDisplay = group.dates.length > 0 ? group.dates[0] : '—';
-      const reasonDisplay = group.reasons.length > 0 ? group.reasons.join(', ') : '—';
-      const vaccineTypeDisplay = group.vaccineTypes.length > 0 ? group.vaccineTypes.join(', ') : '—';
-      const vaccineSourceDisplay = group.vaccineSources.length > 0 ? group.vaccineSources.join(', ') : '—';
-      const diseaseDisplay = group.diseases.length > 0 ? group.diseases.join(', ') : '—';
-      const remarksDisplay = group.notes.length > 0 ? group.notes.join(', ') : '—';
-
-      return {
-        reason: reasonDisplay,
-        date: dateDisplay,
-        barangay,
-        firstName,
-        lastName,
-        gender,
-        birthday,
-        contactNo,
-        species: speciesDisplay,
-        sex: sexDisplay,
-        age: ageDisplay,
-        animalRegistered,
-        noOfHeads,
-        disease: diseaseDisplay,
-        vaccineType: vaccineTypeDisplay,
-        batchLotNo: group.vaccineStocks.length > 0 ? group.vaccineStocks.join(', ') : '',
-        vaccineSource: vaccineSourceDisplay,
-        remarks: remarksDisplay,
+        disease: record.disease,
+        vaccineType: record.vaccineType,
+        batchLotNo: record.vaccineStock,
+        vaccineSource: record.vaccineSource,
+        remarks: record.notes,
       };
     });
   }, [vaccinationRecords]);
@@ -230,10 +145,10 @@ const AdminReports = () => {
     setPage(1);
   }, [selectedYear]);
 
-  const totalPages = Math.max(1, Math.ceil(groupedRecords.length / pageSize));
+  const totalPages = Math.max(1, Math.ceil(displayRecords.length / pageSize));
   const safePage = Math.min(page, totalPages);
   const start = (safePage - 1) * pageSize;
-  const pageItems = groupedRecords.slice(start, start + pageSize);
+  const pageItems = displayRecords.slice(start, start + pageSize);
 
   const availableYears = React.useMemo(() => {
     const years = new Set();
@@ -251,7 +166,7 @@ const AdminReports = () => {
   const exportToExcel = React.useCallback(async () => {
     setExporting(true);
     try {
-      const filteredRecords = groupedRecords.filter((record) => {
+      const filteredRecords = displayRecords.filter((record) => {
         if (!record.date || !selectedYear) return false;
         const d = new Date(record.date);
         if (Number.isNaN(d.getTime())) return false;
@@ -283,8 +198,6 @@ const AdminReports = () => {
         'Species',
         'Sex',
         'Age',
-        'Animal Registered',
-        'No. of Heads',
         'Disease',
         'Vaccine Type',
         'Batch/Lot No.',
@@ -310,8 +223,6 @@ const AdminReports = () => {
             record.species || '—',
             record.sex || '—',
             record.age || '—',
-            record.animalRegistered || '—',
-            record.noOfHeads || '—',
             record.disease || '—',
             record.vaccineType || '—',
             record.batchLotNo || '—',
@@ -337,7 +248,7 @@ const AdminReports = () => {
     } finally {
       setExporting(false);
     }
-  }, [groupedRecords, selectedYear]);
+  }, [displayRecords, selectedYear]);
 
   return (
     <AdminSidebarLayout title="Reports">
@@ -348,13 +259,13 @@ const AdminReports = () => {
             <select
               value={selectedYear}
               onChange={(e) => setSelectedYear(e.target.value)}
-              className="rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
             >
               {availableYears.map((year) => (
                 <option key={year} value={year}>{year}</option>
               ))}
             </select>
-            <Button variant="green" onClick={exportToExcel} disabled={exporting || loading || groupedRecords.length === 0}>
+            <Button variant="green" onClick={exportToExcel} disabled={exporting || loading || displayRecords.length === 0}>
               {exporting ? 'Exporting...' : 'Save as Excel'}
             </Button>
             <Button variant="outline" onClick={fetchVaccinationRecords} disabled={loading}>
@@ -367,70 +278,72 @@ const AdminReports = () => {
           <div className="rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">{error}</div>
         ) : null}
 
-        <div className="rounded-lg border border-border bg-card shadow-sm overflow-hidden">
+        <div className="w-full min-w-0 rounded-xl border border-slate-200 bg-white shadow-md overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full text-sm border-collapse">
-              <thead>
-                <tr className="bg-slate-50 border-b-2 border-slate-200">
-                  <th className="py-3 px-4 text-left font-semibold border-r border-slate-200 whitespace-nowrap" rowSpan={2}>Reason</th>
-                  <th className="py-3 px-4 text-left font-semibold border-r border-slate-200 whitespace-nowrap" rowSpan={2}>Date</th>
-                  <th className="py-3 px-4 text-left font-semibold border-r border-slate-200 whitespace-nowrap" rowSpan={2}>Barangay</th>
-                  <th className="py-3 px-4 text-center font-semibold border-r border-slate-200 whitespace-nowrap bg-slate-100" colSpan={5}>Client Information</th>
-                  <th className="py-3 px-4 text-center font-semibold border-r border-slate-200 whitespace-nowrap bg-slate-100" colSpan={3}>Animal Information</th>
-                  <th className="py-3 px-4 text-center font-semibold border-r border-slate-200 whitespace-nowrap bg-slate-100" colSpan={6}>Vaccine Information</th>
-                  <th className="py-3 px-4 text-center font-semibold whitespace-nowrap" rowSpan={2}>Remarks</th>
+            <table className="w-full text-sm border-collapse min-w-[1000px]">
+              <thead className="sticky top-0 z-10">
+                <tr className="bg-gradient-to-r from-slate-800 to-slate-700">
+                  <th className="py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap border-r border-slate-600" rowSpan={2}>Reason</th>
+                  <th className="py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap border-r border-slate-600" rowSpan={2}>Date</th>
+                  <th className="py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap border-r border-slate-600" rowSpan={2}>Barangay</th>
+                  <th className="py-3.5 px-4 text-center text-xs font-bold uppercase tracking-wider text-white whitespace-nowrap border-r border-slate-600 bg-slate-600/50 hidden xl:table-cell" colSpan={5}>Client Information</th>
+                  <th className="py-3.5 px-4 text-center text-xs font-bold uppercase tracking-wider text-white whitespace-nowrap border-r border-slate-600 bg-slate-600/50 hidden lg:table-cell" colSpan={3}>Animal Information</th>
+                  <th className="py-3.5 px-4 text-center text-xs font-bold uppercase tracking-wider text-white whitespace-nowrap border-r border-slate-600 bg-slate-600/50" colSpan={4}>Vaccine Information</th>
+                  <th className="py-3.5 px-4 text-center text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap hidden lg:table-cell" rowSpan={2}>Remarks</th>
                 </tr>
-                <tr className="bg-slate-50 border-b border-slate-200">
-                  <th className="py-3 px-4 text-left font-semibold border-r border-slate-200 whitespace-nowrap">First Name</th>
-                  <th className="py-3 px-4 text-left font-semibold border-r border-slate-200 whitespace-nowrap">Last Name</th>
-                  <th className="py-3 px-4 text-left font-semibold border-r border-slate-200 whitespace-nowrap">Gender</th>
-                  <th className="py-3 px-4 text-left font-semibold border-r border-slate-200 whitespace-nowrap">Birthday</th>
-                  <th className="py-3 px-4 text-left font-semibold border-r border-slate-200 whitespace-nowrap">Contact No.</th>
-                  <th className="py-3 px-4 text-left font-semibold border-r border-slate-200 whitespace-nowrap">Species</th>
-                  <th className="py-3 px-4 text-left font-semibold border-r border-slate-200 whitespace-nowrap">Sex</th>
-                  <th className="py-3 px-4 text-left font-semibold border-r border-slate-200 whitespace-nowrap">Age</th>
-                  <th className="py-3 px-4 text-left font-semibold border-r border-slate-200 whitespace-nowrap">Animal Registered</th>
-                  <th className="py-3 px-4 text-left font-semibold border-r border-slate-200 whitespace-nowrap">No. of Heads</th>
-                  <th className="py-3 px-4 text-left font-semibold border-r border-slate-200 whitespace-nowrap">Disease</th>
-                  <th className="py-3 px-4 text-left font-semibold border-r border-slate-200 whitespace-nowrap">Vaccine Type</th>
-                  <th className="py-3 px-4 text-left font-semibold border-r border-slate-200 whitespace-nowrap">Batch/Lot No.</th>
-                  <th className="py-3 px-4 text-left font-semibold border-r border-slate-200 whitespace-nowrap">Vaccine Source</th>
+                <tr className="bg-gradient-to-r from-slate-800 to-slate-700">
+                  <th className="py-3 px-4 text-left text-[11px] font-semibold uppercase tracking-wider text-slate-200 whitespace-nowrap border-r border-slate-600">First Name</th>
+                  <th className="py-3 px-4 text-left text-[11px] font-semibold uppercase tracking-wider text-slate-200 whitespace-nowrap border-r border-slate-600">Last Name</th>
+                  <th className="py-3 px-4 text-left text-[11px] font-semibold uppercase tracking-wider text-slate-200 whitespace-nowrap border-r border-slate-600 hidden xl:table-cell">Gender</th>
+                  <th className="py-3 px-4 text-left text-[11px] font-semibold uppercase tracking-wider text-slate-200 whitespace-nowrap border-r border-slate-600 hidden xl:table-cell">Birthday</th>
+                  <th className="py-3 px-4 text-left text-[11px] font-semibold uppercase tracking-wider text-slate-200 whitespace-nowrap border-r border-slate-600 hidden lg:table-cell">Contact No.</th>
+                  <th className="py-3 px-4 text-left text-[11px] font-semibold uppercase tracking-wider text-slate-200 whitespace-nowrap border-r border-slate-600">Species</th>
+                  <th className="py-3 px-4 text-left text-[11px] font-semibold uppercase tracking-wider text-slate-200 whitespace-nowrap border-r border-slate-600 hidden md:table-cell">Sex</th>
+                  <th className="py-3 px-4 text-left text-[11px] font-semibold uppercase tracking-wider text-slate-200 whitespace-nowrap border-r border-slate-600 hidden md:table-cell">Age</th>
+                  <th className="py-3 px-4 text-left text-[11px] font-semibold uppercase tracking-wider text-slate-200 whitespace-nowrap border-r border-slate-600 hidden xl:table-cell">Disease</th>
+                  <th className="py-3 px-4 text-left text-[11px] font-semibold uppercase tracking-wider text-slate-200 whitespace-nowrap border-r border-slate-600">Vaccine Type</th>
+                  <th className="py-3 px-4 text-left text-[11px] font-semibold uppercase tracking-wider text-slate-200 whitespace-nowrap border-r border-slate-600 hidden xl:table-cell">Batch/Lot No.</th>
+                  <th className="py-3 px-4 text-left text-[11px] font-semibold uppercase tracking-wider text-slate-200 whitespace-nowrap border-r border-slate-600 hidden lg:table-cell">Vaccine Source</th>
                 </tr>
               </thead>
               <tbody>
                 {loading ? (
                   <tr>
-                    <td colSpan={17} className="py-8 text-center text-slate-500">
-                      Loading...
+                    <td colSpan={16} className="py-10 text-center text-slate-400 text-sm">
+                      <div className="flex flex-col items-center gap-2">
+                        <svg className="animate-spin h-5 w-5 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>
+                        <span>Loading...</span>
+                      </div>
                     </td>
                   </tr>
                 ) : pageItems.length === 0 ? (
                   <tr>
-                    <td colSpan={17} className="py-8 text-center text-slate-500">
-                      No vaccination records found.
+                    <td colSpan={16} className="py-12 text-center text-slate-400">
+                      <div className="flex flex-col items-center gap-1">
+                        <svg className="h-8 w-8 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                        <span className="text-sm font-medium">No vaccination records found.</span>
+                      </div>
                     </td>
                   </tr>
                 ) : (
                   pageItems.map((record, index) => (
-                    <tr key={index} className="border-b border-slate-200 hover:bg-slate-50 transition-colors">
-                      <td className="py-3 px-4 border-r border-slate-300">{record.reason === 'Routine' ? 'R' : record.reason === 'Mass' ? 'M' : record.reason === 'Outbreak' ? 'O' : record.reason || '—'}</td>
-                      <td className="py-3 px-4 border-r border-slate-300">{record.date || '—'}</td>
-                      <td className="py-3 px-4 border-r border-slate-300">{record.barangay || '—'}</td>
-                      <td className="py-3 px-4 border-r border-slate-300">{record.firstName || '—'}</td>
-                      <td className="py-3 px-4 border-r border-slate-300">{record.lastName || '—'}</td>
-                      <td className="py-3 px-4 border-r border-slate-300">{record.gender || '—'}</td>
-                      <td className="py-3 px-4 border-r border-slate-300">{record.birthday || '—'}</td>
-                      <td className="py-3 px-4 border-r border-slate-300">{record.contactNo || '—'}</td>
-                      <td className="py-3 px-4 border-r border-slate-300">{record.species || '—'}</td>
-                      <td className="py-3 px-4 border-r border-slate-300">{record.sex || '—'}</td>
-                      <td className="py-3 px-4 border-r border-slate-300">{record.age || '—'}</td>
-                      <td className="py-3 px-4 border-r border-slate-300">{record.animalRegistered || 0}</td>
-                      <td className="py-3 px-4 border-r border-slate-300">{record.noOfHeads || 0}</td>
-                      <td className="py-3 px-4 border-r border-slate-300">{record.disease || '—'}</td>
-                      <td className="py-3 px-4 border-r border-slate-300">{record.vaccineType || '—'}</td>
-                      <td className="py-3 px-4 border-r border-slate-300">{record.batchLotNo || '—'}</td>
-                      <td className="py-3 px-4 border-r border-slate-300">{record.vaccineSource || '—'}</td>
-                      <td className="py-3 px-4">{record.remarks || '—'}</td>
+                    <tr key={index} className={`border-b border-slate-100 hover:bg-emerald-50/50 transition-colors ${index % 2 === 0 ? 'bg-white' : 'bg-slate-50/50'}`}>
+                      <td className="py-3 px-4 border-r border-slate-200/80 text-slate-700 font-medium">{record.reason === 'Routine' ? 'R' : record.reason === 'Mass' ? 'M' : record.reason === 'Outbreak' ? 'O' : record.reason || '—'}</td>
+                      <td className="py-3 px-4 border-r border-slate-200/80 text-slate-600">{record.date || '—'}</td>
+                      <td className="py-3 px-4 border-r border-slate-200/80 text-slate-600">{record.barangay || '—'}</td>
+                      <td className="py-3 px-4 border-r border-slate-200/80 text-slate-600">{record.firstName || '—'}</td>
+                      <td className="py-3 px-4 border-r border-slate-200/80 text-slate-600">{record.lastName || '—'}</td>
+                      <td className="py-3 px-4 border-r border-slate-200/80 text-slate-600 hidden xl:table-cell">{record.gender || '—'}</td>
+                      <td className="py-3 px-4 border-r border-slate-200/80 text-slate-600 hidden xl:table-cell">{record.birthday || '—'}</td>
+                      <td className="py-3 px-4 border-r border-slate-200/80 text-slate-600 hidden lg:table-cell">{record.contactNo || '—'}</td>
+                      <td className="py-3 px-4 border-r border-slate-200/80 text-slate-600">{record.species || '—'}</td>
+                      <td className="py-3 px-4 border-r border-slate-200/80 text-slate-600 hidden md:table-cell">{record.sex || '—'}</td>
+                      <td className="py-3 px-4 border-r border-slate-200/80 text-slate-600 hidden md:table-cell">{record.age || '—'}</td>
+                      <td className="py-3 px-4 border-r border-slate-200/80 text-slate-600 hidden xl:table-cell">{record.disease || '—'}</td>
+                      <td className="py-3 px-4 border-r border-slate-200/80 text-slate-600">{record.vaccineType || '—'}</td>
+                      <td className="py-3 px-4 border-r border-slate-200/80 text-slate-600 hidden xl:table-cell">{record.batchLotNo || '—'}</td>
+                      <td className="py-3 px-4 border-r border-slate-200/80 text-slate-600 hidden lg:table-cell">{record.vaccineSource || '—'}</td>
+                      <td className="py-3 px-4 text-slate-600 hidden lg:table-cell">{record.remarks || '—'}</td>
                     </tr>
                   ))
                 )}
@@ -441,14 +354,14 @@ const AdminReports = () => {
 
         <div className="mt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div className="text-sm text-muted-foreground">
-            Showing {groupedRecords.length === 0 ? 0 : start + 1} - {Math.min(start + pageSize, groupedRecords.length)} of{' '}
-            {groupedRecords.length}
+            Showing {displayRecords.length === 0 ? 0 : start + 1} - {Math.min(start + pageSize, displayRecords.length)} of{' '}
+            {displayRecords.length}
           </div>
           <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm" onClick={() => setPage(1)} disabled={safePage === 1}>
+            <Button variant="outline" size="xs" onClick={() => setPage(1)} disabled={safePage === 1}>
               First
             </Button>
-            <Button variant="outline" size="sm" onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={safePage === 1}>
+            <Button variant="outline" size="xs" onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={safePage === 1}>
               Prev
             </Button>
             <div className="text-sm">
@@ -456,13 +369,13 @@ const AdminReports = () => {
             </div>
             <Button
               variant="outline"
-              size="sm"
+              size="xs"
               onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
               disabled={safePage === totalPages}
             >
               Next
             </Button>
-            <Button variant="outline" size="sm" onClick={() => setPage(totalPages)} disabled={safePage === totalPages}>
+            <Button variant="outline" size="xs" onClick={() => setPage(totalPages)} disabled={safePage === totalPages}>
               Last
             </Button>
           </div>

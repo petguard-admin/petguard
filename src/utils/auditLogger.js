@@ -1,4 +1,4 @@
-import { getDatabase, ref, push, serverTimestamp } from 'firebase/database';
+import { getDatabase, ref, push, serverTimestamp, get } from 'firebase/database';
 import { auth } from '../auth';
 import app from '../firebaseConfig';
 
@@ -10,13 +10,17 @@ export const logAuditTrail = async (actionType, targetRecordId, targetRecordType
     const db = getDatabase(app);
     const auditRef = ref(db, 'auditTrail');
 
+    // Get user role from database
+    const userSnap = await get(ref(db, `users/${user.uid}`));
+    const role = userSnap.exists() ? userSnap.val().role : '';
+
     await push(auditRef, {
       timestamp: serverTimestamp(),
-      userId: user.uid,
-      userRole: 'admin', // You may need to fetch the actual role from Firebase
-      actionType,
-      targetRecordId,
-      targetRecordType,
+      performedBy: user.uid,
+      role: role,
+      action: actionType,
+      targetId: targetRecordId,
+      targetType: targetRecordType,
       beforeValues,
       afterValues,
     });

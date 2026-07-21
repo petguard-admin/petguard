@@ -72,12 +72,12 @@ const Navbar = () => {
           {loading || (user && roleLoading) ? (
             <span className="text-sm text-slate-500">Loading...</span>
           ) : user ? (
-            <>
+            <div className="hidden md:flex items-center gap-3">
               <Link to={isAdmin ? "/admin/profile" : "/profile"}>
                 <Button
                   variant="outline"
                   size="sm"
-                  className="border-green-700 text-green-700 hover:bg-green-50 rounded-xl hidden md:block"
+                  className="border-green-700 text-green-700 hover:bg-green-50 rounded-xl"
                 >
                   Profile
                 </Button>
@@ -86,11 +86,11 @@ const Navbar = () => {
               <Button
                 size="sm"
                 onClick={logout}
-                className="bg-green-700 hover:bg-green-800 text-white rounded-xl hidden md:block"
+                className="bg-green-700 hover:bg-green-800 text-white rounded-xl"
               >
                 Logout
               </Button>
-            </>
+            </div>
           ) : (
             <>
               <Button

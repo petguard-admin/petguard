@@ -1,5 +1,5 @@
 import { database } from './firebase';
-import { ref, get, set, update, remove } from 'firebase/database';
+import { ref, get, set, update, remove, push } from 'firebase/database';
 import { authService } from './authService';
 import { auth } from '../auth';
 
@@ -12,9 +12,6 @@ const emailKey = (email) => {
     return '';
   }
 };
-
-// Backend API URL - configure this based on your deployment
-const BACKEND_URL = 'https://petguard-t0mp.onrender.com';
 
 export const adminService = {
   async verifyAdmin() {
@@ -46,104 +43,213 @@ export const adminService = {
 
   async getAdmins() {
     await this.verifyAdmin();
-    
-    try {
-      const token = await auth.currentUser.getIdToken();
-      const response = await fetch(`${BACKEND_URL}/api/admin/list`, {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
+
+    const usersSnap = await get(ref(database, 'users'));
+    const val = usersSnap.exists() ? usersSnap.val() : {};
+
+    const admins = Object.keys(val || {})
+      .filter((uid) => uid !== '__meta')
+      .map((uid) => ({ uid, ...val[uid] }))
+      .filter((u) => u?.role === 'admin')
+      .map((u) => ({
+        uid: u.uid,
+        firstname: u.firstname || '',
+        lastname: u.lastname || '',
+        email: u.email || '',
+        phone: u.phone || '',
+        role: u.role || '',
+        createdAt: u.createdAt || 0
+      }));
+
+    return { admins };
+  },
+
+  async searchUsers(query) {
+    await this.verifyAdmin();
+
+    const [usersSnap, mapSnap, ownersSnap] = await Promise.all([
+      get(ref(database, 'users')),
+      get(ref(database, 'ownerUidMap')),
+      get(ref(database, 'owners')),
+    ]);
+
+    const usersVal = usersSnap.exists() ? usersSnap.val() : {};
+    const mapVal = mapSnap.exists() ? mapSnap.val() : {};
+    const ownersVal = ownersSnap.exists() ? ownersSnap.val() : {};
+
+    const uidToOwnerId = {};
+    Object.keys(mapVal || {}).forEach((uid) => {
+      if (uid !== '__meta') uidToOwnerId[uid] = mapVal[uid];
+    });
+
+    const ownerIdsFromUsers = new Set(Object.values(uidToOwnerId));
+
+    const results = [];
+    const seen = new Set();
+
+    Object.keys(ownersVal || {}).forEach((ownerId) => {
+      if (ownerId === '__meta') return;
+      const owner = ownersVal[ownerId] || {};
+      const uid = owner.uid || '';
+
+      const entry = {
+        uid,
+        ownerId,
+        firstname: owner.firstname || '',
+        lastname: owner.lastname || '',
+        email: owner.email || '',
+        phone: owner.phoneNumber || owner.phone || '',
+        role: uid && usersVal[uid] ? (usersVal[uid].role || 'owner') : 'owner',
+        hasLoginAccess: owner.hasLoginAccess || false,
+      };
+
+      results.push(entry);
+      if (uid) seen.add(uid);
+    });
+
+    Object.keys(usersVal || {}).forEach((uid) => {
+      if (uid === '__meta' || seen.has(uid)) return;
+      const user = usersVal[uid] || {};
+      results.push({
+        uid,
+        ownerId: uidToOwnerId[uid] || '',
+        firstname: user.firstname || '',
+        lastname: user.lastname || '',
+        email: user.email || '',
+        phone: user.phone || '',
+        role: user.role || 'user',
+        hasLoginAccess: true,
       });
+    });
 
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Failed to get admins');
-      }
+    const searchTerm = String(query || '').trim().toLowerCase();
+    const filtered = searchTerm
+      ? results.filter((u) => {
+          const name = `${u.firstname || ''} ${u.lastname || ''}`.toLowerCase();
+          const email = String(u.email || '').toLowerCase();
+          const phone = String(u.phone || '').toLowerCase();
+          return name.includes(searchTerm) || email.includes(searchTerm) || phone.includes(searchTerm);
+        })
+      : results;
 
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.error('Get admins error:', error.message);
-      // Fallback to client-side if backend is unavailable
-      const usersSnap = await get(ref(database, 'users'));
-      const val = usersSnap.exists() ? usersSnap.val() : {};
-
-      const admins = Object.keys(val || {})
-        .filter((uid) => uid !== '__meta')
-        .map((uid) => ({ uid, ...val[uid] }))
-        .filter((u) => u?.role === 'admin')
-        .map((u) => ({
-          uid: u.uid,
-          firstname: u.firstname || '',
-          lastname: u.lastname || '',
-          email: u.email || '',
-          phone: u.phone || '',
-          role: u.role || '',
-          createdAt: u.createdAt || 0
-        }));
-
-      return { admins };
-    }
+    return { users: filtered };
   },
 
   async createAdmin(adminProfile) {
     await this.verifyAdmin();
     
-    try {
-      const token = await auth.currentUser.getIdToken();
-      const response = await fetch(`${BACKEND_URL}/api/admin/create`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(adminProfile)
-      });
+    const { firstname, lastname, email, phone } = adminProfile;
+    const normEmail = normalizeEmail(email);
+    const normPhone = normalizePhone(phone);
+    const eKey = emailKey(normEmail);
 
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Failed to create admin');
-      }
-
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.error('Create admin error:', error.message);
-      throw error;
+    // Check if email exists
+    const emailSnap = await get(ref(database, `emailIndex/${eKey}`));
+    if (emailSnap.exists()) {
+      throw new Error('Email already exists');
     }
+
+    // Note: Admin must be created manually in Firebase Console or via signup
+    // This function only creates the database record after the user exists in Auth
+    throw new Error('Please create the user account in Firebase Console first, then use promoteToAdmin');
+  },
+
+  async promoteToAdmin(uid, ownerId) {
+    await this.verifyAdmin();
+
+    let userSnap = await get(ref(database, `users/${uid}`));
+    let beforeRole = 'owner';
+
+    if (!userSnap.exists() && ownerId) {
+      const ownerSnap = await get(ref(database, `owners/${ownerId}`));
+      if (!ownerSnap.exists()) {
+        throw new Error('Owner not found in database.');
+      }
+      const owner = ownerSnap.val();
+      if (!owner.uid) {
+        throw new Error('This owner has not signed up yet. They must create an account first before being promoted.');
+      }
+      await set(ref(database, `users/${owner.uid}`), { role: 'owner', email: owner.email || '', createdAt: Date.now() });
+      userSnap = await get(ref(database, `users/${owner.uid}`));
+    }
+
+    if (!userSnap.exists()) {
+      throw new Error('User not found in database. User must sign up first.');
+    }
+
+    const user = userSnap.val();
+    const targetUid = uid || userSnap.key;
+
+    await update(ref(database, `users/${targetUid}`), {
+      role: 'admin',
+      promotedBy: auth.currentUser.uid,
+      promotedAt: Date.now()
+    });
+
+    const auditRef = ref(database, 'auditTrail');
+    const newAuditRef = push(auditRef);
+    await set(newAuditRef, {
+      action: 'promote_to_admin',
+      targetId: targetUid,
+      targetType: 'user',
+      performedBy: auth.currentUser.uid,
+      beforeValues: { role: user.role || beforeRole },
+      afterValues: { role: 'admin' },
+      timestamp: Date.now()
+    });
+
+    return { ok: true, message: 'User promoted to admin successfully' };
   },
 
   async inviteAdmin(adminProfile) {
-    // This now uses the same createAdmin endpoint
-    return this.createAdmin(adminProfile);
+    // Firebase-only approach: provide instructions for manual setup
+    const { email } = adminProfile;
+    return {
+      ok: true,
+      message: `To add admin ${email}: 1) Have them sign up at the app, 2) Then use "Promote to Admin" feature`,
+      requiresManualSetup: true
+    };
   },
 
   async deleteAdmin(uid) {
     await this.verifyAdmin();
     
-    try {
-      const token = await auth.currentUser.getIdToken();
-      const response = await fetch(`${BACKEND_URL}/api/admin/${uid}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Failed to delete admin');
-      }
-
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.error('Delete admin error:', error.message);
-      throw error;
+    if (uid === auth.currentUser.uid) {
+      throw new Error('Cannot delete yourself');
     }
+
+    const userSnap = await get(ref(database, `users/${uid}`));
+    if (!userSnap.exists()) {
+      throw new Error('Admin not found');
+    }
+
+    const user = userSnap.val();
+    if (user.role !== 'admin') {
+      throw new Error('User is not an admin');
+    }
+
+    // Note: Cannot delete from Firebase Auth client-side
+    // This only removes admin role and database record
+    await update(ref(database, `users/${uid}`), {
+      role: 'user',
+      demotedBy: auth.currentUser.uid,
+      demotedAt: Date.now()
+    });
+
+    // Log audit
+    const auditRef = ref(database, 'auditTrail');
+    const newAuditRef = push(auditRef);
+    await set(newAuditRef, {
+      action: 'demote_admin',
+      targetId: uid,
+      targetType: 'user',
+      performedBy: auth.currentUser.uid,
+      beforeValues: { role: 'admin' },
+      afterValues: { role: 'user' },
+      timestamp: Date.now()
+    });
+
+    return { ok: true, message: 'Admin demoted to user. Note: Auth account still exists - delete manually in Firebase Console if needed' };
   },
 
   async sendPasswordResetToUser(email) {
