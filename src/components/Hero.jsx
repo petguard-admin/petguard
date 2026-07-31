@@ -27,7 +27,7 @@ const Hero = () => {
             <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
               <Button
                 size="lg"
-                className="bg-green-700 hover:bg-green-800 text-white rounded-xl px-8"
+                variant="green"
               >
                 Get Started
               </Button>
@@ -45,15 +45,15 @@ const Hero = () => {
             <div className="mt-10 flex flex-wrap gap-8 justify-center lg:justify-start">
               <div>
                 <p className="text-2xl font-bold text-slate-900">24/7</p>
-                <p className="text-sm text-slate-500">Health Support</p>
+                <p className="text-sm text-slate-500">Record Access</p>
               </div>
               <div>
-                <p className="text-2xl font-bold text-slate-900">100+</p>
-                <p className="text-sm text-slate-500">Pet Care Tips</p>
+                <p className="text-2xl font-bold text-slate-900">100%</p>
+                <p className="text-sm text-slate-500">Secure Storage</p>
               </div>
               <div>
-                <p className="text-2xl font-bold text-slate-900">Secure</p>
-                <p className="text-sm text-slate-500">Medical Records</p>
+                <p className="text-2xl font-bold text-slate-900">Easy</p>
+                <p className="text-sm text-slate-500">Pet Management</p>
               </div>
             </div>
           </div>

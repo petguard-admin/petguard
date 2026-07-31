@@ -3,7 +3,7 @@ import { PawPrint } from 'lucide-react';
 
 const Footer = () => {
   return (
-    <footer className="bg-slate-900 text-slate-400">
+    <footer className="bg-slate-800 text-slate-400">
       <div className="container mx-auto px-4 py-12">
         <div className="grid md:grid-cols-3 gap-8">
           {/* Brand */}
@@ -33,13 +33,13 @@ const Footer = () => {
           <div>
             <h4 className="text-white font-semibold text-sm mb-3">Contact</h4>
             <div className="space-y-2 text-sm">
-              <p>Barangay Olviano, Pilar, Bataan</p>
-              <p>petguard@example.com</p>
+              <p>Mamburao, Occidental Mindoro</p>
+              <p>petguard.admin@gmail.com</p>
             </div>
           </div>
         </div>
 
-        <div className="mt-10 pt-6 border-t border-slate-800 text-center text-sm">
+        <div className="mt-10 pt-6 border-t border-slate-700 text-center text-sm">
           <p>&copy; {new Date().getFullYear()} PetGuard. All rights reserved.</p>
         </div>
       </div>
