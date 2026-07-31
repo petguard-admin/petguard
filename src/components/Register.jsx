@@ -84,248 +84,219 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen flex bg-[#f7faf7]">
-      {/* Left Panel - Branding (hidden on small screens) */}
-      <div className="hidden lg:flex lg:w-5/12 bg-gradient-to-br from-green-600 via-emerald-600 to-green-700 relative overflow-hidden">
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iLjA1Ij48cGF0aCBkPSJNMzYgMzRoLTJ2LTRoMnYtMmgtNHY2aDJ2Mmgydi0yaDJ2LTJoLTJ2LTJ6TTIyIDE4aC0ydjJoMnYtMnptMTItMTJoLTJ2MmgyVjZ6TTM0IDM4aDJ2NkgzNFYzOHoiLz48L2c+PC9nPjwvc3ZnPg==')] opacity-40" />
-        <div className="relative z-10 flex flex-col items-center justify-center w-full p-12">
-          <img
-            src="/src/img/hero-pet.png"
-            alt="Happy pets"
-            className="w-64 h-64 object-contain mb-8 drop-shadow-2xl"
-          />
-          <h2 className="text-3xl font-bold text-white text-center leading-tight">
-            Join PetGuard today
-          </h2>
-          <p className="text-green-100 text-center mt-3 max-w-xs text-base">
-            Create your free account and start managing your pet's health records.
-          </p>
-        </div>
-      </div>
-
-      {/* Right Panel - Form */}
-      <div className="flex-1 flex items-start justify-center px-4 py-6 sm:px-6 sm:py-10 overflow-y-auto">
-        <div className="w-full max-w-lg">
-          {/* Mobile logo */}
-          <div className="flex flex-col items-center mb-6 lg:hidden">
-            <Link to="/" className="flex items-center gap-2.5 mb-5">
-              <img src="/src/img/OMV_logo.png" alt="PetGuard" className="w-11 h-11 rounded-xl" />
-              <span className="text-2xl font-bold text-slate-900">
-                Pet<span className="text-green-700">Guard</span>
-              </span>
-            </Link>
-          </div>
-
-          {/* Desktop logo */}
-          <div className="hidden lg:flex items-center gap-2.5 mb-6">
-            <img src="/src/img/OMV_logo.png" alt="PetGuard" className="w-10 h-10 rounded-xl" />
-            <span className="text-xl font-bold text-slate-900">
+    <div className="min-h-screen flex items-start justify-center bg-[#f7faf7] px-4 py-6 sm:px-6 sm:py-10 overflow-y-auto">
+      <div className="w-full max-w-lg">
+        {/* Logo */}
+        <div className="flex flex-col items-center mb-6">
+          <Link to="/" className="flex items-center gap-2.5 mb-5">
+            <img src="/src/img/OMV_logo.png" alt="PetGuard" className="w-11 h-11 rounded-xl" />
+            <span className="text-2xl font-bold text-slate-900">
               Pet<span className="text-green-700">Guard</span>
             </span>
-          </div>
-
-          <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 sm:p-8">
-            <h1 className="text-2xl sm:text-[1.7rem] font-bold text-slate-900">Create your account</h1>
-            <p className="text-slate-500 mt-1.5 text-sm">Register your pet owner profile to get started</p>
-
-            {error && (
-              <div className="mt-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-                {error}
-              </div>
-            )}
-
-            <form onSubmit={onSubmit} className="mt-6 space-y-4">
-              {/* Name fields */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1.5" htmlFor="firstname">
-                    First name
-                  </label>
-                  <input
-                    id="firstname"
-                    name="firstname"
-                    value={form.firstname}
-                    onChange={onChange}
-                    className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500/20 focus:border-green-500 focus:bg-white transition-all"
-                    autoComplete="given-name"
-                    placeholder="First name"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1.5" htmlFor="lastname">
-                    Last name
-                  </label>
-                  <input
-                    id="lastname"
-                    name="lastname"
-                    value={form.lastname}
-                    onChange={onChange}
-                    className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500/20 focus:border-green-500 focus:bg-white transition-all"
-                    autoComplete="family-name"
-                    placeholder="Last name"
-                  />
-                </div>
-              </div>
-
-              {/* Email */}
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1.5" htmlFor="email">
-                  Email address
-                </label>
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  value={form.email}
-                  onChange={onChange}
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500/20 focus:border-green-500 focus:bg-white transition-all"
-                  autoComplete="email"
-                  placeholder="you@example.com"
-                />
-              </div>
-
-              {/* Phone */}
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1.5" htmlFor="phone">
-                  Phone number
-                </label>
-                <input
-                  id="phone"
-                  name="phone"
-                  value={form.phone}
-                  onChange={onChange}
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500/20 focus:border-green-500 focus:bg-white transition-all"
-                  autoComplete="tel"
-                  placeholder="Enter your phone number"
-                />
-              </div>
-
-              {/* Barangay & Gender */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1.5" htmlFor="barangay">
-                    Barangay
-                  </label>
-                  <select
-                    id="barangay"
-                    name="barangay"
-                    value={form.barangay}
-                    onChange={onChange}
-                    className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-green-500/20 focus:border-green-500 focus:bg-white transition-all appearance-none"
-                    autoComplete="address-level3"
-                  >
-                    <option value="">Select barangay</option>
-                    <option value="Poblacion 1">Poblacion 1</option>
-                    <option value="Poblacion 2">Poblacion 2</option>
-                    <option value="Poblacion 3">Poblacion 3</option>
-                    <option value="Poblacion 4">Poblacion 4</option>
-                    <option value="Poblacion 5">Poblacion 5</option>
-                    <option value="Poblacion 6">Poblacion 6</option>
-                    <option value="Poblacion 7">Poblacion 7</option>
-                    <option value="Poblacion 8">Poblacion 8</option>
-                    <option value="Balansay">Balansay</option>
-                    <option value="Fatima">Fatima</option>
-                    <option value="Payompon">Payompon</option>
-                    <option value="San Luis">San Luis</option>
-                    <option value="Talabaan">Talabaan</option>
-                    <option value="Tangkalan">Tangkalan</option>
-                    <option value="Tayamaan">Tayamaan</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1.5" htmlFor="gender">
-                    Gender
-                  </label>
-                  <select
-                    id="gender"
-                    name="gender"
-                    value={form.gender}
-                    onChange={onChange}
-                    className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-green-500/20 focus:border-green-500 focus:bg-white transition-all appearance-none"
-                  >
-                    <option value="">Select gender</option>
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
-                    <option value="prefer_not_to_say">Prefer not to say</option>
-                  </select>
-                </div>
-              </div>
-
-              {/* Birthday */}
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1.5" htmlFor="birthday">
-                  Birthday
-                </label>
-                <input
-                  id="birthday"
-                  name="birthday"
-                  type="date"
-                  value={form.birthday}
-                  onChange={onChange}
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-green-500/20 focus:border-green-500 focus:bg-white transition-all"
-                  autoComplete="bday"
-                />
-              </div>
-
-              {/* Password fields */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1.5" htmlFor="password">
-                    Password
-                  </label>
-                  <input
-                    id="password"
-                    name="password"
-                    type="password"
-                    value={form.password}
-                    onChange={onChange}
-                    className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500/20 focus:border-green-500 focus:bg-white transition-all"
-                    autoComplete="new-password"
-                    placeholder="Min. 6 characters"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1.5" htmlFor="confirmPassword">
-                    Confirm password
-                  </label>
-                  <input
-                    id="confirmPassword"
-                    name="confirmPassword"
-                    type="password"
-                    value={form.confirmPassword}
-                    onChange={onChange}
-                    className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500/20 focus:border-green-500 focus:bg-white transition-all"
-                    autoComplete="new-password"
-                    placeholder="Re-enter password"
-                  />
-                </div>
-              </div>
-
-              <Button
-                type="submit"
-                className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2.5 rounded-xl transition-all shadow-sm shadow-green-600/20 hover:shadow-md hover:shadow-green-600/30"
-                disabled={submitting}
-              >
-                {submitting ? (
-                  <span className="flex items-center justify-center gap-2">
-                    <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                    </svg>
-                    Creating account...
-                  </span>
-                ) : 'Create account'}
-              </Button>
-            </form>
-          </div>
-
-          <p className="mt-6 text-sm text-slate-500 text-center">
-            Already have an account?{' '}
-            <Link to="/login" className="font-semibold text-green-600 hover:text-green-700 transition-colors">
-              Sign in
-            </Link>
-          </p>
+          </Link>
         </div>
+
+        <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 sm:p-8">
+          <h1 className="text-2xl sm:text-[1.7rem] font-bold text-slate-900">Create your account</h1>
+          <p className="text-slate-500 mt-1.5 text-sm">Register your pet owner profile to get started</p>
+
+          {error && (
+            <div className="mt-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+              {error}
+            </div>
+          )}
+
+          <form onSubmit={onSubmit} className="mt-6 space-y-4">
+            {/* Name fields */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-1.5" htmlFor="firstname">
+                  First name
+                </label>
+                <input
+                  id="firstname"
+                  name="firstname"
+                  value={form.firstname}
+                  onChange={onChange}
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500/20 focus:border-green-500 focus:bg-white transition-all"
+                  autoComplete="given-name"
+                  placeholder="First name"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-1.5" htmlFor="lastname">
+                  Last name
+                </label>
+                <input
+                  id="lastname"
+                  name="lastname"
+                  value={form.lastname}
+                  onChange={onChange}
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500/20 focus:border-green-500 focus:bg-white transition-all"
+                  autoComplete="family-name"
+                  placeholder="Last name"
+                />
+              </div>
+            </div>
+
+            {/* Email */}
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1.5" htmlFor="email">
+                Email address
+              </label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                value={form.email}
+                onChange={onChange}
+                className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500/20 focus:border-green-500 focus:bg-white transition-all"
+                autoComplete="email"
+                placeholder="you@example.com"
+              />
+            </div>
+
+            {/* Phone */}
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1.5" htmlFor="phone">
+                Phone number
+              </label>
+              <input
+                id="phone"
+                name="phone"
+                value={form.phone}
+                onChange={onChange}
+                className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500/20 focus:border-green-500 focus:bg-white transition-all"
+                autoComplete="tel"
+                placeholder="Enter your phone number"
+              />
+            </div>
+
+            {/* Barangay & Gender */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-1.5" htmlFor="barangay">
+                  Barangay
+                </label>
+                <select
+                  id="barangay"
+                  name="barangay"
+                  value={form.barangay}
+                  onChange={onChange}
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-green-500/20 focus:border-green-500 focus:bg-white transition-all appearance-none"
+                  autoComplete="address-level3"
+                >
+                  <option value="">Select barangay</option>
+                  <option value="Poblacion 1">Poblacion 1</option>
+                  <option value="Poblacion 2">Poblacion 2</option>
+                  <option value="Poblacion 3">Poblacion 3</option>
+                  <option value="Poblacion 4">Poblacion 4</option>
+                  <option value="Poblacion 5">Poblacion 5</option>
+                  <option value="Poblacion 6">Poblacion 6</option>
+                  <option value="Poblacion 7">Poblacion 7</option>
+                  <option value="Poblacion 8">Poblacion 8</option>
+                  <option value="Balansay">Balansay</option>
+                  <option value="Fatima">Fatima</option>
+                  <option value="Payompon">Payompon</option>
+                  <option value="San Luis">San Luis</option>
+                  <option value="Talabaan">Talabaan</option>
+                  <option value="Tangkalan">Tangkalan</option>
+                  <option value="Tayamaan">Tayamaan</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-1.5" htmlFor="gender">
+                  Gender
+                </label>
+                <select
+                  id="gender"
+                  name="gender"
+                  value={form.gender}
+                  onChange={onChange}
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-green-500/20 focus:border-green-500 focus:bg-white transition-all appearance-none"
+                >
+                  <option value="">Select gender</option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                  <option value="prefer_not_to_say">Prefer not to say</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Birthday */}
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1.5" htmlFor="birthday">
+                Birthday
+              </label>
+              <input
+                id="birthday"
+                name="birthday"
+                type="date"
+                value={form.birthday}
+                onChange={onChange}
+                className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-green-500/20 focus:border-green-500 focus:bg-white transition-all"
+                autoComplete="bday"
+              />
+            </div>
+
+            {/* Password fields */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-1.5" htmlFor="password">
+                  Password
+                </label>
+                <input
+                  id="password"
+                  name="password"
+                  type="password"
+                  value={form.password}
+                  onChange={onChange}
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500/20 focus:border-green-500 focus:bg-white transition-all"
+                  autoComplete="new-password"
+                  placeholder="Min. 6 characters"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-1.5" htmlFor="confirmPassword">
+                  Confirm password
+                </label>
+                <input
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  type="password"
+                  value={form.confirmPassword}
+                  onChange={onChange}
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500/20 focus:border-green-500 focus:bg-white transition-all"
+                  autoComplete="new-password"
+                  placeholder="Re-enter password"
+                />
+              </div>
+            </div>
+
+            <Button
+              type="submit"
+              className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2.5 rounded-xl transition-all shadow-sm shadow-green-600/20 hover:shadow-md hover:shadow-green-600/30"
+              disabled={submitting}
+            >
+              {submitting ? (
+                <span className="flex items-center justify-center gap-2">
+                  <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                  </svg>
+                  Creating account...
+                </span>
+              ) : 'Create account'}
+            </Button>
+          </form>
+        </div>
+
+        <p className="mt-6 text-sm text-slate-500 text-center">
+          Already have an account?{' '}
+          <Link to="/login" className="font-semibold text-green-600 hover:text-green-700 transition-colors">
+            Sign in
+          </Link>
+        </p>
       </div>
     </div>
   );

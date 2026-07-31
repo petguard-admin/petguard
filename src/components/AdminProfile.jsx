@@ -160,7 +160,7 @@ const AdminProfile = () => {
           <Button
             onClick={saveProfile}
             disabled={saving}
-            className="bg-green-700 hover:bg-green-800 text-white rounded-xl"
+            variant="green"
           >
             {saving ? 'Saving...' : 'Save'}
           </Button>

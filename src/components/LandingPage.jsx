@@ -247,11 +247,10 @@ const LandingPage = () => {
           </>
         )}
 
-        {/* CTA */}
-        <section className="bg-[#1f7a4d] rounded-3xl shadow-md overflow-hidden">
-          <CTA />
-        </section>
       </main>
+
+      {/* CTA */}
+      <CTA />
 
       {/* Footer */}
       <Footer />

@@ -2,7 +2,7 @@
 
 ## Overview
 
-**PetGuard2** is a pet management web application built for **Barangay Olviano, Pilar, Bataan, Philippines**. It allows pet owners to register their pets, track medical and vaccination records, and provides administrators with a dashboard to manage users, pets, health information, and generate reports. The app focuses on **dogs and cats**, with an emphasis on **anti-rabies vaccination tracking** for LGU (Local Government Unit) compliance.
+**PetGuard2** is a pet management web application built for **Office the Municipal Vaterinarian of Mamburao**. It allows pet owners to register their pets, track medical and vaccination records, and provides administrators with a dashboard to manage users, pets, health information, and generate reports. The app focuses on **dogs and cats**, with an emphasis on **anti-rabies vaccination tracking** for LGU (Local Government Unit) compliance.
 
 ---
 
