@@ -16,7 +16,7 @@ const Navbar = () => {
           className="flex items-center gap-2 text-2xl font-bold text-slate-900"
         >
           <img
-            src="/src/img/OMV_logo.png"
+            src="/img/OMV_logo.png"
             alt="OMV Logo"
             className="w-10 h-10 rounded-xl"
           />

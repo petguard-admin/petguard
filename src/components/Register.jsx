@@ -89,7 +89,7 @@ const Register = () => {
         {/* Logo */}
         <div className="flex flex-col items-center mb-6">
           <Link to="/" className="flex items-center gap-2.5 mb-5">
-            <img src="/src/img/OMV_logo.png" alt="PetGuard" className="w-11 h-11 rounded-xl" />
+            <img src="/img/OMV_logo.png" alt="PetGuard" className="w-11 h-11 rounded-xl" />
             <span className="text-2xl font-bold text-slate-900">
               Pet<span className="text-green-700">Guard</span>
             </span>

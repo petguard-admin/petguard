@@ -62,7 +62,7 @@ const Hero = () => {
           <div className="relative">
             <div className="bg-white rounded-3xl p-6">
               <img
-                src="src/img/hero-pet.png"
+                src="/img/hero-pet.png"
                 alt="Pet healthcare"
                 className="w-full max-w-lg mx-auto"
               />
