@@ -8,17 +8,17 @@ const Navbar = () => {
 
   return (
     <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-green-100">
-      <nav className="container mx-auto px-4 lg:px-8 py-4 flex justify-between items-center">
+      <nav className="container mx-auto px-3 sm:px-4 lg:px-6 py-2 sm:py-3 flex justify-between items-center">
         
         {/* Logo */}
         <Link
           to="/"
-          className="flex items-center gap-2 text-2xl font-bold text-slate-900"
+          className="flex items-center gap-1.5 sm:gap-2 text-lg sm:text-xl font-bold text-slate-900"
         >
           <img
             src="/img/OMV_logo.png"
             alt="OMV Logo"
-            className="w-10 h-10 rounded-xl"
+            className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg"
           />
           <span>
             Pet<span className="text-green-700">Guard</span>
@@ -26,7 +26,7 @@ const Navbar = () => {
         </Link>
 
         {/* Nav Links */}
-        <ul className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-700">
+        <ul className="hidden md:flex items-center gap-4 sm:gap-6 text-xs sm:text-sm font-medium text-slate-700">
           <li>
             <Link
               to="/"
@@ -68,16 +68,16 @@ const Navbar = () => {
         </ul>
 
         {/* Auth Actions */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           {loading || (user && roleLoading) ? (
-            <span className="text-sm text-slate-500">Loading...</span>
+            <span className="text-xs sm:text-sm text-slate-500">Loading...</span>
           ) : user ? (
-            <div className="hidden md:flex items-center gap-3">
+            <div className="hidden md:flex items-center gap-2">
               <Link to={isAdmin ? "/admin/profile" : "/profile"}>
                 <Button
                   variant="outline"
                   size="sm"
-                  className="border-green-700 text-green-700 hover:bg-green-50 rounded-xl"
+                  className="border-green-700 text-green-700 hover:bg-green-50 rounded-lg text-xs sm:text-sm px-2 sm:px-3"
                 >
                   Profile
                 </Button>
@@ -86,7 +86,7 @@ const Navbar = () => {
               <Button
                 size="sm"
                 onClick={logout}
-                className="bg-green-700 hover:bg-green-800 text-white rounded-xl"
+                className="bg-green-700 hover:bg-green-800 text-white rounded-lg text-xs sm:text-sm px-2 sm:px-3"
               >
                 Logout
               </Button>
@@ -97,7 +97,7 @@ const Navbar = () => {
                 variant="ghost"
                 size="sm"
                 asChild
-                className="text-slate-700 hover:text-green-700 hover:bg-green-50 rounded-xl"
+                className="text-slate-700 hover:text-green-700 hover:bg-green-50 rounded-lg text-xs sm:text-sm px-2 sm:px-3"
               >
                 <Link to="/login">Login</Link>
               </Button>
@@ -105,7 +105,7 @@ const Navbar = () => {
               <Button
                 size="sm"
                 asChild
-                className="bg-green-700 hover:bg-green-800 text-white rounded-xl px-5"
+                className="bg-green-700 hover:bg-green-800 text-white rounded-lg text-xs sm:text-sm px-3 sm:px-4"
               >
                 <Link to="/register">Get Started</Link>
               </Button>

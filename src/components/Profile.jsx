@@ -150,18 +150,18 @@ const Profile = () => {
     <OwnerSidebarLayout title="Profile">
       <div className="max-w-2xl">
         {error ? (
-          <div className="mb-3 rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
+          <div className="mb-3 rounded-lg border border-destructive/30 bg-destructive/10 px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm text-destructive">
             {error}
           </div>
         ) : null}
 
         {message ? (
-          <div className="mb-3 rounded-md border border-border bg-muted px-3 py-2 text-sm">
+          <div className="mb-3 rounded-lg border border-border bg-muted px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm">
             {message}
           </div>
         ) : null}
 
-        <div className="space-y-4 text-sm">
+        <div className="space-y-3 sm:space-y-4 text-xs sm:text-sm">
           <div>
             <span className="font-medium">Email:</span> {user.email}
           </div>
@@ -170,41 +170,41 @@ const Profile = () => {
           </div>
         </div>
 
-        <div className="mt-6 grid md:grid-cols-2 gap-4 text-sm">
+        <div className="mt-4 sm:mt-6 grid md:grid-cols-2 gap-3 sm:gap-4 text-xs sm:text-sm">
           <div>
-            <label className="block text-xs text-slate-500 mb-1">Firstname</label>
+            <label className="block text-[10px] sm:text-xs text-slate-500 mb-1">Firstname</label>
             <input
               name="firstname"
               value={form.firstname}
               onChange={onChange}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+              className="w-full rounded-lg border border-gray-300 px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
             />
           </div>
           <div>
-            <label className="block text-xs text-slate-500 mb-1">Lastname</label>
+            <label className="block text-[10px] sm:text-xs text-slate-500 mb-1">Lastname</label>
             <input
               name="lastname"
               value={form.lastname}
               onChange={onChange}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+              className="w-full rounded-lg border border-gray-300 px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
             />
           </div>
           <div>
-            <label className="block text-xs text-slate-500 mb-1">Phone no.</label>
+            <label className="block text-[10px] sm:text-xs text-slate-500 mb-1">Phone no.</label>
             <input
               name="phone"
               value={form.phone}
               onChange={onChange}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+              className="w-full rounded-lg border border-gray-300 px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
             />
           </div>
           <div>
-            <label className="block text-xs text-slate-500 mb-1">Barangay</label>
+            <label className="block text-[10px] sm:text-xs text-slate-500 mb-1">Barangay</label>
             <select
               name="barangay"
               value={form.barangay}
               onChange={onChange}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+              className="w-full rounded-lg border border-gray-300 px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
             >
               <option value="">Select</option>
               <option value="Poblacion 1">Poblacion 1</option>
@@ -225,12 +225,12 @@ const Profile = () => {
             </select>
           </div>
           <div>
-            <label className="block text-xs text-slate-500 mb-1">Gender</label>
+            <label className="block text-[10px] sm:text-xs text-slate-500 mb-1">Gender</label>
             <select
               name="gender"
               value={form.gender}
               onChange={onChange}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+              className="w-full rounded-lg border border-gray-300 px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
             >
               <option value="">Select</option>
               <option value="Male">Male</option>
@@ -238,21 +238,22 @@ const Profile = () => {
             </select>
           </div>
           <div>
-            <label className="block text-xs text-slate-500 mb-1">Birthday</label>
+            <label className="block text-[10px] sm:text-xs text-slate-500 mb-1">Birthday</label>
             <input
               name="birthday"
               type="date"
               value={form.birthday}
               onChange={onChange}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+              className="w-full rounded-lg border border-gray-300 px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
             />
           </div>
         </div>
 
-        <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-200">
+        <div className="flex items-center justify-end gap-2 sm:gap-3 pt-3 sm:pt-4 border-t border-slate-200">
           <Button
             variant="outline"
             onClick={resetPassword}
+            className="text-xs sm:text-sm"
           >
             Reset password
           </Button>
@@ -260,16 +261,17 @@ const Profile = () => {
             variant="green"
             onClick={saveProfile}
             disabled={saving}
+            className="text-xs sm:text-sm"
           >
             {saving ? 'Saving...' : 'Save changes'}
           </Button>
         </div>
 
-        <div className="mt-6 flex flex-wrap gap-2">
-          <Button variant="outline" onClick={logout}>
+        <div className="mt-4 sm:mt-6 flex flex-wrap gap-2">
+          <Button variant="outline" onClick={logout} className="text-xs sm:text-sm">
             Logout
           </Button>
-          <Button variant="destructive" onClick={deleteAccount} disabled={deleting}>
+          <Button variant="destructive" onClick={deleteAccount} disabled={deleting} className="text-xs sm:text-sm">
             {deleting ? 'Deleting...' : 'Delete account'}
           </Button>
         </div>

@@ -369,34 +369,35 @@ const MedicalRecords = () => {
 
   return (
     <OwnerSidebarLayout title="Medical Records">
-      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-6">
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 mb-4 sm:mb-6">
         <div>
-          <p className="text-sm text-muted-foreground">Records for your currently selected pet.</p>
+          <p className="text-xs sm:text-sm text-muted-foreground">Records for your currently selected pet.</p>
         </div>
         <Button
           variant="green"
           onClick={() => setIsAddModalOpen(true)}
           disabled={!selectedPetId}
+          className="text-xs sm:text-sm"
         >
           Add Record
         </Button>
       </div>
 
       {!selectedPetId ? (
-        <div className="bg-card rounded-lg shadow-md p-6">
-          <p className="mb-4">No selected pet. Select a pet first.</p>
-          <Button asChild>
+        <div className="bg-card rounded-lg shadow-sm p-4 sm:p-6">
+          <p className="mb-3 sm:mb-4 text-xs sm:text-sm">No selected pet. Select a pet first.</p>
+          <Button asChild className="text-xs sm:text-sm">
             <Link to="/my-pets">Select Pet</Link>
           </Button>
         </div>
       ) : (
-        <div className="rounded-lg border border-border bg-card p-4 shadow-sm">
+        <div className="rounded-lg border border-border bg-card p-3 sm:p-4 shadow-sm">
           {/* Tab Navigation */}
-          <div className="flex gap-2 mb-4 border-b border-border">
+          <div className="flex gap-1 sm:gap-2 mb-3 sm:mb-4 border-b border-border">
             <button
               type="button"
               onClick={() => setActiveTab('medical')}
-              className={`px-4 py-2 text-sm font-medium transition-colors ${
+              className={`px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium transition-colors ${
                 activeTab === 'medical'
                   ? 'text-green-700 border-b-2 border-green-700'
                   : 'text-slate-600 hover:text-green-700'
@@ -407,7 +408,7 @@ const MedicalRecords = () => {
             <button
               type="button"
               onClick={() => setActiveTab('vaccination')}
-              className={`px-4 py-2 text-sm font-medium transition-colors ${
+              className={`px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium transition-colors ${
                 activeTab === 'vaccination'
                   ? 'text-green-700 border-b-2 border-green-700'
                   : 'text-slate-600 hover:text-green-700'
@@ -420,24 +421,24 @@ const MedicalRecords = () => {
           {/* Medical Records Tab */}
           {activeTab === 'medical' && (
             <>
-              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-4">
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 mb-3 sm:mb-4">
                 <div className="flex-1">
-                  <label className="block text-sm font-medium mb-1" htmlFor="medicalSearch">Search</label>
+                  <label className="block text-xs sm:text-sm font-medium mb-1" htmlFor="medicalSearch">Search</label>
                   <input
                     id="medicalSearch"
                     value={medicalSearch}
                     onChange={(e) => setMedicalSearch(e.target.value)}
                     placeholder="Search by date, veterinarian, results"
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+                    className="w-full rounded-lg border border-gray-300 px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1" htmlFor="medicalSpeciesFilter">Species</label>
+                  <label className="block text-xs sm:text-sm font-medium mb-1" htmlFor="medicalSpeciesFilter">Species</label>
                   <select
                     id="medicalSpeciesFilter"
                     value={medicalSpeciesFilter}
                     onChange={(e) => setMedicalSpeciesFilter(e.target.value)}
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+                    className="w-full rounded-lg border border-gray-300 px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                   >
                     <option value="">All</option>
                     <option value="Dog">Dog</option>
@@ -446,68 +447,68 @@ const MedicalRecords = () => {
                 </div>
               </div>
 
-              {error ? <div className="mb-3 text-sm text-destructive">{error}</div> : null}
-              {message ? <div className="mb-3 text-sm text-green-600">{message}</div> : null}
+              {error ? <div className="mb-2 sm:mb-3 text-xs sm:text-sm text-destructive">{error}</div> : null}
+              {message ? <div className="mb-2 sm:mb-3 text-xs sm:text-sm text-green-600">{message}</div> : null}
 
-              <div className="w-full min-w-0 rounded-xl border border-slate-200 bg-white shadow-md overflow-hidden">
+              <div className="w-full min-w-0 rounded-lg border border-slate-200 bg-white shadow-sm overflow-hidden">
                 <div className="overflow-x-auto">
-                  <table className="w-full text-sm border-collapse min-w-[450px]">
+                  <table className="w-full text-xs sm:text-sm border-collapse min-w-[350px] sm:min-w-[450px]">
                     <thead className="sticky top-0 z-10">
                       <tr className="bg-gradient-to-r from-slate-800 to-slate-700">
-                        <th className="py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap">
+                        <th className="py-2 sm:py-3.5 px-2 sm:px-4 text-left text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap">
                           <button type="button" onClick={() => setMedicalSortKey('date')} className="inline-flex items-center gap-1 text-slate-100 hover:text-white transition-colors">
                             Date
                           </button>
                         </th>
-                        <th className="py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap">
+                        <th className="py-2 sm:py-3.5 px-2 sm:px-4 text-left text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap">
                           <button type="button" onClick={() => setMedicalSortKey('results')} className="inline-flex items-center gap-1 text-slate-100 hover:text-white transition-colors">
                             Results
                           </button>
                         </th>
-                        <th className="py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap">
+                        <th className="py-2 sm:py-3.5 px-2 sm:px-4 text-left text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap">
                           <button type="button" onClick={() => setMedicalSortKey('veterinarian')} className="inline-flex items-center gap-1 text-slate-100 hover:text-white transition-colors">
                             Veterinarian
                           </button>
                         </th>
-                        <th className="py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap">Notes</th>
-                        <th className="py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap">Actions</th>
+                        <th className="py-2 sm:py-3.5 px-2 sm:px-4 text-left text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap">Notes</th>
+                        <th className="py-2 sm:py-3.5 px-2 sm:px-4 text-left text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap">Actions</th>
                       </tr>
                     </thead>
                     <tbody>
                       {recordsLoading ? (
                         <tr>
-                          <td colSpan={5} className="py-10 text-center text-slate-400 text-sm">
-                            <div className="flex flex-col items-center gap-2">
-                              <svg className="animate-spin h-5 w-5 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>
+                          <td colSpan={5} className="py-6 sm:py-10 text-center text-slate-400 text-xs sm:text-sm">
+                            <div className="flex flex-col items-center gap-1 sm:gap-2">
+                              <svg className="animate-spin h-4 w-4 sm:h-5 sm:w-5 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>
                               <span>Loading...</span>
                             </div>
                           </td>
                         </tr>
                       ) : medicalPageItems.length === 0 ? (
                         <tr>
-                          <td colSpan={5} className="py-12 text-center text-slate-400">
+                          <td colSpan={5} className="py-8 sm:py-12 text-center text-slate-400">
                             <div className="flex flex-col items-center gap-1">
-                              <svg className="h-8 w-8 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
-                              <span className="text-sm font-medium">No medical records found.</span>
+                              <svg className="h-6 w-6 sm:h-8 sm:w-8 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                              <span className="text-xs sm:text-sm font-medium">No medical records found.</span>
                             </div>
                           </td>
                         </tr>
                       ) : (
                         medicalPageItems.map((r, idx) => (
                           <tr key={r.id} className={`border-b border-slate-100 last:border-0 hover:bg-emerald-50/50 transition-colors ${idx % 2 === 0 ? 'bg-white' : 'bg-slate-50/50'}`}>
-                            <td className="py-3 px-4 text-slate-600">{r.date || '—'}</td>
-                            <td className="py-3 px-4 max-w-xs truncate text-slate-500 text-xs" title={r.results}>{r.results ? r.results.substring(0, 50) + (r.results.length > 50 ? '...' : '') : '—'}</td>
-                            <td className="py-3 px-4 text-slate-600">{r.veterinarian || '—'}</td>
-                            <td className="py-3 px-4 max-w-xs truncate text-slate-500 text-xs" title={r.notes}>{r.notes ? r.notes.substring(0, 50) + (r.notes.length > 50 ? '...' : '') : '—'}</td>
-                            <td className="py-3 px-4">
+                            <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-600 text-xs sm:text-sm">{r.date || '—'}</td>
+                            <td className="py-2 sm:py-3 px-2 sm:px-4 max-w-xs truncate text-slate-500 text-[10px] sm:text-xs" title={r.results}>{r.results ? r.results.substring(0, 50) + (r.results.length > 50 ? '...' : '') : '—'}</td>
+                            <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-600 text-xs sm:text-sm">{r.veterinarian || '—'}</td>
+                            <td className="py-2 sm:py-3 px-2 sm:px-4 max-w-xs truncate text-slate-500 text-[10px] sm:text-xs" title={r.notes}>{r.notes ? r.notes.substring(0, 50) + (r.notes.length > 50 ? '...' : '') : '—'}</td>
+                            <td className="py-2 sm:py-3 px-2 sm:px-4">
                               <div className="flex flex-wrap gap-1">
-                                <Button variant="blue" size="xs" onClick={() => onView(r)}>
+                                <Button variant="blue" size="xs" onClick={() => onView(r)} className="text-[10px] sm:text-xs">
                                   View
                                 </Button>
-                                <Button variant="outline" size="xs" onClick={() => onEdit(r)}>
+                                <Button variant="outline" size="xs" onClick={() => onEdit(r)} className="text-[10px] sm:text-xs">
                                   Edit
                                 </Button>
-                                <Button variant="destructive" size="xs" onClick={() => deleteRecord(r)} disabled={deletingId === r.id}>
+                                <Button variant="destructive" size="xs" onClick={() => deleteRecord(r)} disabled={deletingId === r.id} className="text-[10px] sm:text-xs">
                                   Delete
                                 </Button>
                               </div>
@@ -520,18 +521,18 @@ const MedicalRecords = () => {
                 </div>
               </div>
 
-              <div className="mt-4 flex flex-col md:flex-row md:items-center md:justify-between gap-2">
-                <div className="text-sm text-muted-foreground">
+              <div className="mt-3 sm:mt-4 flex flex-col md:flex-row md:items-center md:justify-between gap-2">
+                <div className="text-xs sm:text-sm text-muted-foreground">
                   Showing {filteredMedical.length ? medicalStart + 1 : 0}-{Math.min(medicalStart + medicalPageSize, filteredMedical.length)} of {filteredMedical.length}
                 </div>
                 <div className="flex items-center gap-2">
-                  <Button variant="outline" size="xs" onClick={() => setMedicalPage((p) => Math.max(1, p - 1))} disabled={medicalSafePage <= 1}>
+                  <Button variant="outline" size="xs" onClick={() => setMedicalPage((p) => Math.max(1, p - 1))} disabled={medicalSafePage <= 1} className="text-[10px] sm:text-xs">
                     Prev
                   </Button>
-                  <div className="text-sm">
+                  <div className="text-xs sm:text-sm">
                     Page {medicalSafePage} / {medicalTotalPages}
                   </div>
-                  <Button variant="outline" size="xs" onClick={() => setMedicalPage((p) => Math.min(medicalTotalPages, p + 1))} disabled={medicalSafePage >= medicalTotalPages}>
+                  <Button variant="outline" size="xs" onClick={() => setMedicalPage((p) => Math.min(medicalTotalPages, p + 1))} disabled={medicalSafePage >= medicalTotalPages} className="text-[10px] sm:text-xs">
                     Next
                   </Button>
                 </div>
@@ -542,24 +543,24 @@ const MedicalRecords = () => {
           {/* Vaccination Records Tab */}
           {activeTab === 'vaccination' && (
             <>
-              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-4">
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 mb-3 sm:mb-4">
                 <div className="flex-1">
-                  <label className="block text-sm font-medium mb-1" htmlFor="vaccinationSearch">Search</label>
+                  <label className="block text-xs sm:text-sm font-medium mb-1" htmlFor="vaccinationSearch">Search</label>
                   <input
                     id="vaccinationSearch"
                     value={vaccinationSearch}
                     onChange={(e) => setVaccinationSearch(e.target.value)}
                     placeholder="Search by date, vaccine type, vaccinated by"
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+                    className="w-full rounded-lg border border-gray-300 px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1" htmlFor="vaccinationSpeciesFilter">Species</label>
+                  <label className="block text-xs sm:text-sm font-medium mb-1" htmlFor="vaccinationSpeciesFilter">Species</label>
                   <select
                     id="vaccinationSpeciesFilter"
                     value={vaccinationSpeciesFilter}
                     onChange={(e) => setVaccinationSpeciesFilter(e.target.value)}
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+                    className="w-full rounded-lg border border-gray-300 px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                   >
                     <option value="">All</option>
                     <option value="Dog">Dog</option>
@@ -568,78 +569,78 @@ const MedicalRecords = () => {
                 </div>
               </div>
 
-              {error ? <div className="mb-3 text-sm text-destructive">{error}</div> : null}
-              {message ? <div className="mb-3 text-sm text-green-600">{message}</div> : null}
+              {error ? <div className="mb-2 sm:mb-3 text-xs sm:text-sm text-destructive">{error}</div> : null}
+              {message ? <div className="mb-2 sm:mb-3 text-xs sm:text-sm text-green-600">{message}</div> : null}
 
-              <div className="w-full min-w-0 rounded-xl border border-slate-200 bg-white shadow-md overflow-hidden">
+              <div className="w-full min-w-0 rounded-lg border border-slate-200 bg-white shadow-sm overflow-hidden">
                 <div className="overflow-x-auto">
-                  <table className="w-full text-sm border-collapse min-w-[600px]">
+                  <table className="w-full text-xs sm:text-sm border-collapse min-w-[400px] sm:min-w-[600px]">
                     <thead className="sticky top-0 z-10">
                       <tr className="bg-gradient-to-r from-slate-800 to-slate-700">
-                        <th className="py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap">
+                        <th className="py-2 sm:py-3.5 px-2 sm:px-4 text-left text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap">
                           <button type="button" onClick={() => setVaccinationSortKey('date')} className="inline-flex items-center gap-1 text-slate-100 hover:text-white transition-colors">
                             Date
                           </button>
                         </th>
-                        <th className="py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap">
+                        <th className="py-2 sm:py-3.5 px-2 sm:px-4 text-left text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap">
                           <button type="button" onClick={() => setVaccinationSortKey('vaccineType')} className="inline-flex items-center gap-1 text-slate-100 hover:text-white transition-colors">
                             Vaccine Type
                           </button>
                         </th>
-                        <th className="py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap hidden lg:table-cell">
+                        <th className="py-2 sm:py-3.5 px-2 sm:px-4 text-left text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap hidden lg:table-cell">
                           <button type="button" onClick={() => setVaccinationSortKey('vaccineSource')} className="inline-flex items-center gap-1 text-slate-100 hover:text-white transition-colors">
                             Source
                           </button>
                         </th>
-                        <th className="py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap">
+                        <th className="py-2 sm:py-3.5 px-2 sm:px-4 text-left text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap">
                           <button type="button" onClick={() => setVaccinationSortKey('vaccinatedBy')} className="inline-flex items-center gap-1 text-slate-100 hover:text-white transition-colors">
                             Vaccinated By
                           </button>
                         </th>
-                        <th className="py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap hidden md:table-cell">Reason</th>
-                        <th className="py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap hidden xl:table-cell">Disease</th>
-                        <th className="py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap hidden md:table-cell">Notes</th>
-                        <th className="py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap">Actions</th>
+                        <th className="py-2 sm:py-3.5 px-2 sm:px-4 text-left text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap hidden md:table-cell">Reason</th>
+                        <th className="py-2 sm:py-3.5 px-2 sm:px-4 text-left text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap hidden xl:table-cell">Disease</th>
+                        <th className="py-2 sm:py-3.5 px-2 sm:px-4 text-left text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap hidden md:table-cell">Notes</th>
+                        <th className="py-2 sm:py-3.5 px-2 sm:px-4 text-left text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap">Actions</th>
                       </tr>
                     </thead>
                     <tbody>
                       {recordsLoading ? (
                         <tr>
-                          <td colSpan={8} className="py-10 text-center text-slate-400 text-sm">
-                            <div className="flex flex-col items-center gap-2">
-                              <svg className="animate-spin h-5 w-5 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>
+                          <td colSpan={8} className="py-6 sm:py-10 text-center text-slate-400 text-xs sm:text-sm">
+                            <div className="flex flex-col items-center gap-1 sm:gap-2">
+                              <svg className="animate-spin h-4 w-4 sm:h-5 sm:w-5 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>
                               <span>Loading...</span>
                             </div>
                           </td>
                         </tr>
                       ) : vaccinationPageItems.length === 0 ? (
                         <tr>
-                          <td colSpan={8} className="py-12 text-center text-slate-400">
+                          <td colSpan={8} className="py-8 sm:py-12 text-center text-slate-400">
                             <div className="flex flex-col items-center gap-1">
-                              <svg className="h-8 w-8 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
-                              <span className="text-sm font-medium">No vaccination records found.</span>
+                              <svg className="h-6 w-6 sm:h-8 sm:w-8 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+                              <span className="text-xs sm:text-sm font-medium">No vaccination records found.</span>
                             </div>
                           </td>
                         </tr>
                       ) : (
                         vaccinationPageItems.map((r, idx) => (
                           <tr key={r.id} className={`border-b border-slate-100 last:border-b-0 hover:bg-emerald-50/50 transition-colors ${idx % 2 === 0 ? 'bg-white' : 'bg-slate-50/50'}`}>
-                            <td className="py-3 px-4 text-slate-600">{r.date || '—'}</td>
-                            <td className="py-3 px-4 text-slate-600">{r.vaccineType || '—'}</td>
-                            <td className="py-3 px-4 text-slate-600 hidden lg:table-cell">{r.vaccineSource || '—'}</td>
-                            <td className="py-3 px-4 text-slate-600">{r.vaccinatedBy || '—'}</td>
-                            <td className="py-3 px-4 text-slate-600 hidden md:table-cell">{r.reason || '—'}</td>
-                            <td className="py-3 px-4 text-slate-600 hidden xl:table-cell">{r.disease || 'N/A'}</td>
-                            <td className="py-3 px-4 max-w-xs truncate text-slate-500 text-xs hidden md:table-cell" title={r.notes}>{r.notes ? r.notes.substring(0, 50) + (r.notes.length > 50 ? '...' : '') : '—'}</td>
-                            <td className="py-3 px-4">
+                            <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-600 text-xs sm:text-sm">{r.date || '—'}</td>
+                            <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-600 text-xs sm:text-sm">{r.vaccineType || '—'}</td>
+                            <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-600 hidden lg:table-cell text-xs sm:text-sm">{r.vaccineSource || '—'}</td>
+                            <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-600 text-xs sm:text-sm">{r.vaccinatedBy || '—'}</td>
+                            <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-600 hidden md:table-cell text-xs sm:text-sm">{r.reason || '—'}</td>
+                            <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-600 hidden xl:table-cell text-xs sm:text-sm">{r.disease || 'N/A'}</td>
+                            <td className="py-2 sm:py-3 px-2 sm:px-4 max-w-xs truncate text-slate-500 text-[10px] sm:text-xs hidden md:table-cell" title={r.notes}>{r.notes ? r.notes.substring(0, 50) + (r.notes.length > 50 ? '...' : '') : '—'}</td>
+                            <td className="py-2 sm:py-3 px-2 sm:px-4">
                               <div className="flex flex-wrap gap-1">
-                                <Button variant="blue" size="xs" onClick={() => onView(r)}>
+                                <Button variant="blue" size="xs" onClick={() => onView(r)} className="text-[10px] sm:text-xs">
                                   View
                                 </Button>
-                                <Button variant="outline" size="xs" onClick={() => onEdit(r)}>
+                                <Button variant="outline" size="xs" onClick={() => onEdit(r)} className="text-[10px] sm:text-xs">
                                   Edit
                                 </Button>
-                                <Button variant="destructive" size="xs" onClick={() => deleteRecord(r)} disabled={deletingId === r.id}>
+                                <Button variant="destructive" size="xs" onClick={() => deleteRecord(r)} disabled={deletingId === r.id} className="text-[10px] sm:text-xs">
                                   Delete
                                 </Button>
                               </div>
@@ -652,18 +653,18 @@ const MedicalRecords = () => {
                 </div>
               </div>
 
-              <div className="mt-4 flex flex-col md:flex-row md:items-center md:justify-between gap-2">
-                <div className="text-sm text-muted-foreground">
+              <div className="mt-3 sm:mt-4 flex flex-col md:flex-row md:items-center md:justify-between gap-2">
+                <div className="text-xs sm:text-sm text-muted-foreground">
                   Showing {filteredVaccination.length ? vaccinationStart + 1 : 0}-{Math.min(vaccinationStart + vaccinationPageSize, filteredVaccination.length)} of {filteredVaccination.length}
                 </div>
                 <div className="flex items-center gap-2">
-                  <Button variant="outline" size="xs" onClick={() => setVaccinationPage((p) => Math.max(1, p - 1))} disabled={vaccinationSafePage <= 1}>
+                  <Button variant="outline" size="xs" onClick={() => setVaccinationPage((p) => Math.max(1, p - 1))} disabled={vaccinationSafePage <= 1} className="text-[10px] sm:text-xs">
                     Prev
                   </Button>
-                  <div className="text-sm">
+                  <div className="text-xs sm:text-sm">
                     Page {vaccinationSafePage} / {vaccinationTotalPages}
                   </div>
-                  <Button variant="outline" size="xs" onClick={() => setVaccinationPage((p) => Math.min(vaccinationTotalPages, p + 1))} disabled={vaccinationSafePage >= vaccinationTotalPages}>
+                  <Button variant="outline" size="xs" onClick={() => setVaccinationPage((p) => Math.min(vaccinationTotalPages, p + 1))} disabled={vaccinationSafePage >= vaccinationTotalPages} className="text-[10px] sm:text-xs">
                     Next
                   </Button>
                 </div>

@@ -146,144 +146,144 @@ const AdminDashboard = () => {
       ) : null}
 
       {/* Stat Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
-        <div className="group relative rounded-xl border border-slate-200 bg-white p-5 shadow-md hover:shadow-lg transition-all duration-200 overflow-hidden">
-          <div className="absolute inset-y-0 left-0 w-1 bg-emerald-500 rounded-l-xl"></div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        <div className="group relative rounded-lg border border-slate-200 bg-white p-3 sm:p-4 shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden">
+          <div className="absolute inset-y-0 left-0 w-1 bg-emerald-500 rounded-l-lg"></div>
           <div className="flex items-start justify-between">
             <div className="min-w-0 flex-1">
-              <p className="text-sm font-medium text-slate-500 truncate">Total Users</p>
-              <p className="mt-2 text-3xl font-bold text-slate-900 tabular-nums">{loading ? '—' : totalUsers.toLocaleString()}</p>
+              <p className="text-xs sm:text-sm font-medium text-slate-500 truncate">Total Users</p>
+              <p className="mt-1 sm:mt-2 text-xl sm:text-2xl font-bold text-slate-900 tabular-nums">{loading ? '—' : totalUsers.toLocaleString()}</p>
             </div>
-            <div className="rounded-xl bg-emerald-50 p-3 shrink-0 group-hover:bg-emerald-100 transition-colors">
-              <Users className="h-6 w-6 text-emerald-600" />
+            <div className="rounded-lg bg-emerald-50 p-2 sm:p-3 shrink-0 group-hover:bg-emerald-100 transition-colors">
+              <Users className="h-5 w-5 sm:h-6 sm:w-6 text-emerald-600" />
             </div>
           </div>
         </div>
 
-        <div className="group relative rounded-xl border border-slate-200 bg-white p-5 shadow-md hover:shadow-lg transition-all duration-200 overflow-hidden">
-          <div className="absolute inset-y-0 left-0 w-1 bg-blue-500 rounded-l-xl"></div>
+        <div className="group relative rounded-lg border border-slate-200 bg-white p-3 sm:p-4 shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden">
+          <div className="absolute inset-y-0 left-0 w-1 bg-blue-500 rounded-l-lg"></div>
           <div className="flex items-start justify-between">
             <div className="min-w-0 flex-1">
-              <p className="text-sm font-medium text-slate-500 truncate">Total Pets</p>
-              <p className="mt-2 text-3xl font-bold text-slate-900 tabular-nums">{loading ? '—' : totalPets.toLocaleString()}</p>
+              <p className="text-xs sm:text-sm font-medium text-slate-500 truncate">Total Pets</p>
+              <p className="mt-1 sm:mt-2 text-xl sm:text-2xl font-bold text-slate-900 tabular-nums">{loading ? '—' : totalPets.toLocaleString()}</p>
             </div>
-            <div className="rounded-xl bg-blue-50 p-3 shrink-0 group-hover:bg-blue-100 transition-colors">
-              <PawPrint className="h-6 w-6 text-blue-600" />
+            <div className="rounded-lg bg-blue-50 p-2 sm:p-3 shrink-0 group-hover:bg-blue-100 transition-colors">
+              <PawPrint className="h-5 w-5 sm:h-6 sm:w-6 text-blue-600" />
             </div>
           </div>
         </div>
 
-        <div className="group relative rounded-xl border border-slate-200 bg-white p-5 shadow-md hover:shadow-lg transition-all duration-200 overflow-hidden">
-          <div className="absolute inset-y-0 left-0 w-1 bg-violet-500 rounded-l-xl"></div>
+        <div className="group relative rounded-lg border border-slate-200 bg-white p-3 sm:p-4 shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden">
+          <div className="absolute inset-y-0 left-0 w-1 bg-violet-500 rounded-l-lg"></div>
           <div className="flex items-start justify-between">
             <div className="min-w-0 flex-1">
-              <p className="text-sm font-medium text-slate-500 truncate">Vaccinated (Anti-rabies)</p>
-              <p className="mt-2 text-3xl font-bold text-slate-900 tabular-nums">{loading ? '—' : vaccinatedPets.toLocaleString()}</p>
+              <p className="text-xs sm:text-sm font-medium text-slate-500 truncate">Vaccinated (Anti-rabies)</p>
+              <p className="mt-1 sm:mt-2 text-xl sm:text-2xl font-bold text-slate-900 tabular-nums">{loading ? '—' : vaccinatedPets.toLocaleString()}</p>
             </div>
-            <div className="rounded-xl bg-violet-50 p-3 shrink-0 group-hover:bg-violet-100 transition-colors">
-              <ShieldCheck className="h-6 w-6 text-violet-600" />
+            <div className="rounded-lg bg-violet-50 p-2 sm:p-3 shrink-0 group-hover:bg-violet-100 transition-colors">
+              <ShieldCheck className="h-5 w-5 sm:h-6 sm:w-6 text-violet-600" />
             </div>
           </div>
         </div>
 
-        <div className="group relative rounded-xl border border-slate-200 bg-white p-5 shadow-md hover:shadow-lg transition-all duration-200 overflow-hidden">
-          <div className="absolute inset-y-0 left-0 w-1 bg-amber-500 rounded-l-xl"></div>
+        <div className="group relative rounded-lg border border-slate-200 bg-white p-3 sm:p-4 shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden">
+          <div className="absolute inset-y-0 left-0 w-1 bg-amber-500 rounded-l-lg"></div>
           <div className="flex items-start justify-between">
             <div className="min-w-0 flex-1">
-              <p className="text-sm font-medium text-slate-500 truncate">Unvaccinated (Anti-rabies)</p>
-              <p className="mt-2 text-3xl font-bold text-slate-900 tabular-nums">{loading ? '—' : unvaccinatedPets.toLocaleString()}</p>
+              <p className="text-xs sm:text-sm font-medium text-slate-500 truncate">Unvaccinated (Anti-rabies)</p>
+              <p className="mt-1 sm:mt-2 text-xl sm:text-2xl font-bold text-slate-900 tabular-nums">{loading ? '—' : unvaccinatedPets.toLocaleString()}</p>
             </div>
-            <div className="rounded-xl bg-amber-50 p-3 shrink-0 group-hover:bg-amber-100 transition-colors">
-              <ShieldAlert className="h-6 w-6 text-amber-600" />
+            <div className="rounded-lg bg-amber-50 p-2 sm:p-3 shrink-0 group-hover:bg-amber-100 transition-colors">
+              <ShieldAlert className="h-5 w-5 sm:h-6 sm:w-6 text-amber-600" />
             </div>
           </div>
         </div>
       </div>
 
       {/* Charts */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mt-6">
-        <div className="rounded-xl border border-slate-200 bg-white shadow-md overflow-hidden">
-          <div className="px-5 py-4 border-b border-slate-100 flex items-center gap-2.5">
-            <div className="rounded-lg bg-emerald-50 p-2">
-              <TrendingUp className="h-4 w-4 text-emerald-600" />
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4 mt-4 sm:mt-6">
+        <div className="rounded-lg border border-slate-200 bg-white shadow-sm overflow-hidden">
+          <div className="px-3 sm:px-4 py-2 sm:py-3 border-b border-slate-100 flex items-center gap-2">
+            <div className="rounded-lg bg-emerald-50 p-1.5 sm:p-2">
+              <TrendingUp className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-emerald-600" />
             </div>
-            <h3 className="text-sm font-semibold text-slate-800">Users Per Month</h3>
+            <h3 className="text-xs sm:text-sm font-semibold text-slate-800">Users Per Month</h3>
           </div>
-          <div className="p-5">
-            <ResponsiveContainer width="100%" height={300}>
+          <div className="p-3 sm:p-4">
+            <ResponsiveContainer width="100%" height={200}>
               <LineChart data={usersPerMonth}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
-                <XAxis dataKey="month" tick={{ fontSize: 11, fill: '#94a3b8' }} axisLine={{ stroke: '#e2e8f0' }} tickLine={false} />
-                <YAxis tick={{ fontSize: 11, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
-                <Tooltip contentStyle={{ borderRadius: '10px', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: '13px' }} />
-                <Legend wrapperStyle={{ paddingTop: '16px', fontSize: '12px' }} />
-                <Line type="monotone" dataKey="users" stroke="#10b981" strokeWidth={2.5} dot={{ fill: '#10b981', strokeWidth: 0, r: 4 }} activeDot={{ r: 6, strokeWidth: 0 }} />
+                <XAxis dataKey="month" tick={{ fontSize: 10, fill: '#94a3b8' }} axisLine={{ stroke: '#e2e8f0' }} tickLine={false} />
+                <YAxis tick={{ fontSize: 10, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
+                <Tooltip contentStyle={{ borderRadius: '8px', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: '11px' }} />
+                <Legend wrapperStyle={{ paddingTop: '12px', fontSize: '10px' }} />
+                <Line type="monotone" dataKey="users" stroke="#10b981" strokeWidth={2} dot={{ fill: '#10b981', strokeWidth: 0, r: 3 }} activeDot={{ r: 5, strokeWidth: 0 }} />
               </LineChart>
             </ResponsiveContainer>
           </div>
         </div>
 
-        <div className="rounded-xl border border-slate-200 bg-white shadow-md overflow-hidden">
-          <div className="px-5 py-4 border-b border-slate-100 flex items-center gap-2.5">
-            <div className="rounded-lg bg-blue-50 p-2">
-              <BarChart3 className="h-4 w-4 text-blue-600" />
+        <div className="rounded-lg border border-slate-200 bg-white shadow-sm overflow-hidden">
+          <div className="px-3 sm:px-4 py-2 sm:py-3 border-b border-slate-100 flex items-center gap-2">
+            <div className="rounded-lg bg-blue-50 p-1.5 sm:p-2">
+              <BarChart3 className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-blue-600" />
             </div>
-            <h3 className="text-sm font-semibold text-slate-800">Dogs vs Cats</h3>
+            <h3 className="text-xs sm:text-sm font-semibold text-slate-800">Dogs vs Cats</h3>
           </div>
-          <div className="p-5">
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={dogsAndCats} barSize={48}>
+          <div className="p-3 sm:p-4">
+            <ResponsiveContainer width="100%" height={200}>
+              <BarChart data={dogsAndCats} barSize={40}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
-                <XAxis dataKey="name" tick={{ fontSize: 12, fill: '#94a3b8' }} axisLine={{ stroke: '#e2e8f0' }} tickLine={false} />
-                <YAxis tick={{ fontSize: 11, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
-                <Tooltip contentStyle={{ borderRadius: '10px', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: '13px' }} cursor={{ fill: 'rgba(16, 185, 129, 0.06)' }} />
-                <Legend wrapperStyle={{ paddingTop: '16px', fontSize: '12px' }} />
-                <Bar dataKey="count" fill="#3b82f6" radius={[6, 6, 0, 0]} />
+                <XAxis dataKey="name" tick={{ fontSize: 11, fill: '#94a3b8' }} axisLine={{ stroke: '#e2e8f0' }} tickLine={false} />
+                <YAxis tick={{ fontSize: 10, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
+                <Tooltip contentStyle={{ borderRadius: '8px', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: '11px' }} cursor={{ fill: 'rgba(16, 185, 129, 0.06)' }} />
+                <Legend wrapperStyle={{ paddingTop: '12px', fontSize: '10px' }} />
+                <Bar dataKey="count" fill="#3b82f6" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
         </div>
 
-        <div className="rounded-xl border border-slate-200 bg-white shadow-md overflow-hidden">
-          <div className="px-5 py-4 border-b border-slate-100 flex items-center gap-2.5">
-            <div className="rounded-lg bg-violet-50 p-2">
-              <Activity className="h-4 w-4 text-violet-600" />
+        <div className="rounded-lg border border-slate-200 bg-white shadow-sm overflow-hidden">
+          <div className="px-3 sm:px-4 py-2 sm:py-3 border-b border-slate-100 flex items-center gap-2">
+            <div className="rounded-lg bg-violet-50 p-1.5 sm:p-2">
+              <Activity className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-violet-600" />
             </div>
-            <h3 className="text-sm font-semibold text-slate-800">Vaccinated vs Unvaccinated (Anti-rabies)</h3>
+            <h3 className="text-xs sm:text-sm font-semibold text-slate-800">Vaccinated vs Unvaccinated (Anti-rabies)</h3>
           </div>
-          <div className="p-5">
-            <ResponsiveContainer width="100%" height={300}>
+          <div className="p-3 sm:p-4">
+            <ResponsiveContainer width="100%" height={200}>
               <BarChart data={[
                 { name: 'Vaccinated', count: vaccinatedPets },
                 { name: 'Unvaccinated', count: unvaccinatedPets }
-              ]} barSize={56}>
+              ]} barSize={48}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
-                <XAxis dataKey="name" tick={{ fontSize: 12, fill: '#94a3b8' }} axisLine={{ stroke: '#e2e8f0' }} tickLine={false} />
-                <YAxis tick={{ fontSize: 11, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
-                <Tooltip contentStyle={{ borderRadius: '10px', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: '13px' }} cursor={{ fill: 'rgba(139, 92, 246, 0.06)' }} />
-                <Legend wrapperStyle={{ paddingTop: '16px', fontSize: '12px' }} />
-                <Bar dataKey="count" fill="#8b5cf6" radius={[6, 6, 0, 0]} />
+                <XAxis dataKey="name" tick={{ fontSize: 11, fill: '#94a3b8' }} axisLine={{ stroke: '#e2e8f0' }} tickLine={false} />
+                <YAxis tick={{ fontSize: 10, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
+                <Tooltip contentStyle={{ borderRadius: '8px', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: '11px' }} cursor={{ fill: 'rgba(139, 92, 246, 0.06)' }} />
+                <Legend wrapperStyle={{ paddingTop: '12px', fontSize: '10px' }} />
+                <Bar dataKey="count" fill="#8b5cf6" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
         </div>
 
-        <div className="rounded-xl border border-slate-200 bg-white shadow-md overflow-hidden">
-          <div className="px-5 py-4 border-b border-slate-100 flex items-center gap-2.5">
-            <div className="rounded-lg bg-blue-50 p-2">
-              <MapPin className="h-4 w-4 text-blue-600" />
+        <div className="rounded-lg border border-slate-200 bg-white shadow-sm overflow-hidden">
+          <div className="px-3 sm:px-4 py-2 sm:py-3 border-b border-slate-100 flex items-center gap-2">
+            <div className="rounded-lg bg-blue-50 p-1.5 sm:p-2">
+              <MapPin className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-blue-600" />
             </div>
-            <h3 className="text-sm font-semibold text-slate-800">Pets by Barangay</h3>
+            <h3 className="text-xs sm:text-sm font-semibold text-slate-800">Pets by Barangay</h3>
           </div>
-          <div className="p-5">
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={petsByBarangay} barSize={36}>
+          <div className="p-3 sm:p-4">
+            <ResponsiveContainer width="100%" height={200}>
+              <BarChart data={petsByBarangay} barSize={30}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
-                <XAxis dataKey="barangay" tick={{ fontSize: 11, fill: '#94a3b8' }} axisLine={{ stroke: '#e2e8f0' }} tickLine={false} interval={0} angle={-30} textAnchor="end" height={60} />
-                <YAxis tick={{ fontSize: 11, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
-                <Tooltip contentStyle={{ borderRadius: '10px', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: '13px' }} cursor={{ fill: 'rgba(59, 130, 246, 0.06)' }} />
-                <Legend wrapperStyle={{ paddingTop: '16px', fontSize: '12px' }} />
-                <Bar dataKey="count" fill="#3b82f6" radius={[6, 6, 0, 0]} />
+                <XAxis dataKey="barangay" tick={{ fontSize: 10, fill: '#94a3b8' }} axisLine={{ stroke: '#e2e8f0' }} tickLine={false} interval={0} angle={-30} textAnchor="end" height={50} />
+                <YAxis tick={{ fontSize: 10, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
+                <Tooltip contentStyle={{ borderRadius: '8px', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: '11px' }} cursor={{ fill: 'rgba(59, 130, 246, 0.06)' }} />
+                <Legend wrapperStyle={{ paddingTop: '12px', fontSize: '10px' }} />
+                <Bar dataKey="count" fill="#3b82f6" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>

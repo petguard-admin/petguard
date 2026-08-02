@@ -195,64 +195,64 @@ const AdminControl = () => {
 
   return (
     <AdminSidebarLayout title="Admin Control">
-      <div className="flex flex-col gap-4">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+      <div className="flex flex-col gap-3">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
           <div className="flex items-center gap-2">
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search admins..."
-              className="w-full md:w-80 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+              className="w-full md:w-64 sm:md:w-80 rounded-lg border border-gray-300 px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
             />
           </div>
           <div className="flex gap-2">
-            <Button variant="green" type="button" onClick={openPromote}>Promote to Admin</Button>
+            <Button variant="green" type="button" onClick={openPromote} className="text-xs sm:text-sm">Promote to Admin</Button>
           </div>
         </div>
 
         {error ? (
-          <div className="rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">{error}</div>
+          <div className="rounded-md border border-destructive/30 bg-destructive/10 px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm text-destructive">{error}</div>
         ) : null}
 
-        <div className="w-full min-w-0 rounded-xl border border-slate-200 bg-white shadow-md overflow-hidden">
+        <div className="w-full min-w-0 rounded-lg border border-slate-200 bg-white shadow-sm overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full text-sm border-collapse min-w-[480px]">
+            <table className="w-full text-xs sm:text-sm border-collapse min-w-[400px] sm:min-w-[480px]">
               <thead className="sticky top-0 z-10">
                 <tr className="bg-gradient-to-r from-slate-800 to-slate-700">
-                  <th className="py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap w-1/6">
+                  <th className="py-2 sm:py-3.5 px-2 sm:px-4 text-left text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap w-1/6">
                     <button type="button" onClick={() => toggleSort('name')} className="inline-flex items-center gap-1 text-slate-100 hover:text-white transition-colors">
                       Name
                     </button>
                   </th>
-                  <th className="py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap w-1/6">
+                  <th className="py-2 sm:py-3.5 px-2 sm:px-4 text-left text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap w-1/6">
                     <button type="button" onClick={() => toggleSort('email')} className="inline-flex items-center gap-1 text-slate-100 hover:text-white transition-colors">
                       Email
                     </button>
                   </th>
-                  <th className="py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap w-1/6 hidden md:table-cell">
+                  <th className="py-2 sm:py-3.5 px-2 sm:px-4 text-left text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap w-1/6 hidden md:table-cell">
                     <button type="button" onClick={() => toggleSort('phone')} className="inline-flex items-center gap-1 text-slate-100 hover:text-white transition-colors">
                       Phone
                     </button>
                   </th>
-                  <th className="py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap w-1/6">
+                  <th className="py-2 sm:py-3.5 px-2 sm:px-4 text-left text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap w-1/6">
                     <button type="button" onClick={() => toggleSort('role')} className="inline-flex items-center gap-1 text-slate-100 hover:text-white transition-colors">
                       Role
                     </button>
                   </th>
-                  <th className="py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap w-1/6 hidden lg:table-cell">
+                  <th className="py-2 sm:py-3.5 px-2 sm:px-4 text-left text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap w-1/6 hidden lg:table-cell">
                     <button type="button" onClick={() => toggleSort('createdAt')} className="inline-flex items-center gap-1 text-slate-100 hover:text-white transition-colors">
                       Date Created
                     </button>
                   </th>
-                  <th className="py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap w-1/6">Actions</th>
+                  <th className="py-2 sm:py-3.5 px-2 sm:px-4 text-left text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap w-1/6">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {loading ? (
                   <tr>
-                    <td className="py-10 text-center text-slate-400 text-sm" colSpan={6}>
-                      <div className="flex flex-col items-center gap-2">
-                        <div className="h-5 w-5 animate-spin rounded-full border-2 border-slate-300 border-t-emerald-600"></div>
+                    <td className="py-6 sm:py-10 text-center text-slate-400 text-xs sm:text-sm" colSpan={6}>
+                      <div className="flex flex-col items-center gap-1 sm:gap-2">
+                        <div className="h-4 w-4 sm:h-5 sm:w-5 animate-spin rounded-full border-2 border-slate-300 border-t-emerald-600"></div>
                         <span>Loading...</span>
                       </div>
                     </td>
@@ -262,17 +262,17 @@ const AdminControl = () => {
                     const name = `${a.firstname || ''} ${a.lastname || ''}`.trim() || '—';
                     return (
                       <tr key={a.uid} className={`border-b border-slate-100 hover:bg-emerald-50/50 transition-colors ${idx % 2 === 0 ? 'bg-white' : 'bg-slate-50/50'}`}>
-                        <td className="py-3 px-4 font-medium text-slate-800">{name}</td>
-                        <td className="py-3 px-4 text-slate-600">{a.email || '—'}</td>
-                        <td className="py-3 px-4 text-slate-600 hidden md:table-cell">{a.phone || '—'}</td>
-                        <td className="py-3 px-4">
-                          <span className="inline-flex items-center rounded-full bg-violet-100 text-violet-700 px-2.5 py-0.5 text-xs font-semibold">{a.role || 'admin'}</span>
+                        <td className="py-2 sm:py-3 px-2 sm:px-4 font-medium text-slate-800 text-xs sm:text-sm">{name}</td>
+                        <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-600 text-xs sm:text-sm">{a.email || '—'}</td>
+                        <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-600 hidden md:table-cell text-xs sm:text-sm">{a.phone || '—'}</td>
+                        <td className="py-2 sm:py-3 px-2 sm:px-4">
+                          <span className="inline-flex items-center rounded-full bg-violet-100 text-violet-700 px-2 py-0.5 text-[10px] sm:text-xs font-semibold">{a.role || 'admin'}</span>
                         </td>
-                        <td className="py-3 px-4 text-slate-600 hidden lg:table-cell">{fmtDate(a.createdAt)}</td>
-                        <td className="py-3 px-4">
+                        <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-600 hidden lg:table-cell text-xs sm:text-sm">{fmtDate(a.createdAt)}</td>
+                        <td className="py-2 sm:py-3 px-2 sm:px-4">
                           <div className="flex flex-wrap gap-1">
-                            <Button size="xs" variant="blue" type="button" onClick={() => openView(a)}>View</Button>
-                            <Button size="xs" variant="destructive" type="button" onClick={() => handleDelete(a)}>Delete</Button>
+                            <Button size="xs" variant="blue" type="button" onClick={() => openView(a)} className="text-[10px] sm:text-xs">View</Button>
+                            <Button size="xs" variant="destructive" type="button" onClick={() => handleDelete(a)} className="text-[10px] sm:text-xs">Delete</Button>
                           </div>
                         </td>
                       </tr>
@@ -280,10 +280,10 @@ const AdminControl = () => {
                   })
                 ) : (
                   <tr>
-                    <td className="py-12 text-center text-slate-400" colSpan={6}>
+                    <td className="py-8 sm:py-12 text-center text-slate-400" colSpan={6}>
                       <div className="flex flex-col items-center gap-1">
-                        <span className="text-sm font-medium">No admins found</span>
-                        <span className="text-xs text-slate-300">Try adjusting your search</span>
+                        <span className="text-xs sm:text-sm font-medium">No admins found</span>
+                        <span className="text-[10px] sm:text-xs text-slate-300">Try adjusting your search</span>
                       </div>
                     </td>
                   </tr>

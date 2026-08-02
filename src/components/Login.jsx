@@ -71,37 +71,37 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#f7faf7] px-4 py-8 sm:px-6 sm:py-12">
-      <div className="w-full max-w-md">
+    <div className="min-h-screen flex items-center justify-center bg-[#f7faf7] px-3 py-6 sm:px-4 sm:py-8">
+      <div className="w-full max-w-sm">
         {/* Logo */}
-        <div className="flex flex-col items-center mb-8">
-          <Link to="/" className="flex items-center gap-2.5 mb-6">
-            <img src="/img/OMV_logo.png" alt="PetGuard" className="w-11 h-11 rounded-xl" />
-            <span className="text-2xl font-bold text-slate-900">
+        <div className="flex flex-col items-center mb-5">
+          <Link to="/" className="flex items-center gap-2 mb-4">
+            <img src="/img/OMV_logo.png" alt="PetGuard" className="w-8 h-8 rounded-lg" />
+            <span className="text-xl font-bold text-slate-900">
               Pet<span className="text-green-700">Guard</span>
             </span>
           </Link>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 sm:p-8">
-          <h1 className="text-2xl sm:text-[1.7rem] font-bold text-slate-900">Welcome back</h1>
-          <p className="text-slate-500 mt-1.5 text-sm">Sign in to your account to continue</p>
+        <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-4 sm:p-5">
+          <h1 className="text-xl sm:text-2xl font-bold text-slate-900">Welcome back</h1>
+          <p className="text-slate-500 mt-1 text-xs sm:text-sm">Sign in to your account to continue</p>
 
           {error && (
-            <div className="mt-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+            <div className="mt-3 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-xs sm:text-sm text-red-700">
               {error}
             </div>
           )}
 
           {message && (
-            <div className="mt-4 rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700">
+            <div className="mt-3 rounded-lg border border-green-200 bg-green-50 px-3 py-2 text-xs sm:text-sm text-green-700">
               {message}
             </div>
           )}
 
-          <form onSubmit={onSubmit} className="mt-6 space-y-4">
+          <form onSubmit={onSubmit} className="mt-4 space-y-3">
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5" htmlFor="email">
+              <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1" htmlFor="email">
                 Email address
               </label>
               <input
@@ -109,14 +109,14 @@ const Login = () => {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500/20 focus:border-green-500 focus:bg-white transition-all"
+                className="w-full rounded-lg border border-slate-200 bg-slate-50/50 px-3 py-2 text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500/20 focus:border-green-500 focus:bg-white transition-all"
                 autoComplete="email"
                 placeholder="you@example.com"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5" htmlFor="password">
+              <label className="block text-xs sm:text-sm font-medium text-slate-700 mb-1" htmlFor="password">
                 Password
               </label>
               <input
@@ -124,7 +124,7 @@ const Login = () => {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500/20 focus:border-green-500 focus:bg-white transition-all"
+                className="w-full rounded-lg border border-slate-200 bg-slate-50/50 px-3 py-2 text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500/20 focus:border-green-500 focus:bg-white transition-all"
                 autoComplete="current-password"
                 placeholder="Enter your password"
               />
@@ -135,7 +135,7 @@ const Login = () => {
                 type="button"
                 onClick={onForgotPassword}
                 disabled={resetting || submitting}
-                className="text-sm font-medium text-green-600 hover:text-green-700 disabled:opacity-50 transition-colors"
+                className="text-xs sm:text-sm font-medium text-green-600 hover:text-green-700 disabled:opacity-50 transition-colors"
               >
                 {resetting ? 'Sending...' : 'Forgot password?'}
               </button>
@@ -143,12 +143,12 @@ const Login = () => {
 
             <Button
               type="submit"
-              className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2.5 rounded-xl transition-all shadow-sm shadow-green-600/20 hover:shadow-md hover:shadow-green-600/30"
+              className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 rounded-lg transition-all shadow-sm shadow-green-600/20 hover:shadow-md hover:shadow-green-600/30 text-xs sm:text-sm"
               disabled={submitting}
             >
               {submitting ? (
                 <span className="flex items-center justify-center gap-2">
-                  <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
+                  <svg className="animate-spin h-3 w-3 sm:h-4 sm:w-4" viewBox="0 0 24 24" fill="none">
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                   </svg>
@@ -159,7 +159,7 @@ const Login = () => {
           </form>
         </div>
 
-        <p className="mt-6 text-sm text-slate-500 text-center">
+        <p className="mt-4 text-xs sm:text-sm text-slate-500 text-center">
           Don't have an account?{' '}
           <Link to="/register" className="font-semibold text-green-600 hover:text-green-700 transition-colors">
             Create one

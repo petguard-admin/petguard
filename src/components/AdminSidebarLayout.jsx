@@ -102,9 +102,9 @@ const AdminSidebarLayout = ({ title, children }) => {
               onClick={() => setMobileOpen(false)}
               className="absolute inset-0 bg-black/40"
             />
-            <div className="absolute left-0 top-0 h-full w-72 bg-white border-r border-slate-200 p-5 shadow-xl">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-lg font-bold text-slate-900">Admin Panel</h2>
+            <div className="absolute left-0 top-0 h-full w-64 bg-white border-r border-slate-200 p-4 shadow-xl">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-base font-bold text-slate-900">Admin Panel</h2>
                 <button
                   type="button"
                   onClick={() => setMobileOpen(false)}
@@ -119,10 +119,10 @@ const AdminSidebarLayout = ({ title, children }) => {
         )}
 
         {/* Desktop Sidebar */}
-        <aside className="hidden md:block w-64 shrink-0 sticky top-0 h-screen overflow-y-auto">
-          <div className="p-3">
-            <div className="rounded-3xl bg-white border border-green-100 shadow-sm p-5">
-              <h2 className="text-lg font-bold text-slate-900 mb-4">
+        <aside className="hidden md:block w-56 shrink-0 sticky top-0 h-screen overflow-y-auto">
+          <div className="p-2">
+            <div className="rounded-2xl bg-white border border-green-100 shadow-sm p-3">
+              <h2 className="text-base font-bold text-slate-900 mb-3">
                 Admin Panel
               </h2>
               {renderNav()}
@@ -131,18 +131,18 @@ const AdminSidebarLayout = ({ title, children }) => {
         </aside>
 
         {/* Main Content */}
-        <main className="flex-1 min-w-0 px-3 sm:px-5 lg:px-8 py-6 sm:py-8">
-          <div className="max-w-[90rem] mx-auto w-full">
+        <main className="flex-1 min-w-0 px-2 sm:px-4 lg:px-6 py-4 sm:py-6">
+          <div className="max-w-[70rem] mx-auto w-full">
             {title && (
-              <div className="mb-6 sm:mb-8">
-                <h1 className="text-2xl sm:text-3xl font-bold text-slate-900">{title}</h1>
-                <p className="text-slate-500 mt-1 text-sm sm:text-base">
+              <div className="mb-4 sm:mb-6">
+                <h1 className="text-xl sm:text-2xl font-bold text-slate-900">{title}</h1>
+                <p className="text-slate-500 mt-1 text-xs sm:text-sm">
                   Manage and monitor system information here.
                 </p>
               </div>
             )}
 
-            <div className="bg-white rounded-2xl sm:rounded-3xl border border-green-100 shadow-sm p-4 sm:p-6 min-w-0">
+            <div className="bg-white rounded-xl sm:rounded-2xl border border-green-100 shadow-sm p-3 sm:p-5 min-w-0">
               {children}
             </div>
           </div>

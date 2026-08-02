@@ -504,26 +504,26 @@ const AdminUserManagement = () => {
 
   return (
     <AdminSidebarLayout title="User Management">
-      <div className="flex flex-col gap-4">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+      <div className="flex flex-col gap-3">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
           <div className="flex flex-col md:flex-row md:items-center gap-2">
             <div className="flex-1">
-              <label className="block text-sm font-medium mb-1" htmlFor="userSearch">Search</label>
+              <label className="block text-xs sm:text-sm font-medium mb-1" htmlFor="userSearch">Search</label>
               <input
                 id="userSearch"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search by name, email, phone, barangay"
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+                className="w-full rounded-lg border border-gray-300 px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1" htmlFor="barangayFilter">Barangay</label>
+              <label className="block text-xs sm:text-sm font-medium mb-1" htmlFor="barangayFilter">Barangay</label>
               <select
                 id="barangayFilter"
                 value={barangayFilter}
                 onChange={(e) => setBarangayFilter(e.target.value)}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+                className="w-full rounded-lg border border-gray-300 px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
               >
                 <option value="">All</option>
                 {uniqueBarangays.map((barangay) => (
@@ -533,83 +533,83 @@ const AdminUserManagement = () => {
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <Button variant="green" onClick={onNewUser}>New User</Button>
+            <Button variant="green" onClick={onNewUser} className="text-xs sm:text-sm">New User</Button>
           </div>
         </div>
 
         {error ? (
-          <div className="rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">{error}</div>
+          <div className="rounded-md border border-destructive/30 bg-destructive/10 px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm text-destructive">{error}</div>
         ) : null}
 
-        <div className="w-full min-w-0 rounded-xl border border-slate-200 bg-white shadow-md overflow-hidden">
+        <div className="w-full min-w-0 rounded-lg border border-slate-200 bg-white shadow-sm overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full text-sm border-collapse min-w-[800px]">
+            <table className="w-full text-xs sm:text-sm border-collapse min-w-[600px] sm:min-w-[800px]">
               <thead className="sticky top-0 z-10">
                 <tr className="bg-gradient-to-r from-slate-800 to-slate-700">
-                  <th className="py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap">
+                  <th className="py-2 sm:py-3.5 px-2 sm:px-4 text-left text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap">
                     <button type="button" onClick={() => toggleSort('name')} className="inline-flex items-center gap-1 text-slate-100 hover:text-white transition-colors">
                       Name
                     </button>
                   </th>
-                  <th className="py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap">
+                  <th className="py-2 sm:py-3.5 px-2 sm:px-4 text-left text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap">
                     <button type="button" onClick={() => toggleSort('email')} className="inline-flex items-center gap-1 text-slate-100 hover:text-white transition-colors">
                       Email
                     </button>
                   </th>
-                  <th className="py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap hidden md:table-cell">
+                  <th className="py-2 sm:py-3.5 px-2 sm:px-4 text-left text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap hidden md:table-cell">
                     <button type="button" onClick={() => toggleSort('phone')} className="inline-flex items-center gap-1 text-slate-100 hover:text-white transition-colors">
                       Phone
                     </button>
                   </th>
-                  <th className="py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap hidden md:table-cell">
+                  <th className="py-2 sm:py-3.5 px-2 sm:px-4 text-left text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap hidden md:table-cell">
                     <button type="button" onClick={() => toggleSort('barangay')} className="inline-flex items-center gap-1 text-slate-100 hover:text-white transition-colors">
                       Barangay
                     </button>
                   </th>
-                  <th className="py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap hidden lg:table-cell">
+                  <th className="py-2 sm:py-3.5 px-2 sm:px-4 text-left text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap hidden lg:table-cell">
                     <button type="button" onClick={() => toggleSort('gender')} className="inline-flex items-center gap-1 text-slate-100 hover:text-white transition-colors">
                       Gender
                     </button>
                   </th>
-                  <th className="py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap hidden lg:table-cell">
+                  <th className="py-2 sm:py-3.5 px-2 sm:px-4 text-left text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap hidden lg:table-cell">
                     <button type="button" onClick={() => toggleSort('birthday')} className="inline-flex items-center gap-1 text-slate-100 hover:text-white transition-colors">
                       Birthday
                     </button>
                   </th>
-                  <th className="py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap hidden md:table-cell">
+                  <th className="py-2 sm:py-3.5 px-2 sm:px-4 text-left text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap hidden md:table-cell">
                     <button type="button" onClick={() => toggleSort('pets')} className="inline-flex items-center gap-1 text-slate-100 hover:text-white transition-colors">
                       No. of Pets
                     </button>
                   </th>
-                  <th className="py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap">
+                  <th className="py-2 sm:py-3.5 px-2 sm:px-4 text-left text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap">
                     <button type="button" onClick={() => toggleSort('status')} className="inline-flex items-center gap-1 text-slate-100 hover:text-white transition-colors">
                       Status
                     </button>
                   </th>
-                  <th className="py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap hidden lg:table-cell">
+                  <th className="py-2 sm:py-3.5 px-2 sm:px-4 text-left text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap hidden lg:table-cell">
                     <button type="button" onClick={() => toggleSort('createdAt')} className="inline-flex items-center gap-1 text-slate-100 hover:text-white transition-colors">
                       Date of Registration
                     </button>
                   </th>
-                  <th className="py-3.5 px-4 text-left text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap">Actions</th>
+                  <th className="py-2 sm:py-3.5 px-2 sm:px-4 text-left text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-100 whitespace-nowrap">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {loading ? (
                   <tr>
-                    <td colSpan={10} className="py-10 text-center text-slate-400 text-sm">
-                      <div className="flex flex-col items-center gap-2">
-                        <svg className="animate-spin h-5 w-5 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>
+                    <td colSpan={10} className="py-6 sm:py-10 text-center text-slate-400 text-xs sm:text-sm">
+                      <div className="flex flex-col items-center gap-1 sm:gap-2">
+                        <svg className="animate-spin h-4 w-4 sm:h-5 sm:w-5 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>
                         <span>Loading...</span>
                       </div>
                     </td>
                   </tr>
                 ) : pageItems.length === 0 ? (
                   <tr>
-                    <td colSpan={10} className="py-12 text-center text-slate-400">
+                    <td colSpan={10} className="py-8 sm:py-12 text-center text-slate-400">
                       <div className="flex flex-col items-center gap-1">
-                        <svg className="h-8 w-8 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
-                        <span className="text-sm font-medium">No users found.</span>
+                        <svg className="h-6 w-6 sm:h-8 sm:w-8 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+                        <span className="text-xs sm:text-sm font-medium">No users found.</span>
                       </div>
                     </td>
                   </tr>
@@ -619,28 +619,28 @@ const AdminUserManagement = () => {
                     const canMutate = Boolean(u.ownerId);
                     return (
                       <tr key={u.uid || u.ownerId} className={`border-b border-slate-100 hover:bg-emerald-50/50 transition-colors ${idx % 2 === 0 ? 'bg-white' : 'bg-slate-50/50'}`}>
-                        <td className="py-3 px-4 font-medium text-slate-800 whitespace-nowrap">{name}</td>
-                        <td className="py-3 px-4 text-slate-600">{u.email || '—'}</td>
-                        <td className="py-3 px-4 text-slate-600 hidden md:table-cell">{u.phone || '—'}</td>
-                        <td className="py-3 px-4 text-slate-600 hidden md:table-cell">{u.barangay || '—'}</td>
-                        <td className="py-3 px-4 text-slate-600 hidden lg:table-cell">{u.gender || '—'}</td>
-                        <td className="py-3 px-4 text-slate-600 hidden lg:table-cell">{u.birthday || '—'}</td>
-                        <td className="py-3 px-4 text-slate-600 text-center hidden md:table-cell">{u.pets ?? 0}</td>
-                        <td className="py-3 px-4">
-                          <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${u.accountStatus === 'active' ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'}`}>
+                        <td className="py-2 sm:py-3 px-2 sm:px-4 font-medium text-slate-800 whitespace-nowrap text-xs sm:text-sm">{name}</td>
+                        <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-600 text-xs sm:text-sm">{u.email || '—'}</td>
+                        <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-600 hidden md:table-cell text-xs sm:text-sm">{u.phone || '—'}</td>
+                        <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-600 hidden md:table-cell text-xs sm:text-sm">{u.barangay || '—'}</td>
+                        <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-600 hidden lg:table-cell text-xs sm:text-sm">{u.gender || '—'}</td>
+                        <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-600 hidden lg:table-cell text-xs sm:text-sm">{u.birthday || '—'}</td>
+                        <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-600 text-center hidden md:table-cell text-xs sm:text-sm">{u.pets ?? 0}</td>
+                        <td className="py-2 sm:py-3 px-2 sm:px-4">
+                          <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] sm:text-xs font-semibold ${u.accountStatus === 'active' ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'}`}>
                             {u.accountStatus === 'active' ? 'Active' : 'Inactive'}
                           </span>
                         </td>
-                        <td className="py-3 px-4 text-slate-600 hidden lg:table-cell">{fmtDate(u.createdAt)}</td>
-                        <td className="py-3 px-4">
+                        <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-600 hidden lg:table-cell text-xs sm:text-sm">{fmtDate(u.createdAt)}</td>
+                        <td className="py-2 sm:py-3 px-2 sm:px-4">
                           <div className="flex flex-wrap gap-1">
-                            <Button variant="blue" size="xs" onClick={() => onView(u)} disabled={!canMutate}>
+                            <Button variant="blue" size="xs" onClick={() => onView(u)} disabled={!canMutate} className="text-[10px] sm:text-xs">
                               View
                             </Button>
-                            <Button variant="outline" size="xs" onClick={() => onEdit(u)} disabled={!canMutate}>
+                            <Button variant="outline" size="xs" onClick={() => onEdit(u)} disabled={!canMutate} className="text-[10px] sm:text-xs">
                               Edit
                             </Button>
-                            <Button variant="destructive" size="xs" onClick={() => onDelete(u)} disabled={!canMutate}>
+                            <Button variant="destructive" size="xs" onClick={() => onDelete(u)} disabled={!canMutate} className="text-[10px] sm:text-xs">
                               Delete
                             </Button>
                           </div>

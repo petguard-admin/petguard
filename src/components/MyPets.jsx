@@ -303,15 +303,16 @@ const MyPets = () => {
   <OwnerSidebarLayout title="My Pets">
     
     {/* Header */}
-    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-8">
+    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4 sm:mb-6">
       <div>
-        <p className="text-slate-600 text-sm">
+        <p className="text-slate-600 text-xs sm:text-sm">
           Manage your pets and select an active profile.
         </p>
       </div>
       <Button
         variant="green"
         onClick={() => setIsRegisterModalOpen(true)}
+        className="text-xs sm:text-sm"
       >
         + Register Pet
       </Button>
@@ -319,38 +320,39 @@ const MyPets = () => {
 
     {/* Alerts */}
     {message && (
-      <div className="mb-4 rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800">
+      <div className="mb-3 rounded-lg border border-green-200 bg-green-50 px-3 py-2 text-xs sm:text-sm text-green-800">
         {message}
       </div>
     )}
 
     {error && (
-      <div className="mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+      <div className="mb-3 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-xs sm:text-sm text-red-700">
         {error}
       </div>
     )}
 
     {/* Empty State */}
     {!pets.length ? (
-      <div className="bg-white border border-green-100 rounded-3xl p-10 text-center shadow-sm">
-        <p className="text-slate-600 mb-4">
+      <div className="bg-white border border-green-100 rounded-2xl p-6 sm:p-10 text-center shadow-sm">
+        <p className="text-slate-600 mb-3 sm:mb-4 text-xs sm:text-sm">
           You have not registered any pets yet.
         </p>
         <Button
           variant="green"
           onClick={() => setIsRegisterModalOpen(true)}
+          className="text-xs sm:text-sm"
         >
           Register your first pet
         </Button>
       </div>
     ) : (
-      <div className="grid lg:grid-cols-3 gap-8">
+      <div className="grid lg:grid-cols-3 gap-4 sm:gap-8">
         
         {/* LEFT: Pet List */}
-        <div className="bg-white rounded-3xl border border-green-100 shadow-sm p-5">
-          <h2 className="font-semibold text-slate-900 mb-4">Your Pets</h2>
+        <div className="bg-white rounded-2xl border border-green-100 shadow-sm p-3 sm:p-5">
+          <h2 className="font-semibold text-slate-900 mb-3 text-sm sm:text-base">Your Pets</h2>
 
-          <div className="space-y-3">
+          <div className="space-y-2 sm:space-y-3">
             {pets.map((pet) => {
               const active = pet.id === selectedPetId;
 
@@ -358,14 +360,14 @@ const MyPets = () => {
                 <button
                   key={pet.id}
                   onClick={() => onSwitch(pet.id)}
-                  className={`w-full flex items-center gap-3 p-3 rounded-xl border transition-all ${
+                  className={`w-full flex items-center gap-2 sm:gap-3 p-2 sm:p-3 rounded-lg sm:rounded-xl border transition-all ${
                     active
                       ? "border-green-600 bg-green-50"
                       : "border-slate-200 hover:bg-green-50"
                   }`}
                 >
                   {/* Image */}
-                  <div className="w-12 h-12 rounded-xl bg-green-100 overflow-hidden shrink-0">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-green-100 overflow-hidden shrink-0">
                     {pet.image ? (
                       <img
                         src={pet.image}
@@ -373,7 +375,7 @@ const MyPets = () => {
                         className="w-full h-full object-cover"
                       />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center text-sm text-green-700">
+                      <div className="w-full h-full flex items-center justify-center text-xs sm:text-sm text-green-700">
                         🐾
                       </div>
                     )}
@@ -381,10 +383,10 @@ const MyPets = () => {
 
                   {/* Info */}
                   <div className="text-left">
-                    <div className="font-medium text-slate-900">
+                    <div className="font-medium text-slate-900 text-xs sm:text-sm">
                       {pet.petName || "Unnamed"}
                     </div>
-                    <p className="text-sm text-slate-500">
+                    <p className="text-xs sm:text-sm text-slate-500">
   {pet.species || "—"} • {pet.breed || "—"} •{" "}
   {getPetAge(pet.dateOfBirth)}
 </p>
@@ -396,13 +398,13 @@ const MyPets = () => {
         </div>
 
         {/* RIGHT: Pet Details */}
-        <div className="lg:col-span-2 bg-white rounded-3xl border border-green-100 shadow-sm p-6">
+        <div className="lg:col-span-2 bg-white rounded-2xl border border-green-100 shadow-sm p-4 sm:p-6">
           {selectedPet ? (
             <>
               {/* Top Section */}
-              <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-6">
-                <div className="flex items-center gap-4">
-                  <div className="w-20 h-20 rounded-2xl bg-green-100 overflow-hidden">
+              <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-4 sm:mb-6">
+                <div className="flex items-center gap-3 sm:gap-4">
+                  <div className="w-14 h-14 sm:w-20 sm:h-20 rounded-xl sm:rounded-2xl bg-green-100 overflow-hidden">
                     {selectedPet.image ? (
                       <img
                         src={selectedPet.image}
@@ -410,17 +412,17 @@ const MyPets = () => {
                         className="w-full h-full object-cover"
                       />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center text-xl text-green-700">
+                      <div className="w-full h-full flex items-center justify-center text-lg sm:text-xl text-green-700">
                         🐾
                       </div>
                     )}
                   </div>
 
                   <div>
-                    <h2 className="text-xl font-semibold text-slate-900">
+                    <h2 className="text-lg sm:text-xl font-semibold text-slate-900">
                       {selectedPet.petName || "Unnamed Pet"}
                     </h2>
-                    <p className="text-sm text-slate-500">
+                    <p className="text-xs sm:text-sm text-slate-500">
                       {selectedPet.species || "—"} • {selectedPet.breed || "—"}
                     </p>
                   </div>
@@ -431,6 +433,7 @@ const MyPets = () => {
                   <Button
                     variant="blue"
                     onClick={openEditModal}
+                    className="text-xs sm:text-sm"
                   >
                     Edit
                   </Button>
@@ -439,6 +442,7 @@ const MyPets = () => {
                     variant="destructive"
                     onClick={deletePet}
                     disabled={deleting}
+                    className="text-xs sm:text-sm"
                   >
                     {deleting ? "Deleting..." : "Delete"}
                   </Button>
@@ -446,7 +450,7 @@ const MyPets = () => {
               </div>
 
               {/* Pet Info View */}
-              <div className="grid md:grid-cols-2 gap-4 text-sm">
+              <div className="grid md:grid-cols-2 gap-3 sm:gap-4 text-xs sm:text-sm">
                 {[
                   ["Species", selectedPet.species],
                   ["Sex", selectedPet.sex],
@@ -457,8 +461,8 @@ const MyPets = () => {
                   ["Date of Birth", selectedPet.dateOfBirth],
                 ].map(([label, value]) => (
                   <div key={label}>
-                    <div className="text-xs text-slate-500">{label}</div>
-                    <div className="font-medium text-slate-900">
+                    <div className="text-[10px] sm:text-xs text-slate-500">{label}</div>
+                    <div className="font-medium text-slate-900 text-xs sm:text-sm">
                       {value || "—"}
                     </div>
                   </div>
@@ -466,7 +470,7 @@ const MyPets = () => {
               </div>
             </>
           ) : (
-            <p className="text-slate-500">Select a pet to view details.</p>
+            <p className="text-slate-500 text-xs sm:text-sm">Select a pet to view details.</p>
           )}
         </div>
       </div>
