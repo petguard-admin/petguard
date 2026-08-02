@@ -259,7 +259,7 @@ const AdminInformationCenter = () => {
           <div className="rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">{error}</div>
         ) : null}
 
-        <div className="w-full min-w-0 rounded-xl border border-slate-200 bg-white shadow-md overflow-hidden">
+        <div className="w-full min-w-0 rounded-xl border border-slate-800 bg-slate-900 shadow-md overflow-hidden">
           <div className="overflow-x-auto">
             <table className="min-w-full text-sm border-collapse min-w-[420px]">
               <thead>
@@ -283,8 +283,8 @@ const AdminInformationCenter = () => {
                   </tr>
                 ) : filtered.length ? (
                   filtered.map((row) => (
-                    <tr key={row.id} className="border-b border-slate-100 hover:bg-emerald-50/50 transition-colors even:bg-slate-50/50">
-                      <td className="py-3 px-4 font-medium max-w-[200px] truncate" title={row.title}>{row.title || '—'}</td>
+                    <tr key={row.id} className="border-b border-slate-800 hover:bg-slate-800/50 transition-colors even:bg-slate-900/50">
+                      <td className="py-3 px-4 font-medium max-w-[200px] truncate text-slate-100" title={row.title}>{row.title || '—'}</td>
                       <td className="py-3 px-4">
                         <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${row.type === 'announcement' ? 'bg-blue-100 text-blue-700' : 'bg-amber-100 text-amber-700'}`}>
                           {row.type || '—'}

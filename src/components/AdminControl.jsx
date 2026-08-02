@@ -214,7 +214,7 @@ const AdminControl = () => {
           <div className="rounded-md border border-destructive/30 bg-destructive/10 px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm text-destructive">{error}</div>
         ) : null}
 
-        <div className="w-full min-w-0 rounded-lg border border-slate-200 bg-white shadow-sm overflow-hidden">
+        <div className="w-full min-w-0 rounded-lg border border-slate-800 bg-slate-900 shadow-sm overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-xs sm:text-sm border-collapse min-w-[400px] sm:min-w-[480px]">
               <thead className="sticky top-0 z-10">
@@ -261,14 +261,14 @@ const AdminControl = () => {
                   filteredSorted.map((a, idx) => {
                     const name = `${a.firstname || ''} ${a.lastname || ''}`.trim() || '—';
                     return (
-                      <tr key={a.uid} className={`border-b border-slate-100 hover:bg-emerald-50/50 transition-colors ${idx % 2 === 0 ? 'bg-white' : 'bg-slate-50/50'}`}>
-                        <td className="py-2 sm:py-3 px-2 sm:px-4 font-medium text-slate-800 text-xs sm:text-sm">{name}</td>
-                        <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-600 text-xs sm:text-sm max-w-[150px] truncate" title={a.email}>{a.email || '—'}</td>
-                        <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-600 hidden md:table-cell text-xs sm:text-sm max-w-[120px] truncate" title={a.phone}>{a.phone || '—'}</td>
+                      <tr key={a.uid} className={`border-b border-slate-800 hover:bg-slate-800/50 transition-colors ${idx % 2 === 0 ? 'bg-slate-900' : 'bg-slate-900/50'}`}>
+                        <td className="py-2 sm:py-3 px-2 sm:px-4 font-medium text-slate-100 text-xs sm:text-sm">{name}</td>
+                        <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-300 text-xs sm:text-sm max-w-[150px] truncate" title={a.email}>{a.email || '—'}</td>
+                        <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-300 hidden md:table-cell text-xs sm:text-sm max-w-[120px] truncate" title={a.phone}>{a.phone || '—'}</td>
                         <td className="py-2 sm:py-3 px-2 sm:px-4">
                           <span className="inline-flex items-center rounded-full bg-violet-100 text-violet-700 px-2 py-0.5 text-[10px] sm:text-xs font-semibold">{a.role || 'admin'}</span>
                         </td>
-                        <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-600 hidden lg:table-cell text-xs sm:text-sm">{fmtDate(a.createdAt)}</td>
+                        <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-300 hidden lg:table-cell text-xs sm:text-sm">{fmtDate(a.createdAt)}</td>
                         <td className="py-2 sm:py-3 px-2 sm:px-4">
                           <div className="flex gap-1">
                             <Button size="xs" variant="blue" type="button" onClick={() => openView(a)} className="text-[10px] sm:text-xs">View</Button>

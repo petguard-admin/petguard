@@ -541,7 +541,7 @@ const AdminUserManagement = () => {
           <div className="rounded-md border border-destructive/30 bg-destructive/10 px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm text-destructive">{error}</div>
         ) : null}
 
-        <div className="w-full min-w-0 rounded-lg border border-slate-200 bg-white shadow-sm overflow-hidden">
+        <div className="w-full min-w-0 rounded-lg border border-slate-800 bg-slate-900 shadow-sm overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-xs sm:text-sm border-collapse min-w-[600px] sm:min-w-[800px]">
               <thead className="sticky top-0 z-10">
@@ -618,20 +618,20 @@ const AdminUserManagement = () => {
                     const name = `${u.firstname || ''} ${u.lastname || ''}`.trim() || '—';
                     const canMutate = Boolean(u.ownerId);
                     return (
-                      <tr key={u.uid || u.ownerId} className={`border-b border-slate-100 hover:bg-emerald-50/50 transition-colors ${idx % 2 === 0 ? 'bg-white' : 'bg-slate-50/50'}`}>
-                        <td className="py-2 sm:py-3 px-2 sm:px-4 font-medium text-slate-800 whitespace-nowrap text-xs sm:text-sm">{name}</td>
-                        <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-600 text-xs sm:text-sm max-w-[150px] truncate" title={u.email}>{u.email || '—'}</td>
-                        <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-600 hidden md:table-cell text-xs sm:text-sm max-w-[120px] truncate" title={u.phone}>{u.phone || '—'}</td>
-                        <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-600 hidden md:table-cell text-xs sm:text-sm max-w-[120px] truncate" title={u.barangay}>{u.barangay || '—'}</td>
-                        <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-600 hidden lg:table-cell text-xs sm:text-sm">{u.gender || '—'}</td>
-                        <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-600 hidden lg:table-cell text-xs sm:text-sm">{u.birthday || '—'}</td>
-                        <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-600 text-center hidden md:table-cell text-xs sm:text-sm">{u.pets ?? 0}</td>
+                      <tr key={u.uid || u.ownerId} className={`border-b border-slate-800 hover:bg-slate-800/50 transition-colors ${idx % 2 === 0 ? 'bg-slate-900' : 'bg-slate-900/50'}`}>
+                        <td className="py-2 sm:py-3 px-2 sm:px-4 font-medium text-slate-100 whitespace-nowrap text-xs sm:text-sm">{name}</td>
+                        <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-300 text-xs sm:text-sm max-w-[150px] truncate" title={u.email}>{u.email || '—'}</td>
+                        <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-300 hidden md:table-cell text-xs sm:text-sm max-w-[120px] truncate" title={u.phone}>{u.phone || '—'}</td>
+                        <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-300 hidden md:table-cell text-xs sm:text-sm max-w-[120px] truncate" title={u.barangay}>{u.barangay || '—'}</td>
+                        <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-300 hidden lg:table-cell text-xs sm:text-sm">{u.gender || '—'}</td>
+                        <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-300 hidden lg:table-cell text-xs sm:text-sm">{u.birthday || '—'}</td>
+                        <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-300 text-center hidden md:table-cell text-xs sm:text-sm">{u.pets ?? 0}</td>
                         <td className="py-2 sm:py-3 px-2 sm:px-4">
                           <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] sm:text-xs font-semibold ${u.accountStatus === 'active' ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'}`}>
                             {u.accountStatus === 'active' ? 'Active' : 'Inactive'}
                           </span>
                         </td>
-                        <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-600 hidden lg:table-cell text-xs sm:text-sm">{fmtDate(u.createdAt)}</td>
+                        <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-300 hidden lg:table-cell text-xs sm:text-sm">{fmtDate(u.createdAt)}</td>
                         <td className="py-2 sm:py-3 px-2 sm:px-4">
                           <div className="flex gap-1">
                             <Button variant="blue" size="xs" onClick={() => onView(u)} disabled={!canMutate} className="text-[10px] sm:text-xs">

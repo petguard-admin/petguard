@@ -305,7 +305,7 @@ const MyPets = () => {
     {/* Header */}
     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4 sm:mb-6">
       <div>
-        <p className="text-slate-600 text-xs sm:text-sm">
+        <p className="text-slate-400 text-xs sm:text-sm">
           Manage your pets and select an active profile.
         </p>
       </div>
@@ -333,8 +333,8 @@ const MyPets = () => {
 
     {/* Empty State */}
     {!pets.length ? (
-      <div className="bg-white border border-green-100 rounded-2xl p-6 sm:p-10 text-center shadow-sm">
-        <p className="text-slate-600 mb-3 sm:mb-4 text-xs sm:text-sm">
+      <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-10 text-center shadow-sm">
+        <p className="text-slate-400 mb-3 sm:mb-4 text-xs sm:text-sm">
           You have not registered any pets yet.
         </p>
         <Button
@@ -349,8 +349,8 @@ const MyPets = () => {
       <div className="grid lg:grid-cols-3 gap-4 sm:gap-8">
         
         {/* LEFT: Pet List */}
-        <div className="bg-white rounded-2xl border border-green-100 shadow-sm p-3 sm:p-5">
-          <h2 className="font-semibold text-slate-900 mb-3 text-sm sm:text-base">Your Pets</h2>
+        <div className="bg-slate-900 rounded-2xl border border-slate-800 shadow-sm p-3 sm:p-5">
+          <h2 className="font-semibold text-slate-50 mb-3 text-sm sm:text-base">Your Pets</h2>
 
           <div className="space-y-2 sm:space-y-3">
             {pets.map((pet) => {
@@ -398,7 +398,7 @@ const MyPets = () => {
         </div>
 
         {/* RIGHT: Pet Details */}
-        <div className="lg:col-span-2 bg-white rounded-2xl border border-green-100 shadow-sm p-4 sm:p-6">
+        <div className="lg:col-span-2 bg-slate-900 rounded-2xl border border-slate-800 shadow-sm p-4 sm:p-6">
           {selectedPet ? (
             <>
               {/* Top Section */}

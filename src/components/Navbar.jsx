@@ -3,17 +3,25 @@ import { Link } from "react-router-dom";
 import { Button } from "./ui/Button";
 import { useAuth } from "../AuthContext";
 
-const Navbar = () => {
+const Navbar = ({ dark = false }) => {
   const { user, logout, loading, roleLoading, isAdmin } = useAuth();
 
   return (
-    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-green-100">
+    <header
+      className={`sticky top-0 z-50 backdrop-blur-md border-b ${
+        dark
+          ? "bg-slate-950/95 border-green-900"
+          : "bg-white/95 border-green-100"
+      }`}
+    >
       <nav className="container mx-auto px-3 sm:px-4 lg:px-6 py-2 sm:py-3 flex justify-between items-center">
         
         {/* Logo */}
         <Link
           to="/"
-          className="flex items-center gap-1.5 sm:gap-2 text-lg sm:text-xl font-bold text-slate-900"
+          className={`flex items-center gap-1.5 sm:gap-2 text-lg sm:text-xl font-bold ${
+            dark ? "text-white" : "text-slate-900"
+          }`}
         >
           <img
             src="/img/OMV_logo.png"
@@ -21,16 +29,16 @@ const Navbar = () => {
             className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg"
           />
           <span>
-            Pet<span className="text-green-700">Guard</span>
+            Pet<span className={dark ? "text-green-400" : "text-green-700"}>Guard</span>
           </span>
         </Link>
 
         {/* Nav Links */}
-        <ul className="hidden md:flex items-center gap-4 sm:gap-6 text-xs sm:text-sm font-medium text-slate-700">
+        <ul className={`hidden md:flex items-center gap-4 sm:gap-6 text-xs sm:text-sm font-medium ${dark ? "text-slate-300" : "text-slate-700"}`}>
           <li>
             <Link
               to="/"
-              className="hover:text-green-700 transition-colors"
+              className={`${dark ? "hover:text-green-400" : "hover:text-green-700"} transition-colors`}
             >
               Home
             </Link>
@@ -40,7 +48,7 @@ const Navbar = () => {
             <li>
               <Link
                 to="/admin"
-                className="hover:text-green-700 transition-colors"
+                className={`${dark ? "hover:text-green-400" : "hover:text-green-700"} transition-colors`}
               >
                 Dashboard
               </Link>
@@ -50,7 +58,7 @@ const Navbar = () => {
               <li>
                 <Link
                   to="/my-pets"
-                  className="hover:text-green-700 transition-colors"
+                  className={`${dark ? "hover:text-green-400" : "hover:text-green-700"} transition-colors`}
                 >
                   My Pets
                 </Link>
@@ -58,7 +66,7 @@ const Navbar = () => {
               <li>
                 <Link
                   to="/medical-records"
-                  className="hover:text-green-700 transition-colors"
+                  className={`${dark ? "hover:text-green-400" : "hover:text-green-700"} transition-colors`}
                 >
                   Medical Records
                 </Link>
@@ -70,14 +78,18 @@ const Navbar = () => {
         {/* Auth Actions */}
         <div className="flex items-center gap-2">
           {loading || (user && roleLoading) ? (
-            <span className="text-xs sm:text-sm text-slate-500">Loading...</span>
+            <span className={`text-xs sm:text-sm ${dark ? "text-slate-400" : "text-slate-500"}`}>Loading...</span>
           ) : user ? (
             <div className="hidden md:flex items-center gap-2">
               <Link to={isAdmin ? "/admin/profile" : "/profile"}>
                 <Button
                   variant="outline"
                   size="sm"
-                  className="border-green-700 text-green-700 hover:bg-green-50 rounded-lg text-xs sm:text-sm px-2 sm:px-3"
+                  className={`rounded-lg text-xs sm:text-sm px-2 sm:px-3 ${
+                    dark
+                      ? "border-green-500 text-green-400 hover:bg-green-900/20"
+                      : "border-green-700 text-green-700 hover:bg-green-50"
+                  }`}
                 >
                   Profile
                 </Button>
@@ -97,7 +109,11 @@ const Navbar = () => {
                 variant="ghost"
                 size="sm"
                 asChild
-                className="text-slate-700 hover:text-green-700 hover:bg-green-50 rounded-lg text-xs sm:text-sm px-2 sm:px-3"
+                className={`rounded-lg text-xs sm:text-sm px-2 sm:px-3 ${
+                  dark
+                    ? "text-slate-300 hover:text-green-400 hover:bg-green-900/20"
+                    : "text-slate-700 hover:text-green-700 hover:bg-green-50"
+                }`}
               >
                 <Link to="/login">Login</Link>
               </Button>

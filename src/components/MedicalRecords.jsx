@@ -399,8 +399,8 @@ const MedicalRecords = () => {
               onClick={() => setActiveTab('medical')}
               className={`px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium transition-colors ${
                 activeTab === 'medical'
-                  ? 'text-green-700 border-b-2 border-green-700'
-                  : 'text-slate-600 hover:text-green-700'
+                  ? 'text-emerald-400 border-b-2 border-emerald-400'
+                  : 'text-slate-400 hover:text-emerald-400'
               }`}
             >
               Medical Records
@@ -410,8 +410,8 @@ const MedicalRecords = () => {
               onClick={() => setActiveTab('vaccination')}
               className={`px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium transition-colors ${
                 activeTab === 'vaccination'
-                  ? 'text-green-700 border-b-2 border-green-700'
-                  : 'text-slate-600 hover:text-green-700'
+                  ? 'text-emerald-400 border-b-2 border-emerald-400'
+                  : 'text-slate-400 hover:text-emerald-400'
               }`}
             >
               Vaccination Records
@@ -450,7 +450,7 @@ const MedicalRecords = () => {
               {error ? <div className="mb-2 sm:mb-3 text-xs sm:text-sm text-destructive">{error}</div> : null}
               {message ? <div className="mb-2 sm:mb-3 text-xs sm:text-sm text-green-600">{message}</div> : null}
 
-              <div className="w-full min-w-0 rounded-lg border border-slate-200 bg-white shadow-sm overflow-hidden">
+              <div className="w-full min-w-0 rounded-lg border border-slate-800 bg-slate-900 shadow-sm overflow-hidden">
                 <div className="overflow-x-auto">
                   <table className="w-full text-xs sm:text-sm border-collapse min-w-[350px] sm:min-w-[450px]">
                     <thead className="sticky top-0 z-10">
@@ -495,11 +495,11 @@ const MedicalRecords = () => {
                         </tr>
                       ) : (
                         medicalPageItems.map((r, idx) => (
-                          <tr key={r.id} className={`border-b border-slate-100 last:border-0 hover:bg-emerald-50/50 transition-colors ${idx % 2 === 0 ? 'bg-white' : 'bg-slate-50/50'}`}>
-                            <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-600 text-xs sm:text-sm">{r.date || '—'}</td>
-                            <td className="py-2 sm:py-3 px-2 sm:px-4 max-w-[150px] truncate text-slate-500 text-[10px] sm:text-xs" title={r.results}>{r.results || '—'}</td>
-                            <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-600 text-xs sm:text-sm max-w-[120px] truncate" title={r.veterinarian}>{r.veterinarian || '—'}</td>
-                            <td className="py-2 sm:py-3 px-2 sm:px-4 max-w-[150px] truncate text-slate-500 text-[10px] sm:text-xs" title={r.notes}>{r.notes || '—'}</td>
+                          <tr key={r.id} className={`border-b border-slate-800 last:border-0 hover:bg-slate-800/50 transition-colors ${idx % 2 === 0 ? 'bg-slate-900' : 'bg-slate-900/50'}`}>
+                            <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-300 text-xs sm:text-sm">{r.date || '—'}</td>
+                            <td className="py-2 sm:py-3 px-2 sm:px-4 max-w-[150px] truncate text-slate-400 text-[10px] sm:text-xs" title={r.results}>{r.results || '—'}</td>
+                            <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-300 text-xs sm:text-sm max-w-[120px] truncate" title={r.veterinarian}>{r.veterinarian || '—'}</td>
+                            <td className="py-2 sm:py-3 px-2 sm:px-4 max-w-[150px] truncate text-slate-400 text-[10px] sm:text-xs" title={r.notes}>{r.notes || '—'}</td>
                             <td className="py-2 sm:py-3 px-2 sm:px-4">
                               <div className="flex gap-1">
                                 <Button variant="blue" size="xs" onClick={() => onView(r)} className="text-[10px] sm:text-xs">
@@ -572,7 +572,7 @@ const MedicalRecords = () => {
               {error ? <div className="mb-2 sm:mb-3 text-xs sm:text-sm text-destructive">{error}</div> : null}
               {message ? <div className="mb-2 sm:mb-3 text-xs sm:text-sm text-green-600">{message}</div> : null}
 
-              <div className="w-full min-w-0 rounded-lg border border-slate-200 bg-white shadow-sm overflow-hidden">
+              <div className="w-full min-w-0 rounded-lg border border-slate-800 bg-slate-900 shadow-sm overflow-hidden">
                 <div className="overflow-x-auto">
                   <table className="w-full text-xs sm:text-sm border-collapse min-w-[400px] sm:min-w-[600px]">
                     <thead className="sticky top-0 z-10">
@@ -624,14 +624,14 @@ const MedicalRecords = () => {
                         </tr>
                       ) : (
                         vaccinationPageItems.map((r, idx) => (
-                          <tr key={r.id} className={`border-b border-slate-100 last:border-b-0 hover:bg-emerald-50/50 transition-colors ${idx % 2 === 0 ? 'bg-white' : 'bg-slate-50/50'}`}>
-                            <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-600 text-xs sm:text-sm">{r.date || '—'}</td>
-                            <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-600 text-xs sm:text-sm max-w-[120px] truncate" title={r.vaccineType}>{r.vaccineType || '—'}</td>
-                            <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-600 hidden lg:table-cell text-xs sm:text-sm max-w-[120px] truncate" title={r.vaccineSource}>{r.vaccineSource || '—'}</td>
-                            <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-600 text-xs sm:text-sm max-w-[120px] truncate" title={r.vaccinatedBy}>{r.vaccinatedBy || '—'}</td>
-                            <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-600 hidden md:table-cell text-xs sm:text-sm max-w-[120px] truncate" title={r.reason}>{r.reason || '—'}</td>
-                            <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-600 hidden xl:table-cell text-xs sm:text-sm">{r.disease || 'N/A'}</td>
-                            <td className="py-2 sm:py-3 px-2 sm:px-4 max-w-[150px] truncate text-slate-500 text-[10px] sm:text-xs hidden md:table-cell" title={r.notes}>{r.notes || '—'}</td>
+                          <tr key={r.id} className={`border-b border-slate-800 last:border-b-0 hover:bg-slate-800/50 transition-colors ${idx % 2 === 0 ? 'bg-slate-900' : 'bg-slate-900/50'}`}>
+                            <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-300 text-xs sm:text-sm">{r.date || '—'}</td>
+                            <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-300 text-xs sm:text-sm max-w-[120px] truncate" title={r.vaccineType}>{r.vaccineType || '—'}</td>
+                            <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-300 hidden lg:table-cell text-xs sm:text-sm max-w-[120px] truncate" title={r.vaccineSource}>{r.vaccineSource || '—'}</td>
+                            <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-300 text-xs sm:text-sm max-w-[120px] truncate" title={r.vaccinatedBy}>{r.vaccinatedBy || '—'}</td>
+                            <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-300 hidden md:table-cell text-xs sm:text-sm max-w-[120px] truncate" title={r.reason}>{r.reason || '—'}</td>
+                            <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-300 hidden xl:table-cell text-xs sm:text-sm">{r.disease || 'N/A'}</td>
+                            <td className="py-2 sm:py-3 px-2 sm:px-4 max-w-[150px] truncate text-slate-400 text-[10px] sm:text-xs hidden md:table-cell" title={r.notes}>{r.notes || '—'}</td>
                             <td className="py-2 sm:py-3 px-2 sm:px-4">
                               <div className="flex gap-1">
                                 <Button variant="blue" size="xs" onClick={() => onView(r)} className="text-[10px] sm:text-xs">

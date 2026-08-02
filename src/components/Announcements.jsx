@@ -28,11 +28,11 @@ const Announcements = ({ items = [], onItemClick, compact = false, alwaysScrollO
             items.map((announcement) => (
               <div
                 key={announcement.id}
-                className={`${compact ? '' : 'w-[300px] snap-start flex-shrink-0 md:w-auto'} group relative bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer`}
+                className={`${compact ? '' : 'w-[300px] snap-start flex-shrink-0 md:w-auto'} group relative bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:border-slate-700 transition-all duration-300 cursor-pointer`}
                 onClick={() => onItemClick && onItemClick(announcement)}
               >
                 {/* Image */}
-                <div className="relative h-48 bg-gradient-to-br from-emerald-100 to-teal-50 overflow-hidden">
+                <div className="relative h-48 bg-gradient-to-br from-emerald-900 to-teal-950 overflow-hidden">
                   <img
                     src={announcement.imageUrl || "/placeholder.jpg"}
                     alt={announcement.title}
@@ -40,7 +40,7 @@ const Announcements = ({ items = [], onItemClick, compact = false, alwaysScrollO
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
                   {announcement.createdAt && (
-                    <span className="absolute top-3 left-3 inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-white/90 text-emerald-700 backdrop-blur-sm shadow-sm">
+                    <span className="absolute top-3 left-3 inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-950/70 text-emerald-300 backdrop-blur-sm shadow-sm">
                       {fmtDate(announcement.createdAt)}
                     </span>
                   )}
@@ -48,15 +48,15 @@ const Announcements = ({ items = [], onItemClick, compact = false, alwaysScrollO
 
                 {/* Content */}
                 <div className="p-5">
-                  <h3 className="text-base font-bold text-slate-900 line-clamp-2 group-hover:text-emerald-700 transition-colors duration-200">
+                  <h3 className="text-base font-bold text-slate-100 line-clamp-2 group-hover:text-emerald-400 transition-colors duration-200">
                     {announcement.title}
                   </h3>
 
-                  <p className="mt-2 text-sm text-slate-500 line-clamp-2 leading-relaxed">
+                  <p className="mt-2 text-sm text-slate-400 line-clamp-2 leading-relaxed">
                     {announcement.content}
                   </p>
 
-                  <div className="mt-4 flex items-center text-sm font-semibold text-emerald-700 group-hover:text-emerald-800 transition-colors">
+                  <div className="mt-4 flex items-center text-sm font-semibold text-emerald-400 group-hover:text-emerald-300 transition-colors">
                     Read more
                     <svg className="ml-1.5 h-4 w-4 group-hover:translate-x-0.5 transition-transform duration-200" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />

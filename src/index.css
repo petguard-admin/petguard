@@ -1,11 +1,18 @@
 @import "tailwindcss";
 
+/* Slightly smaller UI on mobile screens */
+@media (max-width: 767px) {
+  html {
+    font-size: 15px;
+  }
+}
+
 /* Base styles */
 @layer base {
   body {
     margin: 0;
-    background-color: #f8fafc;
-    color: #0f172a;
+    background-color: #020617;
+    color: #e2e8f0;
     font-family:
       ui-sans-serif,
       system-ui,
@@ -17,4 +24,122 @@
       "Liberation Sans",
       sans-serif;
   }
+}
+
+:root {
+  color-scheme: dark;
+}
+
+/* ===== Global Dark Mode =====
+   Remap light Tailwind utilities to dark equivalents across the whole app.
+   Unlayered rules override Tailwind's utilities (which live in cascade layers). */
+
+/* Surfaces */
+.bg-white { background-color: #0f172a; }
+.bg-white\/95 { background-color: rgb(15 23 42 / 0.95); }
+.bg-slate-50 { background-color: #1e293b; }
+.bg-slate-50\/50 { background-color: rgb(30 41 59 / 0.5); }
+.bg-slate-100 { background-color: #1e293b; }
+.bg-slate-200 { background-color: #334155; }
+.bg-gray-100 { background-color: #1e293b; }
+.focus\:bg-white { background-color: #0f172a; }
+
+/* Tinted surfaces */
+.bg-green-50 { background-color: #052e16; }
+.bg-green-50\/50 { background-color: rgb(5 46 22 / 0.5); }
+.bg-green-100 { background-color: #064e3b; }
+.bg-emerald-50 { background-color: #022c22; }
+.bg-emerald-50\/50 { background-color: rgb(2 44 34 / 0.5); }
+.bg-emerald-100 { background-color: #064e3b; }
+.bg-blue-50 { background-color: #172554; }
+.bg-blue-100 { background-color: #1e3a8a; }
+.bg-red-50 { background-color: #450a0a; }
+.bg-red-100 { background-color: #7f1d1d; }
+.bg-amber-50 { background-color: #451a03; }
+.bg-amber-100 { background-color: #78350f; }
+.bg-violet-50 { background-color: #2e1065; }
+.bg-violet-100 { background-color: #4c1d95; }
+
+/* Hover / focus surfaces */
+.hover\:bg-emerald-50\/50 { background-color: rgb(2 44 34 / 0.5); }
+.hover\:bg-emerald-50 { background-color: #022c22; }
+.hover\:bg-slate-50 { background-color: #1e293b; }
+.hover\:bg-slate-100 { background-color: #1e293b; }
+.hover\:bg-slate-200 { background-color: #334155; }
+.hover\:bg-green-50 { background-color: #052e16; }
+.hover\:bg-red-50 { background-color: #450a0a; }
+.hover\:bg-blue-50 { background-color: #172554; }
+.group-hover\:bg-emerald-100 { background-color: #064e3b; }
+.group-hover\:bg-blue-100 { background-color: #1e3a8a; }
+.group-hover\:bg-violet-100 { background-color: #4c1d95; }
+.group-hover\:bg-amber-100 { background-color: #78350f; }
+.even\:bg-slate-50\/50 { background-color: rgb(30 41 59 / 0.5); }
+.disabled\:bg-gray-100 { background-color: #1e293b; }
+
+/* Text */
+.text-slate-900 { color: #f1f5f9; }
+.text-slate-800 { color: #e2e8f0; }
+.text-slate-700 { color: #cbd5e1; }
+.text-slate-600 { color: #94a3b8; }
+.text-slate-500 { color: #94a3b8; }
+.text-gray-900 { color: #f1f5f9; }
+.text-gray-600 { color: #94a3b8; }
+.text-gray-500 { color: #94a3b8; }
+
+.text-green-700 { color: #4ade80; }
+.text-green-600 { color: #4ade80; }
+.text-green-800 { color: #4ade80; }
+.text-emerald-700 { color: #34d399; }
+.text-emerald-600 { color: #34d399; }
+.text-emerald-800 { color: #34d399; }
+.text-emerald-900 { color: #34d399; }
+.text-sky-700 { color: #38bdf8; }
+.text-blue-700 { color: #60a5fa; }
+.text-blue-600 { color: #60a5fa; }
+.text-blue-800 { color: #60a5fa; }
+.text-red-700 { color: #f87171; }
+.text-red-500 { color: #f87171; }
+.text-amber-700 { color: #fbbf24; }
+.text-amber-600 { color: #fbbf24; }
+.text-violet-700 { color: #a78bfa; }
+.text-violet-600 { color: #a78bfa; }
+
+/* Hover text */
+.hover\:text-green-700 { color: #4ade80; }
+.hover\:text-emerald-800 { color: #34d399; }
+.hover\:text-blue-800 { color: #60a5fa; }
+.hover\:text-red-700 { color: #f87171; }
+.hover\:text-slate-600 { color: #94a3b8; }
+.hover\:text-slate-700 { color: #cbd5e1; }
+.hover\:text-slate-800 { color: #e2e8f0; }
+.hover\:text-slate-900 { color: #f1f5f9; }
+.hover\:text-gray-600 { color: #cbd5e1; }
+
+/* Borders */
+.border-slate-100 { border-color: #1e293b; }
+.border-slate-200 { border-color: #334155; }
+.border-slate-200\/60 { border-color: rgb(51 65 85 / 0.6); }
+.border-slate-200\/80 { border-color: rgb(51 65 85 / 0.8); }
+.border-slate-300 { border-color: #475569; }
+.border-gray-100 { border-color: #1e293b; }
+.border-gray-200 { border-color: #334155; }
+.border-gray-300 { border-color: #475569; }
+.border-green-100 { border-color: #064e3b; }
+.border-green-200 { border-color: #065f46; }
+.border-red-200 { border-color: #7f1d1d; }
+.hover\:border-slate-300 { border-color: #475569; }
+
+/* Recharts dark theme */
+.recharts-default-tooltip {
+  background-color: #0f172a !important;
+  border-color: #334155 !important;
+}
+.recharts-tooltip-label {
+  color: #e2e8f0 !important;
+}
+.recharts-tooltip-item {
+  color: #cbd5e1 !important;
+}
+.recharts-legend-item-text {
+  color: #94a3b8 !important;
 }

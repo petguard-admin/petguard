@@ -993,8 +993,8 @@ const AdminPetManagement = () => {
             onClick={() => setActiveTab('pets')}
             className={`px-4 py-2 text-sm font-medium transition-colors ${
               activeTab === 'pets'
-                ? 'text-green-700 border-b-2 border-green-700'
-                : 'text-slate-600 hover:text-green-700'
+                ? 'text-emerald-400 border-b-2 border-emerald-400'
+                : 'text-slate-400 hover:text-emerald-400'
             }`}
           >
             Pet Records
@@ -1004,8 +1004,8 @@ const AdminPetManagement = () => {
             onClick={() => setActiveTab('medical')}
             className={`px-4 py-2 text-sm font-medium transition-colors ${
               activeTab === 'medical'
-                ? 'text-green-700 border-b-2 border-green-700'
-                : 'text-slate-600 hover:text-green-700'
+                ? 'text-emerald-400 border-b-2 border-emerald-400'
+                : 'text-slate-400 hover:text-emerald-400'
             }`}
           >
             Medical Records
@@ -1015,8 +1015,8 @@ const AdminPetManagement = () => {
             onClick={() => setActiveTab('vaccination')}
             className={`px-4 py-2 text-sm font-medium transition-colors ${
               activeTab === 'vaccination'
-                ? 'text-green-700 border-b-2 border-green-700'
-                : 'text-slate-600 hover:text-green-700'
+                ? 'text-emerald-400 border-b-2 border-emerald-400'
+                : 'text-slate-400 hover:text-emerald-400'
             }`}
           >
             Vaccination Records
@@ -1059,7 +1059,7 @@ const AdminPetManagement = () => {
 
             {error ? <div className="rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">{error}</div> : null}
 
-            <div className="w-full min-w-0 rounded-xl border border-slate-200 bg-white shadow-md overflow-hidden">
+            <div className="w-full min-w-0 rounded-xl border border-slate-800 bg-slate-900 shadow-md overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full text-sm border-collapse min-w-[700px]">
                   <thead className="sticky top-0 z-10">
@@ -1119,25 +1119,25 @@ const AdminPetManagement = () => {
                       </tr>
                     ) : pageItems.length ? (
                       pageItems.map((p, idx) => (
-                        <tr key={`${p.ownerId}_${p.petId}`} className={`border-b border-slate-100 hover:bg-emerald-50/50 transition-colors ${idx % 2 === 0 ? 'bg-white' : 'bg-slate-50/50'}`}>
+                        <tr key={`${p.ownerId}_${p.petId}`} className={`border-b border-slate-800 hover:bg-slate-800/50 transition-colors ${idx % 2 === 0 ? 'bg-slate-900' : 'bg-slate-900/50'}`}>
                           <td className="py-3 px-4">
-                            <button type="button" className="text-emerald-700 hover:text-emerald-800 hover:underline font-medium" onClick={() => onView(p)}>
+                            <button type="button" className="text-emerald-400 hover:text-emerald-300 hover:underline font-medium" onClick={() => onView(p)}>
                               {p.petName || '—'}
                             </button>
                           </td>
-                          <td className="py-3 px-4 text-slate-600">
+                          <td className="py-3 px-4 text-slate-300">
                             <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${p.species === 'Dog' ? 'bg-blue-100 text-blue-700' : 'bg-amber-100 text-amber-700'}`}>
                               {p.species || '—'}
                             </span>
                           </td>
-                          <td className="hidden lg:table-cell py-3 px-4 text-slate-600 max-w-[120px] truncate" title={p.breed}>{p.breed || '—'}</td>
-                          <td className="hidden md:table-cell py-3 px-4 text-slate-600">{p.sex || '—'}</td>
-                          <td className="py-3 px-4 text-slate-600">{calcAge(p.dateOfBirth)}</td>
+                          <td className="hidden lg:table-cell py-3 px-4 text-slate-300 max-w-[120px] truncate" title={p.breed}>{p.breed || '—'}</td>
+                          <td className="hidden md:table-cell py-3 px-4 text-slate-300">{p.sex || '—'}</td>
+                          <td className="py-3 px-4 text-slate-300">{calcAge(p.dateOfBirth)}</td>
                           <td className="hidden lg:table-cell py-3 px-4">
-                            <span className="inline-flex items-center rounded-full bg-slate-100 text-slate-600 px-2.5 py-0.5 text-xs font-semibold">{tagLabel(p)}</span>
+                            <span className="inline-flex items-center rounded-full bg-slate-800 text-slate-300 px-2.5 py-0.5 text-xs font-semibold">{tagLabel(p)}</span>
                           </td>
-                          <td className="py-3 px-4 text-slate-600 max-w-[120px] truncate" title={p.barangay}>{p.barangay || '—'}</td>
-                          <td className="hidden md:table-cell py-3 px-4 text-slate-600 max-w-[150px] truncate" title={p.ownerName}>{p.ownerName || '—'}</td>
+                          <td className="py-3 px-4 text-slate-300 max-w-[120px] truncate" title={p.barangay}>{p.barangay || '—'}</td>
+                          <td className="hidden md:table-cell py-3 px-4 text-slate-300 max-w-[150px] truncate" title={p.ownerName}>{p.ownerName || '—'}</td>
                           <td className="py-3 px-4">
                             <div className="flex gap-1">
                               <Button variant="blue" size="xs" onClick={() => onView(p)}>
@@ -1235,7 +1235,7 @@ const AdminPetManagement = () => {
 
             {error ? <div className="rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">{error}</div> : null}
 
-            <div className="w-full min-w-0 rounded-xl border border-slate-200 bg-white shadow-md overflow-hidden">
+            <div className="w-full min-w-0 rounded-xl border border-slate-800 bg-slate-900 shadow-md overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full text-sm border-collapse min-w-[700px]">
                   <thead className="sticky top-0 z-10">
@@ -1292,19 +1292,19 @@ const AdminPetManagement = () => {
                       </tr>
                     ) : (
                       medicalPageItems.map((r, idx) => (
-                        <tr key={r.recordId} className={`border-b border-slate-100 hover:bg-emerald-50/50 transition-colors ${idx % 2 === 0 ? 'bg-white' : 'bg-slate-50/50'}`}>
-                          <td className="py-3 px-4 text-slate-600">{r.petName || '—'}</td>
-                          <td className="py-3 px-4 text-slate-600">
+                        <tr key={r.recordId} className={`border-b border-slate-800 hover:bg-slate-800/50 transition-colors ${idx % 2 === 0 ? 'bg-slate-900' : 'bg-slate-900/50'}`}>
+                          <td className="py-3 px-4 text-slate-300">{r.petName || '—'}</td>
+                          <td className="py-3 px-4 text-slate-300">
                             <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${r.species === 'Dog' ? 'bg-blue-100 text-blue-700' : 'bg-amber-100 text-amber-700'}`}>
                               {r.species || '—'}
                             </span>
                           </td>
-                          <td className="py-3 px-4 text-slate-600">{r.date || '—'}</td>
-                          <td className="py-3 px-4 max-w-[150px] truncate text-slate-500 text-xs" title={r.results}>{r.results || '—'}</td>
-                          <td className="py-3 px-4 text-slate-600 max-w-[120px] truncate" title={r.veterinarian}>{r.veterinarian || '—'}</td>
-                          <td className="hidden md:table-cell py-3 px-4 max-w-[150px] truncate text-slate-500 text-xs" title={r.notes}>{r.notes || '—'}</td>
-                          <td className="hidden lg:table-cell py-3 px-4 text-slate-600 max-w-[120px] truncate" title={r.barangay}>{r.barangay || '—'}</td>
-                          <td className="hidden md:table-cell py-3 px-4 text-slate-600 max-w-[150px] truncate" title={r.ownerName}>{r.ownerName || '—'}</td>
+                          <td className="py-3 px-4 text-slate-300">{r.date || '—'}</td>
+                          <td className="py-3 px-4 max-w-[150px] truncate text-slate-400 text-xs" title={r.results}>{r.results || '—'}</td>
+                          <td className="py-3 px-4 text-slate-300 max-w-[120px] truncate" title={r.veterinarian}>{r.veterinarian || '—'}</td>
+                          <td className="hidden md:table-cell py-3 px-4 max-w-[150px] truncate text-slate-400 text-xs" title={r.notes}>{r.notes || '—'}</td>
+                          <td className="hidden lg:table-cell py-3 px-4 text-slate-300 max-w-[120px] truncate" title={r.barangay}>{r.barangay || '—'}</td>
+                          <td className="hidden md:table-cell py-3 px-4 text-slate-300 max-w-[150px] truncate" title={r.ownerName}>{r.ownerName || '—'}</td>
                           <td className="py-3 px-4">
                             <div className="flex gap-1">
                               <Button variant="blue" size="xs" onClick={() => { setSelectedMedicalRecord(r); setMedicalViewOpen(true); }}>
@@ -1403,7 +1403,7 @@ const AdminPetManagement = () => {
 
             {error ? <div className="rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">{error}</div> : null}
 
-            <div className="w-full min-w-0 rounded-xl border border-slate-200 bg-white shadow-md overflow-hidden">
+            <div className="w-full min-w-0 rounded-xl border border-slate-800 bg-slate-900 shadow-md overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full text-sm border-collapse min-w-[900px]">
                   <thead className="sticky top-0 z-10">
@@ -1463,22 +1463,22 @@ const AdminPetManagement = () => {
                       </tr>
                     ) : (
                       vaccinationPageItems.map((r, idx) => (
-                        <tr key={r.recordId} className={`border-b border-slate-100 hover:bg-emerald-50/50 transition-colors ${idx % 2 === 0 ? 'bg-white' : 'bg-slate-50/50'}`}>
-                          <td className="py-3 px-4 text-slate-600">{r.petName || '—'}</td>
-                          <td className="py-3 px-4 text-slate-600">
+                        <tr key={r.recordId} className={`border-b border-slate-800 hover:bg-slate-800/50 transition-colors ${idx % 2 === 0 ? 'bg-slate-900' : 'bg-slate-900/50'}`}>
+                          <td className="py-3 px-4 text-slate-300">{r.petName || '—'}</td>
+                          <td className="py-3 px-4 text-slate-300">
                             <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${r.species === 'Dog' ? 'bg-blue-100 text-blue-700' : 'bg-amber-100 text-amber-700'}`}>
                               {r.species || '—'}
                             </span>
                           </td>
-                          <td className="py-3 px-4 text-slate-600">{r.date || '—'}</td>
-                          <td className="py-3 px-4 text-slate-600 max-w-[120px] truncate" title={r.vaccineType}>{r.vaccineType || '—'}</td>
-                          <td className="hidden lg:table-cell py-3 px-4 text-slate-600 max-w-[120px] truncate" title={r.vaccineSource}>{r.vaccineSource || '—'}</td>
-                          <td className="hidden md:table-cell py-3 px-4 text-slate-600 max-w-[120px] truncate" title={r.vaccinatedBy}>{r.vaccinatedBy || '—'}</td>
-                          <td className="hidden lg:table-cell py-3 px-4 text-slate-600 max-w-[120px] truncate" title={r.reason}>{r.reason || '—'}</td>
-                          <td className="hidden xl:table-cell py-3 px-4 text-slate-600">{r.disease || 'N/A'}</td>
-                          <td className="hidden xl:table-cell py-3 px-4 max-w-[150px] truncate text-slate-500 text-xs" title={r.notes}>{r.notes || '—'}</td>
-                          <td className="hidden lg:table-cell py-3 px-4 text-slate-600 max-w-[120px] truncate" title={r.barangay}>{r.barangay || '—'}</td>
-                          <td className="py-3 px-4 text-slate-600 max-w-[150px] truncate" title={r.ownerName}>{r.ownerName || '—'}</td>
+                          <td className="py-3 px-4 text-slate-300">{r.date || '—'}</td>
+                          <td className="py-3 px-4 text-slate-300 max-w-[120px] truncate" title={r.vaccineType}>{r.vaccineType || '—'}</td>
+                          <td className="hidden lg:table-cell py-3 px-4 text-slate-300 max-w-[120px] truncate" title={r.vaccineSource}>{r.vaccineSource || '—'}</td>
+                          <td className="hidden md:table-cell py-3 px-4 text-slate-300 max-w-[120px] truncate" title={r.vaccinatedBy}>{r.vaccinatedBy || '—'}</td>
+                          <td className="hidden lg:table-cell py-3 px-4 text-slate-300 max-w-[120px] truncate" title={r.reason}>{r.reason || '—'}</td>
+                          <td className="hidden xl:table-cell py-3 px-4 text-slate-300">{r.disease || 'N/A'}</td>
+                          <td className="hidden xl:table-cell py-3 px-4 max-w-[150px] truncate text-slate-400 text-xs" title={r.notes}>{r.notes || '—'}</td>
+                          <td className="hidden lg:table-cell py-3 px-4 text-slate-300 max-w-[120px] truncate" title={r.barangay}>{r.barangay || '—'}</td>
+                          <td className="py-3 px-4 text-slate-300 max-w-[150px] truncate" title={r.ownerName}>{r.ownerName || '—'}</td>
                           <td className="py-3 px-4">
                             <div className="flex gap-1">
                               <Button variant="blue" size="xs" onClick={() => { setSelectedVaccinationRecord(r); setVaccinationViewOpen(true); }}>

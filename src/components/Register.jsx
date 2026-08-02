@@ -84,7 +84,7 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-start justify-center bg-[#f7faf7] px-3 py-4 sm:px-4 sm:py-6 overflow-y-auto">
+    <div className="min-h-screen flex items-start justify-center bg-slate-950 px-3 py-4 sm:px-4 sm:py-6 overflow-y-auto">
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="flex flex-col items-center mb-4">

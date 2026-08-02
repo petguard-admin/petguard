@@ -33,8 +33,8 @@ const OwnerSidebarLayout = ({ title, children }) => {
             to={item.to}
             className={`block rounded-xl px-4 py-3 text-sm font-medium transition-all ${
               active
-                ? "bg-green-700 text-white shadow-sm"
-                : "text-slate-700 hover:bg-green-50 hover:text-green-700"
+                ? "bg-emerald-700 text-white shadow-sm"
+                : "text-slate-300 hover:bg-slate-800 hover:text-emerald-400"
             }`}
           >
             {item.label}
@@ -44,7 +44,7 @@ const OwnerSidebarLayout = ({ title, children }) => {
       <button
         type="button"
         onClick={handleLogout}
-        className="w-full block rounded-xl px-4 py-3 text-sm font-medium text-left transition-all text-slate-700 hover:bg-red-50 hover:text-red-700"
+        className="w-full block rounded-xl px-4 py-3 text-sm font-medium text-left transition-all text-slate-300 hover:bg-red-950/40 hover:text-red-400"
       >
         Logout
       </button>
@@ -52,8 +52,8 @@ const OwnerSidebarLayout = ({ title, children }) => {
   );
 
   return (
-    <div className="min-h-screen bg-[#f7faf7]">
-      <Navbar />
+    <div className="min-h-screen bg-slate-950">
+      <Navbar dark />
 
       <div className="flex flex-col md:flex-row gap-1">
         {/* Mobile Menu */}
@@ -61,7 +61,7 @@ const OwnerSidebarLayout = ({ title, children }) => {
           <button
             type="button"
             onClick={() => setMobileOpen(true)}
-            className="rounded-xl border border-green-100 bg-white px-4 py-2 text-sm font-medium shadow-sm"
+            className="rounded-xl border border-slate-700 bg-slate-900 px-4 py-2 text-sm font-medium shadow-sm text-slate-200"
           >
             ☰ Menu
           </button>
@@ -76,13 +76,13 @@ const OwnerSidebarLayout = ({ title, children }) => {
               onClick={() => setMobileOpen(false)}
               className="absolute inset-0 bg-black/40"
             />
-            <div className="absolute left-0 top-0 h-full w-64 bg-white border-r border-slate-200 p-4 shadow-xl">
+            <div className="absolute left-0 top-0 h-full w-64 bg-slate-900 border-r border-slate-800 p-4 shadow-xl">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-base font-bold text-slate-900">Menu</h2>
+                <h2 className="text-base font-bold text-slate-50">Menu</h2>
                 <button
                   type="button"
                   onClick={() => setMobileOpen(false)}
-                  className="text-slate-500 hover:text-slate-900"
+                  className="text-slate-400 hover:text-slate-100"
                 >
                   ✕
                 </button>
@@ -95,8 +95,8 @@ const OwnerSidebarLayout = ({ title, children }) => {
         {/* Desktop Sidebar */}
         <aside className="hidden md:block w-56 shrink-0 sticky top-0 h-screen overflow-y-auto">
           <div className="p-2">
-            <div className="rounded-2xl bg-white border border-green-100 shadow-sm p-3">
-              <h2 className="text-base font-bold text-slate-900 mb-3">
+            <div className="rounded-2xl bg-slate-900 border border-slate-800 shadow-sm p-3">
+              <h2 className="text-base font-bold text-slate-50 mb-3">
                 My Account
               </h2>
               {renderNav()}
@@ -109,14 +109,14 @@ const OwnerSidebarLayout = ({ title, children }) => {
           <div className="max-w-[70rem] mx-auto w-full">
             {title && (
               <div className="mb-4 sm:mb-6">
-                <h1 className="text-xl sm:text-2xl font-bold text-slate-900">{title}</h1>
-                <p className="text-slate-500 mt-1 text-xs sm:text-sm">
+                <h1 className="text-xl sm:text-2xl font-bold text-slate-50">{title}</h1>
+                <p className="text-slate-400 mt-1 text-xs sm:text-sm">
                   Access and manage your pet information here.
                 </p>
               </div>
             )}
 
-            <div className="bg-white rounded-xl sm:rounded-2xl border border-green-100 shadow-sm p-3 sm:p-5 min-w-0">
+            <div className="bg-slate-900 rounded-xl sm:rounded-2xl border border-slate-800 shadow-sm p-3 sm:p-5 min-w-0">
               {children}
             </div>
           </div>

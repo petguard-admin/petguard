@@ -19,18 +19,18 @@ const HealthInfo = ({ items = [], onItemClick, compact = false, alwaysScrollOnMo
             items.map((item) => (
               <div
                 key={item.id}
-                className={`${compact ? '' : 'w-[300px] snap-start flex-shrink-0 md:w-auto'} group relative bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer`}
+                className={`${compact ? '' : 'w-[300px] snap-start flex-shrink-0 md:w-auto'} group relative bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:border-slate-700 transition-all duration-300 cursor-pointer`}
                 onClick={() => onItemClick && onItemClick(item)}
               >
                 {/* Image */}
-                <div className="relative h-48 bg-gradient-to-br from-sky-100 to-blue-50 overflow-hidden">
+                <div className="relative h-48 bg-gradient-to-br from-sky-900 to-blue-950 overflow-hidden">
                   <img
                     src={item.imageUrl || "/placeholder.jpg"}
                     alt={item.title}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
-                  <span className="absolute top-3 left-3 inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-white/90 text-sky-700 backdrop-blur-sm shadow-sm">
+                  <span className="absolute top-3 left-3 inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-950/70 text-sky-300 backdrop-blur-sm shadow-sm">
                     <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
                     </svg>
@@ -40,15 +40,15 @@ const HealthInfo = ({ items = [], onItemClick, compact = false, alwaysScrollOnMo
 
                 {/* Content */}
                 <div className="p-5">
-                  <h3 className="text-base font-bold text-slate-900 line-clamp-2 group-hover:text-sky-700 transition-colors duration-200">
+                  <h3 className="text-base font-bold text-slate-100 line-clamp-2 group-hover:text-sky-400 transition-colors duration-200">
                     {item.title}
                   </h3>
 
-                  <p className="mt-2 text-sm text-slate-500 line-clamp-2 leading-relaxed">
+                  <p className="mt-2 text-sm text-slate-400 line-clamp-2 leading-relaxed">
                     {item.content}
                   </p>
 
-                  <div className="mt-4 flex items-center text-sm font-semibold text-sky-700 group-hover:text-sky-800 transition-colors">
+                  <div className="mt-4 flex items-center text-sm font-semibold text-sky-400 group-hover:text-sky-300 transition-colors">
                     Read more
                     <svg className="ml-1.5 h-4 w-4 group-hover:translate-x-0.5 transition-transform duration-200" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />

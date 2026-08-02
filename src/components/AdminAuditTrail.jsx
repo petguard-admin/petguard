@@ -194,7 +194,7 @@ const AdminAuditTrail = () => {
           <div className="rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">{error}</div>
         ) : null}
 
-        <div className="w-full min-w-0 rounded-xl border border-slate-200 bg-white shadow-md overflow-hidden">
+        <div className="w-full min-w-0 rounded-xl border border-slate-800 bg-slate-900 shadow-md overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-sm border-collapse min-w-[700px]">
               <thead className="sticky top-0 z-10">
@@ -230,23 +230,23 @@ const AdminAuditTrail = () => {
                   </tr>
                 ) : (
                   pageItems.map((record, idx) => (
-                    <tr key={record.recordId} className={`border-b border-slate-100 hover:bg-emerald-50/50 transition-colors ${idx % 2 === 0 ? 'bg-white' : 'bg-slate-50/50'}`}>
-                      <td className="py-3 px-4 border-r border-slate-100 whitespace-nowrap font-mono text-xs text-slate-700">{formatTimestamp(record.timestamp)}</td>
-                      <td className="py-3 px-4 border-r border-slate-100 text-slate-700">{userNames[record.userId] || record.userId || '—'}</td>
-                      <td className="py-3 px-4 border-r border-slate-100">
+                    <tr key={record.recordId} className={`border-b border-slate-800 hover:bg-slate-800/50 transition-colors ${idx % 2 === 0 ? 'bg-slate-900' : 'bg-slate-900/50'}`}>
+                      <td className="py-3 px-4 border-r border-slate-800 whitespace-nowrap font-mono text-xs text-slate-300">{formatTimestamp(record.timestamp)}</td>
+                      <td className="py-3 px-4 border-r border-slate-800 text-slate-300">{userNames[record.userId] || record.userId || '—'}</td>
+                      <td className="py-3 px-4 border-r border-slate-800">
                         <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${record.userRole === 'admin' ? 'bg-violet-100 text-violet-700' : 'bg-slate-100 text-slate-600'}`}>
                           {record.userRole || '—'}
                         </span>
                       </td>
-                      <td className="py-3 px-4 border-r border-slate-100">
+                      <td className="py-3 px-4 border-r border-slate-800">
                         <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${record.actionType === 'create' ? 'bg-emerald-100 text-emerald-700' : record.actionType === 'update' ? 'bg-blue-100 text-blue-700' : record.actionType === 'delete' ? 'bg-red-100 text-red-700' : 'bg-slate-100 text-slate-600'}`}>
                           {record.actionType || '—'}
                         </span>
                       </td>
-                      <td className="py-3 px-4 border-r border-slate-100 font-mono text-xs text-slate-600 hidden lg:table-cell">{record.targetRecordId || '—'}</td>
-                      <td className="py-3 px-4 border-r border-slate-100 text-slate-600 hidden lg:table-cell">{record.targetRecordType || '—'}</td>
-                      <td className="py-3 px-4 border-r border-slate-100 max-w-xs truncate text-slate-500 text-xs hidden xl:table-cell" title={formatValues(record.beforeValues, record.afterValues)}>{formatValues(record.beforeValues, record.afterValues)}</td>
-                      <td className="py-3 px-4 max-w-xs truncate text-slate-500 text-xs hidden xl:table-cell" title={formatValues(record.afterValues, record.beforeValues)}>{formatValues(record.afterValues, record.beforeValues)}</td>
+                      <td className="py-3 px-4 border-r border-slate-800 font-mono text-xs text-slate-300 hidden lg:table-cell">{record.targetRecordId || '—'}</td>
+                      <td className="py-3 px-4 border-r border-slate-800 text-slate-300 hidden lg:table-cell">{record.targetRecordType || '—'}</td>
+                      <td className="py-3 px-4 border-r border-slate-800 max-w-xs truncate text-slate-400 text-xs hidden xl:table-cell" title={formatValues(record.beforeValues, record.afterValues)}>{formatValues(record.beforeValues, record.afterValues)}</td>
+                      <td className="py-3 px-4 max-w-xs truncate text-slate-400 text-xs hidden xl:table-cell" title={formatValues(record.afterValues, record.beforeValues)}>{formatValues(record.afterValues, record.beforeValues)}</td>
                     </tr>
                   ))
                 )}
