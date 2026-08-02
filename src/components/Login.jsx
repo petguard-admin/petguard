@@ -143,7 +143,8 @@ const Login = () => {
 
             <Button
               type="submit"
-              className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 rounded-lg transition-all shadow-sm shadow-green-600/20 hover:shadow-md hover:shadow-green-600/30 text-xs sm:text-sm"
+              variant="green"
+              className="w-full text-xs sm:text-sm"
               disabled={submitting}
             >
               {submitting ? (
