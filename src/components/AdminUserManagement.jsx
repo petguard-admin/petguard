@@ -240,6 +240,10 @@ const AdminUserManagement = () => {
     setAddOpen(false);
   };
 
+  const closeEdit = () => {
+    setEditOpen(false);
+  };
+
   const onChange = (e) => {
     setForm((p) => ({ ...p, [e.target.name]: e.target.value }));
   };

@@ -44,22 +44,41 @@ export const adminService = {
   async getAdmins() {
     await this.verifyAdmin();
 
-    const usersSnap = await get(ref(database, 'users'));
-    const val = usersSnap.exists() ? usersSnap.val() : {};
+    const [usersSnap, ownersSnap, ownerUidMapSnap] = await Promise.all([
+      get(ref(database, 'users')),
+      get(ref(database, 'owners')),
+      get(ref(database, 'ownerUidMap'))
+    ]);
 
-    const admins = Object.keys(val || {})
+    const usersVal = usersSnap.exists() ? usersSnap.val() : {};
+    const ownersVal = ownersSnap.exists() ? ownersSnap.val() : {};
+    const ownerUidMapVal = ownerUidMapSnap.exists() ? ownerUidMapSnap.val() : {};
+
+    // Create uid -> ownerId mapping
+    const uidToOwnerId = {};
+    Object.keys(ownerUidMapVal || {}).forEach((uid) => {
+      if (uid !== '__meta') uidToOwnerId[uid] = ownerUidMapVal[uid];
+    });
+
+    const admins = Object.keys(usersVal || {})
       .filter((uid) => uid !== '__meta')
-      .map((uid) => ({ uid, ...val[uid] }))
+      .map((uid) => ({ uid, ...usersVal[uid] }))
       .filter((u) => u?.role === 'admin')
-      .map((u) => ({
-        uid: u.uid,
-        firstname: u.firstname || '',
-        lastname: u.lastname || '',
-        email: u.email || '',
-        phone: u.phone || '',
-        role: u.role || '',
-        createdAt: u.createdAt || 0
-      }));
+      .map((u) => {
+        // Try to get personal info from owners collection if not in users
+        const ownerId = uidToOwnerId[u.uid];
+        const owner = ownerId ? (ownersVal[ownerId] || {}) : {};
+        
+        return {
+          uid: u.uid,
+          firstname: u.firstname || owner.firstname || '',
+          lastname: u.lastname || owner.lastname || '',
+          email: u.email || owner.email || '',
+          phone: u.phone || owner.phoneNumber || owner.phone || '',
+          role: u.role || '',
+          createdAt: u.createdAt || owner.createdAt || 0
+        };
+      });
 
     return { admins };
   },
@@ -159,6 +178,7 @@ export const adminService = {
 
     let userSnap = await get(ref(database, `users/${uid}`));
     let beforeRole = 'owner';
+    let ownerData = null;
 
     if (!userSnap.exists() && ownerId) {
       const ownerSnap = await get(ref(database, `owners/${ownerId}`));
@@ -169,8 +189,22 @@ export const adminService = {
       if (!owner.uid) {
         throw new Error('This owner has not signed up yet. They must create an account first before being promoted.');
       }
-      await set(ref(database, `users/${owner.uid}`), { role: 'owner', email: owner.email || '', createdAt: Date.now() });
+      // Copy personal info from owner to user record
+      await set(ref(database, `users/${owner.uid}`), {
+        role: 'owner',
+        email: owner.email || '',
+        firstname: owner.firstname || '',
+        lastname: owner.lastname || '',
+        phone: owner.phoneNumber || owner.phone || '',
+        createdAt: Date.now()
+      });
       userSnap = await get(ref(database, `users/${owner.uid}`));
+    } else if (ownerId) {
+      // Even if user record exists, fetch owner data to populate missing fields
+      const ownerSnap = await get(ref(database, `owners/${ownerId}`));
+      if (ownerSnap.exists()) {
+        ownerData = ownerSnap.val();
+      }
     }
 
     if (!userSnap.exists()) {
@@ -180,11 +214,21 @@ export const adminService = {
     const user = userSnap.val();
     const targetUid = uid || userSnap.key;
 
-    await update(ref(database, `users/${targetUid}`), {
+    // Update with role and personal info from owner if available
+    const updateData = {
       role: 'admin',
       promotedBy: auth.currentUser.uid,
       promotedAt: Date.now()
-    });
+    };
+
+    if (ownerData) {
+      updateData.firstname = ownerData.firstname || '';
+      updateData.lastname = ownerData.lastname || '';
+      updateData.phone = ownerData.phoneNumber || ownerData.phone || '';
+      updateData.email = ownerData.email || '';
+    }
+
+    await update(ref(database, `users/${targetUid}`), updateData);
 
     const auditRef = ref(database, 'auditTrail');
     const newAuditRef = push(auditRef);
