@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useMemo, useState } from '
 
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { auth } from './auth';
+import { getDatabase, ref, get } from 'firebase/database';
 
 const AuthContext = createContext(null);
 
@@ -34,11 +35,24 @@ export const AuthProvider = ({ children }) => {
     (async () => {
       try {
         if (active) setRoleLoading(true);
-        const tokenRes = await user.getIdTokenResult(true);
-        const isAdmin = tokenRes?.claims?.admin === true;
+        
+        // Check database role instead of Firebase Auth custom claims
+        const db = getDatabase();
+        const userRef = ref(db, `users/${user.uid}`);
+        const userSnap = await get(userRef);
+        
+        let isAdmin = false;
+        let userRole = '';
+        
+        if (userSnap.exists()) {
+          const userData = userSnap.val();
+          isAdmin = userData.role === 'admin';
+          userRole = userData.role || '';
+        }
+        
         if (!active) return;
         setIsAdmin(isAdmin);
-        setRole(isAdmin ? 'admin' : '');
+        setRole(userRole);
         setRoleLoading(false);
       } catch {
         if (!active) return;

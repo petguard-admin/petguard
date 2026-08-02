@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 import { sendPasswordResetEmail, signInWithEmailAndPassword } from 'firebase/auth';
+import { getDatabase, ref, get } from 'firebase/database';
 
 import { auth } from '../auth';
 import { Button } from './ui/Button';
@@ -29,8 +30,18 @@ const Login = () => {
     setSubmitting(true);
     try {
       const cred = await signInWithEmailAndPassword(auth, email, password);
-      const tokenRes = await cred.user.getIdTokenResult(true);
-      const isAdmin = tokenRes?.claims?.admin === true;
+      
+      // Check database role instead of Firebase Auth custom claims
+      const db = getDatabase();
+      const userRef = ref(db, `users/${cred.user.uid}`);
+      const userSnap = await get(userRef);
+      
+      let isAdmin = false;
+      if (userSnap.exists()) {
+        const userData = userSnap.val();
+        isAdmin = userData.role === 'admin';
+      }
+      
       navigate(isAdmin ? '/admin' : '/');
     } catch (err) {
       setError(err?.message || 'Login failed.');
