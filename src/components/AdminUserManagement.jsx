@@ -620,9 +620,9 @@ const AdminUserManagement = () => {
                     return (
                       <tr key={u.uid || u.ownerId} className={`border-b border-slate-100 hover:bg-emerald-50/50 transition-colors ${idx % 2 === 0 ? 'bg-white' : 'bg-slate-50/50'}`}>
                         <td className="py-2 sm:py-3 px-2 sm:px-4 font-medium text-slate-800 whitespace-nowrap text-xs sm:text-sm">{name}</td>
-                        <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-600 text-xs sm:text-sm">{u.email || '—'}</td>
-                        <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-600 hidden md:table-cell text-xs sm:text-sm">{u.phone || '—'}</td>
-                        <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-600 hidden md:table-cell text-xs sm:text-sm">{u.barangay || '—'}</td>
+                        <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-600 text-xs sm:text-sm max-w-[150px] truncate" title={u.email}>{u.email || '—'}</td>
+                        <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-600 hidden md:table-cell text-xs sm:text-sm max-w-[120px] truncate" title={u.phone}>{u.phone || '—'}</td>
+                        <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-600 hidden md:table-cell text-xs sm:text-sm max-w-[120px] truncate" title={u.barangay}>{u.barangay || '—'}</td>
                         <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-600 hidden lg:table-cell text-xs sm:text-sm">{u.gender || '—'}</td>
                         <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-600 hidden lg:table-cell text-xs sm:text-sm">{u.birthday || '—'}</td>
                         <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-600 text-center hidden md:table-cell text-xs sm:text-sm">{u.pets ?? 0}</td>
@@ -633,7 +633,7 @@ const AdminUserManagement = () => {
                         </td>
                         <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-600 hidden lg:table-cell text-xs sm:text-sm">{fmtDate(u.createdAt)}</td>
                         <td className="py-2 sm:py-3 px-2 sm:px-4">
-                          <div className="flex flex-wrap gap-1">
+                          <div className="flex gap-1">
                             <Button variant="blue" size="xs" onClick={() => onView(u)} disabled={!canMutate} className="text-[10px] sm:text-xs">
                               View
                             </Button>

@@ -284,7 +284,7 @@ const AdminInformationCenter = () => {
                 ) : filtered.length ? (
                   filtered.map((row) => (
                     <tr key={row.id} className="border-b border-slate-100 hover:bg-emerald-50/50 transition-colors even:bg-slate-50/50">
-                      <td className="py-3 px-4 font-medium">{row.title || '—'}</td>
+                      <td className="py-3 px-4 font-medium max-w-[200px] truncate" title={row.title}>{row.title || '—'}</td>
                       <td className="py-3 px-4">
                         <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${row.type === 'announcement' ? 'bg-blue-100 text-blue-700' : 'bg-amber-100 text-amber-700'}`}>
                           {row.type || '—'}
@@ -297,7 +297,7 @@ const AdminInformationCenter = () => {
                       </td>
                       <td className="py-3 px-4">{fmtDate(row.createdAt)}</td>
                       <td className="py-3 px-4">
-                        <div className="flex flex-wrap gap-1">
+                        <div className="flex gap-1">
                           <Button size="xs" variant="blue" type="button" onClick={() => openEdit(row)}>Edit</Button>
                           <Button size="xs" variant="outline" type="button" onClick={() => togglePublish(row)}>
                             {row.isPublished ? 'Unpublish' : 'Publish'}

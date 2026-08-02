@@ -497,11 +497,11 @@ const MedicalRecords = () => {
                         medicalPageItems.map((r, idx) => (
                           <tr key={r.id} className={`border-b border-slate-100 last:border-0 hover:bg-emerald-50/50 transition-colors ${idx % 2 === 0 ? 'bg-white' : 'bg-slate-50/50'}`}>
                             <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-600 text-xs sm:text-sm">{r.date || '—'}</td>
-                            <td className="py-2 sm:py-3 px-2 sm:px-4 max-w-xs truncate text-slate-500 text-[10px] sm:text-xs" title={r.results}>{r.results ? r.results.substring(0, 50) + (r.results.length > 50 ? '...' : '') : '—'}</td>
-                            <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-600 text-xs sm:text-sm">{r.veterinarian || '—'}</td>
-                            <td className="py-2 sm:py-3 px-2 sm:px-4 max-w-xs truncate text-slate-500 text-[10px] sm:text-xs" title={r.notes}>{r.notes ? r.notes.substring(0, 50) + (r.notes.length > 50 ? '...' : '') : '—'}</td>
+                            <td className="py-2 sm:py-3 px-2 sm:px-4 max-w-[150px] truncate text-slate-500 text-[10px] sm:text-xs" title={r.results}>{r.results || '—'}</td>
+                            <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-600 text-xs sm:text-sm max-w-[120px] truncate" title={r.veterinarian}>{r.veterinarian || '—'}</td>
+                            <td className="py-2 sm:py-3 px-2 sm:px-4 max-w-[150px] truncate text-slate-500 text-[10px] sm:text-xs" title={r.notes}>{r.notes || '—'}</td>
                             <td className="py-2 sm:py-3 px-2 sm:px-4">
-                              <div className="flex flex-wrap gap-1">
+                              <div className="flex gap-1">
                                 <Button variant="blue" size="xs" onClick={() => onView(r)} className="text-[10px] sm:text-xs">
                                   View
                                 </Button>
@@ -626,14 +626,14 @@ const MedicalRecords = () => {
                         vaccinationPageItems.map((r, idx) => (
                           <tr key={r.id} className={`border-b border-slate-100 last:border-b-0 hover:bg-emerald-50/50 transition-colors ${idx % 2 === 0 ? 'bg-white' : 'bg-slate-50/50'}`}>
                             <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-600 text-xs sm:text-sm">{r.date || '—'}</td>
-                            <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-600 text-xs sm:text-sm">{r.vaccineType || '—'}</td>
-                            <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-600 hidden lg:table-cell text-xs sm:text-sm">{r.vaccineSource || '—'}</td>
-                            <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-600 text-xs sm:text-sm">{r.vaccinatedBy || '—'}</td>
-                            <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-600 hidden md:table-cell text-xs sm:text-sm">{r.reason || '—'}</td>
+                            <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-600 text-xs sm:text-sm max-w-[120px] truncate" title={r.vaccineType}>{r.vaccineType || '—'}</td>
+                            <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-600 hidden lg:table-cell text-xs sm:text-sm max-w-[120px] truncate" title={r.vaccineSource}>{r.vaccineSource || '—'}</td>
+                            <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-600 text-xs sm:text-sm max-w-[120px] truncate" title={r.vaccinatedBy}>{r.vaccinatedBy || '—'}</td>
+                            <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-600 hidden md:table-cell text-xs sm:text-sm max-w-[120px] truncate" title={r.reason}>{r.reason || '—'}</td>
                             <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-600 hidden xl:table-cell text-xs sm:text-sm">{r.disease || 'N/A'}</td>
-                            <td className="py-2 sm:py-3 px-2 sm:px-4 max-w-xs truncate text-slate-500 text-[10px] sm:text-xs hidden md:table-cell" title={r.notes}>{r.notes ? r.notes.substring(0, 50) + (r.notes.length > 50 ? '...' : '') : '—'}</td>
+                            <td className="py-2 sm:py-3 px-2 sm:px-4 max-w-[150px] truncate text-slate-500 text-[10px] sm:text-xs hidden md:table-cell" title={r.notes}>{r.notes || '—'}</td>
                             <td className="py-2 sm:py-3 px-2 sm:px-4">
-                              <div className="flex flex-wrap gap-1">
+                              <div className="flex gap-1">
                                 <Button variant="blue" size="xs" onClick={() => onView(r)} className="text-[10px] sm:text-xs">
                                   View
                                 </Button>

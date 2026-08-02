@@ -263,14 +263,14 @@ const AdminControl = () => {
                     return (
                       <tr key={a.uid} className={`border-b border-slate-100 hover:bg-emerald-50/50 transition-colors ${idx % 2 === 0 ? 'bg-white' : 'bg-slate-50/50'}`}>
                         <td className="py-2 sm:py-3 px-2 sm:px-4 font-medium text-slate-800 text-xs sm:text-sm">{name}</td>
-                        <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-600 text-xs sm:text-sm">{a.email || '—'}</td>
-                        <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-600 hidden md:table-cell text-xs sm:text-sm">{a.phone || '—'}</td>
+                        <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-600 text-xs sm:text-sm max-w-[150px] truncate" title={a.email}>{a.email || '—'}</td>
+                        <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-600 hidden md:table-cell text-xs sm:text-sm max-w-[120px] truncate" title={a.phone}>{a.phone || '—'}</td>
                         <td className="py-2 sm:py-3 px-2 sm:px-4">
                           <span className="inline-flex items-center rounded-full bg-violet-100 text-violet-700 px-2 py-0.5 text-[10px] sm:text-xs font-semibold">{a.role || 'admin'}</span>
                         </td>
                         <td className="py-2 sm:py-3 px-2 sm:px-4 text-slate-600 hidden lg:table-cell text-xs sm:text-sm">{fmtDate(a.createdAt)}</td>
                         <td className="py-2 sm:py-3 px-2 sm:px-4">
-                          <div className="flex flex-wrap gap-1">
+                          <div className="flex gap-1">
                             <Button size="xs" variant="blue" type="button" onClick={() => openView(a)} className="text-[10px] sm:text-xs">View</Button>
                             <Button size="xs" variant="destructive" type="button" onClick={() => handleDelete(a)} className="text-[10px] sm:text-xs">Delete</Button>
                           </div>

@@ -502,8 +502,7 @@ const MyPets = () => {
               <ImageUpload
                 value={editForm.image}
                 onChange={({ url }) =>
-                  setEditForm((prev) => ({ ...prev, image: url }))
-                }
+                  setEditForm((prev) => ({ ...prev, image: url }))}
                 folder="pets"
                 label="Pet Photo"
                 allowUrl={false}

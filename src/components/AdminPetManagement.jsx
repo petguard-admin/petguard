@@ -6,6 +6,7 @@ import AdminSidebarLayout from './AdminSidebarLayout';
 import { Button } from './ui/Button';
 import Modal from './Modal';
 import ImageUpload from './ImageUpload';
+import SearchableSelect from './ui/SearchableSelect';
 import { auth } from '../auth';
 import app from '../firebaseConfig';
 import { logAuditTrail } from '../utils/auditLogger';
@@ -89,7 +90,6 @@ const AdminPetManagement = () => {
   const showTagTypeOther = form.tagType === 'others';
   const showVaccineTypeOther = vaccinationForm.vaccineType === 'others';
 
-  const [ownerSearch, setOwnerSearch] = React.useState('');
   const [selectedOwner, setSelectedOwner] = React.useState(null);
 
   const [search, setSearch] = React.useState('');
@@ -123,13 +123,15 @@ const AdminPetManagement = () => {
       if (!user) throw new Error('Please log in to continue.');
 
       const db = getDatabase(app);
-      const [ownersSnap, petsSnap] = await Promise.all([
+      const [ownersSnap, petsSnap, usersSnap] = await Promise.all([
         get(ref(db, 'owners')),
         get(ref(db, 'petsByOwner')),
+        get(ref(db, 'users')),
       ]);
 
       const ownersVal = ownersSnap.exists() ? ownersSnap.val() : {};
       const petsVal = petsSnap.exists() ? petsSnap.val() : {};
+      const usersVal = usersSnap.exists() ? usersSnap.val() : {};
 
       const ownersById = {};
       const ownersArr = [];
@@ -138,12 +140,15 @@ const AdminPetManagement = () => {
         .forEach((ownerId) => {
           const o = { ownerId, ...ownersVal[ownerId] };
           ownersById[ownerId] = o;
+          // Get role from users collection if available
+          const userRecord = usersVal[o.uid] || {};
           ownersArr.push({
             ownerId: o.ownerId,
             firstname: o.firstname || '',
             lastname: o.lastname || '',
             phone: o.phoneNumber || o.phone || '',
             barangay: o.barangay || '',
+            role: userRecord.role || 'owner',
           });
         });
 
@@ -648,7 +653,6 @@ const AdminPetManagement = () => {
       tagNumber: '',
       contactWithOtherAnimals: '',
     });
-    setOwnerSearch('');
     setSelectedOwner(null);
     setFormError('');
     setFormMessage('');
@@ -1126,16 +1130,16 @@ const AdminPetManagement = () => {
                               {p.species || '—'}
                             </span>
                           </td>
-                          <td className="hidden lg:table-cell py-3 px-4 text-slate-600">{p.breed || '—'}</td>
+                          <td className="hidden lg:table-cell py-3 px-4 text-slate-600 max-w-[120px] truncate" title={p.breed}>{p.breed || '—'}</td>
                           <td className="hidden md:table-cell py-3 px-4 text-slate-600">{p.sex || '—'}</td>
                           <td className="py-3 px-4 text-slate-600">{calcAge(p.dateOfBirth)}</td>
                           <td className="hidden lg:table-cell py-3 px-4">
                             <span className="inline-flex items-center rounded-full bg-slate-100 text-slate-600 px-2.5 py-0.5 text-xs font-semibold">{tagLabel(p)}</span>
                           </td>
-                          <td className="py-3 px-4 text-slate-600">{p.barangay || '—'}</td>
-                          <td className="hidden md:table-cell py-3 px-4 text-slate-600">{p.ownerName || '—'}</td>
+                          <td className="py-3 px-4 text-slate-600 max-w-[120px] truncate" title={p.barangay}>{p.barangay || '—'}</td>
+                          <td className="hidden md:table-cell py-3 px-4 text-slate-600 max-w-[150px] truncate" title={p.ownerName}>{p.ownerName || '—'}</td>
                           <td className="py-3 px-4">
-                            <div className="flex flex-wrap gap-1">
+                            <div className="flex gap-1">
                               <Button variant="blue" size="xs" onClick={() => onView(p)}>
                                 View
                               </Button>
@@ -1296,13 +1300,13 @@ const AdminPetManagement = () => {
                             </span>
                           </td>
                           <td className="py-3 px-4 text-slate-600">{r.date || '—'}</td>
-                          <td className="py-3 px-4 max-w-xs truncate text-slate-500 text-xs" title={r.results}>{r.results ? r.results.substring(0, 50) + (r.results.length > 50 ? '...' : '') : '—'}</td>
-                          <td className="py-3 px-4 text-slate-600">{r.veterinarian || '—'}</td>
-                          <td className="hidden md:table-cell py-3 px-4 max-w-xs truncate text-slate-500 text-xs" title={r.notes}>{r.notes ? r.notes.substring(0, 50) + (r.notes.length > 50 ? '...' : '') : '—'}</td>
-                          <td className="hidden lg:table-cell py-3 px-4 text-slate-600">{r.barangay || '—'}</td>
-                          <td className="hidden md:table-cell py-3 px-4 text-slate-600">{r.ownerName || '—'}</td>
+                          <td className="py-3 px-4 max-w-[150px] truncate text-slate-500 text-xs" title={r.results}>{r.results || '—'}</td>
+                          <td className="py-3 px-4 text-slate-600 max-w-[120px] truncate" title={r.veterinarian}>{r.veterinarian || '—'}</td>
+                          <td className="hidden md:table-cell py-3 px-4 max-w-[150px] truncate text-slate-500 text-xs" title={r.notes}>{r.notes || '—'}</td>
+                          <td className="hidden lg:table-cell py-3 px-4 text-slate-600 max-w-[120px] truncate" title={r.barangay}>{r.barangay || '—'}</td>
+                          <td className="hidden md:table-cell py-3 px-4 text-slate-600 max-w-[150px] truncate" title={r.ownerName}>{r.ownerName || '—'}</td>
                           <td className="py-3 px-4">
-                            <div className="flex flex-wrap gap-1">
+                            <div className="flex gap-1">
                               <Button variant="blue" size="xs" onClick={() => { setSelectedMedicalRecord(r); setMedicalViewOpen(true); }}>
                                 View
                               </Button>
@@ -1467,16 +1471,16 @@ const AdminPetManagement = () => {
                             </span>
                           </td>
                           <td className="py-3 px-4 text-slate-600">{r.date || '—'}</td>
-                          <td className="py-3 px-4 text-slate-600">{r.vaccineType || '—'}</td>
-                          <td className="hidden lg:table-cell py-3 px-4 text-slate-600">{r.vaccineSource || '—'}</td>
-                          <td className="hidden md:table-cell py-3 px-4 text-slate-600">{r.vaccinatedBy || '—'}</td>
-                          <td className="hidden lg:table-cell py-3 px-4 text-slate-600">{r.reason || '—'}</td>
+                          <td className="py-3 px-4 text-slate-600 max-w-[120px] truncate" title={r.vaccineType}>{r.vaccineType || '—'}</td>
+                          <td className="hidden lg:table-cell py-3 px-4 text-slate-600 max-w-[120px] truncate" title={r.vaccineSource}>{r.vaccineSource || '—'}</td>
+                          <td className="hidden md:table-cell py-3 px-4 text-slate-600 max-w-[120px] truncate" title={r.vaccinatedBy}>{r.vaccinatedBy || '—'}</td>
+                          <td className="hidden lg:table-cell py-3 px-4 text-slate-600 max-w-[120px] truncate" title={r.reason}>{r.reason || '—'}</td>
                           <td className="hidden xl:table-cell py-3 px-4 text-slate-600">{r.disease || 'N/A'}</td>
-                          <td className="hidden xl:table-cell py-3 px-4 max-w-xs truncate text-slate-500 text-xs" title={r.notes}>{r.notes ? r.notes.substring(0, 50) + (r.notes.length > 50 ? '...' : '') : '—'}</td>
-                          <td className="hidden lg:table-cell py-3 px-4 text-slate-600">{r.barangay || '—'}</td>
-                          <td className="py-3 px-4 text-slate-600">{r.ownerName || '—'}</td>
+                          <td className="hidden xl:table-cell py-3 px-4 max-w-[150px] truncate text-slate-500 text-xs" title={r.notes}>{r.notes || '—'}</td>
+                          <td className="hidden lg:table-cell py-3 px-4 text-slate-600 max-w-[120px] truncate" title={r.barangay}>{r.barangay || '—'}</td>
+                          <td className="py-3 px-4 text-slate-600 max-w-[150px] truncate" title={r.ownerName}>{r.ownerName || '—'}</td>
                           <td className="py-3 px-4">
-                            <div className="flex flex-wrap gap-1">
+                            <div className="flex gap-1">
                               <Button variant="blue" size="xs" onClick={() => { setSelectedVaccinationRecord(r); setVaccinationViewOpen(true); }}>
                                 View
                               </Button>
@@ -1582,6 +1586,7 @@ const AdminPetManagement = () => {
                 value={form.image}
                 onChange={({ url }) => setForm((p) => ({ ...p, image: url }))}
                 folder="pets"
+                allowUrl={false}
                 label="Pet Photo"
               />
             </div>
@@ -1858,39 +1863,21 @@ const AdminPetManagement = () => {
               {/* Owner Selection */}
               <div className="md:col-span-2">
                 <label className="block text-xs text-slate-500 mb-1">Select owner *</label>
-                <select
+                <SearchableSelect
                   value={selectedOwner?.ownerId || ''}
-                  onChange={(e) => {
-                    const id = e.target.value;
-                    const found = owners.find((o) => o.ownerId === id) || null;
+                  onChange={(value) => {
+                    const found = owners.find((o) => o.ownerId === value) || null;
                     setSelectedOwner(found);
                   }}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
-                >
-                  <option value="">Select</option>
-                  {owners
-                    .filter((o) => {
-                      const q = ownerSearch.trim().toLowerCase();
-                      if (!q) return true;
-                      const name = `${o.firstname || ''} ${o.lastname || ''}`.trim().toLowerCase();
-                      const phone = String(o.phone || '').toLowerCase();
-                      const barangay = String(o.barangay || '').toLowerCase();
-                      return name.includes(q) || phone.includes(q) || barangay.includes(q);
-                    })
-                    .slice(0, 200)
-                    .map((o) => {
-                      const label = `${o.firstname || ''} ${o.lastname || ''}`.trim() || '—';
-                      const meta = `${o.phone || '—'} · ${o.barangay || '—'}`;
-                      return (
-                        <option key={o.ownerId} value={o.ownerId}>
-                          {label} ({meta})
-                        </option>
-                      );
-                    })}
-                </select>
-                <div className="text-xs text-slate-500 mt-1">
-                  Selected: {selectedOwner ? `${selectedOwner.firstname} ${selectedOwner.lastname}`.trim() : 'None'}
-                </div>
+                  options={owners
+                    .filter((o) => o.role !== 'admin')
+                    .map((o) => ({
+                      value: o.ownerId,
+                      label: `${o.firstname || ''} ${o.lastname || ''}`.trim() || '—',
+                      meta: `${o.phone || '—'} · ${o.barangay || '—'}`,
+                    }))}
+                  placeholder="Search owner by name, phone, or barangay..."
+                />
               </div>
 
               <div className="md:col-span-2">
@@ -1899,6 +1886,7 @@ const AdminPetManagement = () => {
                   onChange={({ url }) => setForm((p) => ({ ...p, image: url }))}
                   folder="pets"
                   label="Pet Photo"
+                  allowUrl={false}
                 />
               </div>
 

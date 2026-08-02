@@ -155,6 +155,7 @@ const RegisterPetModal = ({
                 value={form.image}
                 onChange={({ url }) => setForm((prev) => ({ ...prev, image: url }))}
                 folder="pets"
+                allowUrl={false}
                 label="Pet Photo"
               />
             </div>
