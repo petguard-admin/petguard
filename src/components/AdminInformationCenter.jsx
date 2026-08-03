@@ -237,12 +237,12 @@ const AdminInformationCenter = () => {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search title/content..."
-              className="w-full md:w-80 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+              className="w-full md:w-80 rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
             />
             <select
               value={typeFilter}
               onChange={(e) => setTypeFilter(e.target.value)}
-              className="w-full md:w-44 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+              className="w-full md:w-44 rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
             >
               <option value="all">All types</option>
               <option value="announcement">Announcement</option>
@@ -345,7 +345,7 @@ const AdminInformationCenter = () => {
                   name="title"
                   value={form.title}
                   onChange={(e) => setForm((p) => ({ ...p, title: e.target.value }))}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+                  className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                 />
               </div>
               <div>
@@ -354,7 +354,7 @@ const AdminInformationCenter = () => {
                   name="type"
                   value={form.type}
                   onChange={(e) => setForm((p) => ({ ...p, type: e.target.value }))}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+                  className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                 >
                   <option value="announcement">announcement</option>
                   <option value="health">health</option>
@@ -366,6 +366,7 @@ const AdminInformationCenter = () => {
                   onChange={({ url }) => setForm((p) => ({ ...p, imageUrl: url }))}
                   folder="announcements"
                   label="Image"
+                  allowUrl={false}
                 />
               </div>
               <div className="md:col-span-2">
@@ -375,7 +376,7 @@ const AdminInformationCenter = () => {
                   rows={4}
                   value={form.content}
                   onChange={(e) => setForm((p) => ({ ...p, content: e.target.value }))}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+                  className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                 />
               </div>
               <div className="md:col-span-2 flex items-center gap-2">
@@ -384,13 +385,13 @@ const AdminInformationCenter = () => {
                   type="checkbox"
                   checked={form.isPublished === true}
                   onChange={(e) => setForm((p) => ({ ...p, isPublished: e.target.checked }))}
-                  className="rounded border-gray-300 text-green-600 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+                  className="rounded border-slate-600 bg-slate-800 text-emerald-600 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                 />
                 <label className="text-sm">Published</label>
               </div>
             </div>
 
-            <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-200">
+            <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-800">
               <Button
                 variant="outline"
                 onClick={closeAdd}
@@ -432,7 +433,7 @@ const AdminInformationCenter = () => {
                   name="title"
                   value={form.title}
                   onChange={(e) => setForm((p) => ({ ...p, title: e.target.value }))}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+                  className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                 />
               </div>
               <div>
@@ -441,7 +442,7 @@ const AdminInformationCenter = () => {
                   name="type"
                   value={form.type}
                   onChange={(e) => setForm((p) => ({ ...p, type: e.target.value }))}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+                  className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                 >
                   <option value="announcement">announcement</option>
                   <option value="health">health</option>
@@ -453,6 +454,7 @@ const AdminInformationCenter = () => {
                   onChange={({ url }) => setForm((p) => ({ ...p, imageUrl: url }))}
                   folder="announcements"
                   label="Image"
+                  allowUrl={false}
                 />
               </div>
               <div className="md:col-span-2">
@@ -462,7 +464,7 @@ const AdminInformationCenter = () => {
                   rows={4}
                   value={form.content}
                   onChange={(e) => setForm((p) => ({ ...p, content: e.target.value }))}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+                  className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                 />
               </div>
               <div className="md:col-span-2 flex items-center gap-2">
@@ -471,13 +473,13 @@ const AdminInformationCenter = () => {
                   type="checkbox"
                   checked={form.isPublished === true}
                   onChange={(e) => setForm((p) => ({ ...p, isPublished: e.target.checked }))}
-                  className="rounded border-gray-300 text-green-600 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+                  className="rounded border-slate-600 bg-slate-800 text-emerald-600 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                 />
                 <label className="text-sm">Published</label>
               </div>
             </div>
 
-            <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-200">
+            <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-800">
               <Button
                 variant="outline"
                 onClick={closeEdit}

@@ -17,6 +17,8 @@ import AdminAuditTrail from './components/AdminAuditTrail';
 import AdminSettings from './components/AdminSettings';
 import AdminControl from './components/AdminControl';
 import AdminProfile from './components/AdminProfile';
+import PrivacyPolicy from './components/PrivacyPolicy';
+import TermsOfService from './components/TermsOfService';
 
 function App() {
   return (
@@ -25,6 +27,8 @@ function App() {
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/terms-of-service" element={<TermsOfService />} />
           <Route
             path="/profile"
             element={

@@ -23,11 +23,13 @@ const Navbar = ({ dark = false }) => {
             dark ? "text-white" : "text-slate-900"
           }`}
         >
-          <img
-            src="/img/OMV_logo.png"
-            alt="OMV Logo"
-            className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg"
-          />
+          <div className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center overflow-hidden ${dark ? 'bg-slate-800' : 'bg-slate-200'}`}>
+            <img
+              src="/img/OMV_logo.png"
+              alt="OMV Logo"
+              className="w-full h-full object-cover"
+            />
+          </div>
           <span>
             Pet<span className={dark ? "text-green-400" : "text-green-700"}>Guard</span>
           </span>

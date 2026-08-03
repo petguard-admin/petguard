@@ -6,6 +6,7 @@ import { getDatabase, ref, get } from 'firebase/database';
 
 import { auth } from '../auth';
 import { Button } from './ui/Button';
+import { ArrowLeft } from 'lucide-react';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -100,6 +101,15 @@ const Login = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-950 px-3 py-6 sm:px-4 sm:py-8">
       <div className="w-full max-w-sm">
+        {/* Back Button */}
+        <button
+          onClick={() => navigate('/')}
+          className="flex items-center gap-2 text-slate-400 hover:text-emerald-400 transition-colors mb-4"
+        >
+          <ArrowLeft size={20} />
+          <span>Back to Home</span>
+        </button>
+
         {/* Logo */}
         <div className="flex flex-col items-center mb-5">
           <Link to="/" className="flex items-center gap-2 mb-4">

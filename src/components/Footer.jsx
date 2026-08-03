@@ -1,5 +1,6 @@
 import React from 'react';
 import { PawPrint } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Footer = () => {
   return (
@@ -23,9 +24,9 @@ const Footer = () => {
           <div>
             <h4 className="text-white font-semibold text-sm mb-3">Quick Links</h4>
             <div className="space-y-2 text-sm">
-              <a href="#" className="block hover:text-emerald-400 transition-colors">Privacy Policy</a>
-              <a href="#" className="block hover:text-emerald-400 transition-colors">Terms of Service</a>
-              <a href="#" className="block hover:text-emerald-400 transition-colors">Contact Us</a>
+              <Link to="/privacy-policy" className="block hover:text-emerald-400 transition-colors">Privacy Policy</Link>
+              <Link to="/terms-of-service" className="block hover:text-emerald-400 transition-colors">Terms of Service</Link>
+              <a href="mailto:petguard.admin@gmail.com" className="block hover:text-emerald-400 transition-colors">Contact Us</a>
             </div>
           </div>
 

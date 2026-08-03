@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { authService } from '../services/authService';
 import { Button } from './ui/Button';
 import { logAuditTrail } from '../utils/auditLogger';
+import { ArrowLeft } from 'lucide-react';
 
 const Register = () => {
   const navigate = useNavigate();
@@ -18,13 +19,15 @@ const Register = () => {
     birthday: '',
     password: '',
     confirmPassword: '',
+    acceptTerms: false,
   });
 
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
 
   const onChange = (e) => {
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+    setForm((prev) => ({ ...prev, [e.target.name]: value }));
   };
 
   const validate = () => {
@@ -43,6 +46,7 @@ const Register = () => {
     if (!/[a-z]/.test(form.password)) return 'Password must contain at least one lowercase letter.';
     if (!/\d/.test(form.password)) return 'Password must contain at least one number.';
     if (form.password !== form.confirmPassword) return 'Passwords do not match.';
+    if (!form.acceptTerms) return 'You must accept the Terms of Service and Privacy Policy to register.';
     return '';
   };
 
@@ -91,6 +95,15 @@ const Register = () => {
   return (
     <div className="min-h-screen flex items-start justify-center bg-slate-950 px-3 py-4 sm:px-4 sm:py-6 overflow-y-auto">
       <div className="w-full max-w-md">
+        {/* Back Button */}
+        <button
+          onClick={() => navigate('/')}
+          className="flex items-center gap-2 text-slate-400 hover:text-emerald-400 transition-colors mb-4"
+        >
+          <ArrowLeft size={20} />
+          <span>Back to Home</span>
+        </button>
+
         {/* Logo */}
         <div className="flex flex-col items-center mb-4">
           <Link to="/" className="flex items-center gap-2 mb-3">
@@ -258,7 +271,7 @@ const Register = () => {
                   onChange={onChange}
                   className="w-full rounded-lg border border-slate-200 bg-slate-50/50 px-3 py-2 text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-green-500/20 focus:border-green-500 focus:bg-white transition-all"
                   autoComplete="new-password"
-                  placeholder="Min. 6 characters"
+                  placeholder="Min. 8 characters"
                 />
               </div>
               <div>
@@ -276,6 +289,28 @@ const Register = () => {
                   placeholder="Re-enter password"
                 />
               </div>
+            </div>
+
+            {/* Terms and Privacy Checkbox */}
+            <div className="flex items-start gap-2">
+              <input
+                id="acceptTerms"
+                name="acceptTerms"
+                type="checkbox"
+                checked={form.acceptTerms}
+                onChange={onChange}
+                className="mt-0.5 h-4 w-4 rounded border-slate-300 text-green-600 focus:ring-green-500"
+              />
+              <label htmlFor="acceptTerms" className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                I agree to the{' '}
+                <Link to="/terms-of-service" className="text-green-600 hover:text-green-700 underline">
+                  Terms of Service
+                </Link>{' '}
+                and{' '}
+                <Link to="/privacy-policy" className="text-green-600 hover:text-green-700 underline">
+                  Privacy Policy
+                </Link>
+              </label>
             </div>
 
             <Button

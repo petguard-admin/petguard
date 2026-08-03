@@ -13,6 +13,8 @@
     },
 
     "ownerUidMap": {
+      ".read": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'admin'",
+      ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'admin'",
       "$uid": {
         ".read": "auth != null && (auth.uid === $uid || root.child('users').child(auth.uid).child('role').val() === 'admin')",
         ".write": "auth != null && (auth.uid === $uid || root.child('users').child(auth.uid).child('role').val() === 'admin')"
@@ -20,6 +22,8 @@
     },
 
     "owners": {
+      ".read": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'admin'",
+      ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'admin'",
       "$ownerId": {
         ".read": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'admin' || root.child('ownerUidMap').child(auth.uid).val() === $ownerId)",
         ".write": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'admin' || root.child('ownerUidMap').child(auth.uid).val() === $ownerId || (!data.exists() && newData.child('uid').val() === auth.uid) || (!data.child('uid').exists() && newData.child('uid').val() === auth.uid))"
@@ -27,6 +31,8 @@
     },
 
     "petsByOwner": {
+      ".read": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'admin'",
+      ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'admin'",
       "$ownerId": {
         ".read": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'admin' || root.child('ownerUidMap').child(auth.uid).val() === $ownerId)",
         ".write": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'admin' || root.child('ownerUidMap').child(auth.uid).val() === $ownerId)"
@@ -34,6 +40,8 @@
     },
 
     "selectedPetByOwner": {
+      ".read": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'admin'",
+      ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'admin'",
       "$ownerId": {
         ".read": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'admin' || root.child('ownerUidMap').child(auth.uid).val() === $ownerId)",
         ".write": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'admin' || root.child('ownerUidMap').child(auth.uid).val() === $ownerId)"
@@ -41,6 +49,17 @@
     },
 
     "medicalRecordsByPet": {
+      ".read": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'admin'",
+      ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'admin'",
+      "$petId": {
+        ".read": "auth != null",
+        ".write": "auth != null"
+      }
+    },
+
+    "vaccinationRecordsByPet": {
+      ".read": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'admin'",
+      ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'admin'",
       "$petId": {
         ".read": "auth != null",
         ".write": "auth != null"
@@ -48,6 +67,8 @@
     },
 
     "users": {
+      ".read": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'admin'",
+      ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'admin'",
       "$uid": {
         ".read": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'admin'",
         ".write": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'admin' || auth.uid === $uid)"
@@ -55,6 +76,8 @@
     },
 
     "emailIndex": {
+      ".read": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'admin'",
+      ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'admin'",
       "$emailKey": {
         ".read": "true",
         ".write": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'admin' || !data.exists())"
@@ -62,6 +85,8 @@
     },
 
     "phoneIndex": {
+      ".read": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'admin'",
+      ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'admin'",
       "$phone": {
         ".read": "auth != null",
         ".write": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'admin' || !data.exists())"
@@ -70,7 +95,7 @@
 
     "auditTrail": {
       ".read": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'admin'",
-      ".write": "auth != null",
+      ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'admin'",
       "$recordId": {
         ".read": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'admin'",
         ".write": "auth != null && !data.exists()"

@@ -19,12 +19,12 @@ const Modal = ({ open, title, onClose, children, footer, maxWidthClassName = 'ma
       />
 
       <div className={`relative w-full ${maxWidthClassName} max-h-full`}>
-        <div className="relative bg-white rounded-2xl shadow-2xl border border-slate-200/60 flex flex-col max-h-[calc(100vh-2rem)]">
-          <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 shrink-0">
-            <h3 className="text-lg font-semibold text-slate-900">{title}</h3>
+        <div className="relative bg-slate-900 rounded-2xl shadow-2xl border border-slate-800 flex flex-col max-h-[calc(100vh-2rem)]">
+          <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800 shrink-0">
+            <h3 className="text-lg font-semibold text-slate-50">{title}</h3>
             <button
               type="button"
-              className="text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg p-1.5 transition-colors duration-150"
+              className="text-slate-400 hover:text-slate-200 hover:bg-slate-800 rounded-lg p-1.5 transition-colors duration-150"
               onClick={onClose}
               aria-label="Close modal"
             >
@@ -37,7 +37,7 @@ const Modal = ({ open, title, onClose, children, footer, maxWidthClassName = 'ma
           <div className="px-6 py-5 overflow-y-auto flex-1">{children}</div>
           
           {footer ? (
-            <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-slate-100 bg-slate-50/50 rounded-b-2xl shrink-0">{footer}</div>
+            <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-slate-800 bg-slate-950/50 rounded-b-2xl shrink-0">{footer}</div>
           ) : null}
         </div>
       </div>

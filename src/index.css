@@ -129,6 +129,15 @@
 .border-red-200 { border-color: #7f1d1d; }
 .hover\:border-slate-300 { border-color: #475569; }
 
+/* Native select dropdown options (dark mode) */
+select option {
+  background-color: #0f172a;
+  color: #f1f5f9;
+}
+select option:disabled {
+  color: #475569;
+}
+
 /* Recharts dark theme */
 .recharts-default-tooltip {
   background-color: #0f172a !important;

@@ -171,7 +171,7 @@ const RegisterPetModal = ({
                   name="petName"
                   value={form.petName}
                   onChange={onChange}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+                  className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                   placeholder="Enter pet name"
                 />
               </div>
@@ -186,7 +186,7 @@ const RegisterPetModal = ({
                   name="species"
                   value={form.species}
                   onChange={onChange}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+                  className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                 >
                   <option value="">Select</option>
                   <option value="Dog">Dog</option>
@@ -204,7 +204,7 @@ const RegisterPetModal = ({
                   name="sex"
                   value={form.sex}
                   onChange={onChange}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+                  className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                 >
                   <option value="">Select</option>
                   <option value="Male">Male</option>
@@ -222,7 +222,7 @@ const RegisterPetModal = ({
                   name="spayedNeutered"
                   value={form.spayedNeutered}
                   onChange={onChange}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+                  className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                 >
                   <option value="">Select</option>
                   <option value="Yes">Yes</option>
@@ -243,7 +243,7 @@ const RegisterPetModal = ({
                   step="0.1"
                   value={form.weightKgs}
                   onChange={onChange}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+                  className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                   placeholder="Enter weight"
                 />
               </div>
@@ -258,7 +258,7 @@ const RegisterPetModal = ({
                   name="breed"
                   value={form.breed}
                   onChange={onChange}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+                  className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                   placeholder="Enter breed"
                 />
               </div>
@@ -273,7 +273,7 @@ const RegisterPetModal = ({
                   name="animalColor"
                   value={form.animalColor}
                   onChange={onChange}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+                  className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                   placeholder="Enter color"
                 />
               </div>
@@ -289,7 +289,7 @@ const RegisterPetModal = ({
                   type="date"
                   value={form.dateOfBirth}
                   onChange={onChange}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+                  className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                 />
               </div>
 
@@ -303,7 +303,7 @@ const RegisterPetModal = ({
                   name="petOrigin"
                   value={form.petOrigin}
                   onChange={onChange}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+                  className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                 >
                   <option value="">Select</option>
                   <option value="local">Local</option>
@@ -314,7 +314,7 @@ const RegisterPetModal = ({
                     name="petOriginOther"
                     value={form.petOriginOther}
                     onChange={onChange}
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors mt-2"
+                    className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors mt-2"
                     placeholder="Specify origin"
                   />
                 )}
@@ -330,7 +330,7 @@ const RegisterPetModal = ({
                   name="ownership"
                   value={form.ownership}
                   onChange={onChange}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+                  className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                 >
                   <option value="">Select</option>
                   <option value="household">Household</option>
@@ -342,7 +342,7 @@ const RegisterPetModal = ({
                     name="ownershipOther"
                     value={form.ownershipOther}
                     onChange={onChange}
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors mt-2"
+                    className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors mt-2"
                     placeholder="Specify ownership"
                   />
                 )}
@@ -358,7 +358,7 @@ const RegisterPetModal = ({
                   name="tagType"
                   value={form.tagType}
                   onChange={onChange}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+                  className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                 >
                   <option value="">Select</option>
                   <option value="collar tag">Collar Tag</option>
@@ -372,7 +372,7 @@ const RegisterPetModal = ({
                     name="tagTypeOther"
                     value={form.tagTypeOther}
                     onChange={onChange}
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors mt-2"
+                    className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors mt-2"
                     placeholder="Specify tag type"
                   />
                 )}
@@ -388,7 +388,7 @@ const RegisterPetModal = ({
                   name="tagNumber"
                   value={form.tagNumber}
                   onChange={onChange}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+                  className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                   placeholder="Enter tag number"
                 />
               </div>
@@ -403,7 +403,7 @@ const RegisterPetModal = ({
                   name="habitat"
                   value={form.habitat}
                   onChange={onChange}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+                  className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                 >
                   <option value="">Select</option>
                   <option value="caged">Caged</option>
@@ -423,7 +423,7 @@ const RegisterPetModal = ({
                   name="contactWithOtherAnimals"
                   value={form.contactWithOtherAnimals}
                   onChange={onChange}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+                  className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                 >
                   <option value="">Select</option>
                   <option value="frequent">Frequent</option>
@@ -435,8 +435,8 @@ const RegisterPetModal = ({
             
             {/* Female-specific fields */}
             {isFemale && (
-              <div className="border border-slate-200 rounded-lg p-4 space-y-3 bg-green-50/50 mt-4">
-                <div className="font-medium text-sm text-green-800">Female-specific information</div>
+              <div className="border border-slate-700 rounded-lg p-4 space-y-3 bg-emerald-950/30 mt-4">
+                <div className="font-medium text-sm text-emerald-400">Female-specific information</div>
                 <div className="flex gap-4">
                   <label className="flex items-center gap-2 text-sm">
                     <input
@@ -444,7 +444,7 @@ const RegisterPetModal = ({
                       name="pregnant"
                       checked={form.pregnant}
                       onChange={onChange}
-                      className="rounded border-gray-300 text-green-600 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+                      className="rounded border-slate-600 bg-slate-800 text-emerald-600 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                     />
                     Pregnant
                   </label>
@@ -454,7 +454,7 @@ const RegisterPetModal = ({
                       name="lactating"
                       checked={form.lactating}
                       onChange={onChange}
-                      className="rounded border-gray-300 text-green-600 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+                      className="rounded border-slate-600 bg-slate-800 text-emerald-600 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                     />
                     Lactating with puppies
                   </label>
@@ -470,7 +470,7 @@ const RegisterPetModal = ({
                       min="0"
                       value={form.puppyCount}
                       onChange={onChange}
-                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
+                      className="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
                       placeholder="Enter number"
                     />
                   </div>
@@ -478,7 +478,7 @@ const RegisterPetModal = ({
               </div>
             )}
             
-            <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-200">
+            <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-800">
               <Button
                 variant="outline"
                 onClick={onClose}
