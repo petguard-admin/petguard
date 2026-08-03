@@ -49,7 +49,7 @@ const AdminInformationCenter = () => {
       setItems(arr);
     } catch (e) {
       setItems([]);
-      setError('Could not load announcements. Please try again.');
+      setError('Unable to load announcements. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -139,7 +139,7 @@ const AdminInformationCenter = () => {
       await load();
       setAddOpen(false);
     } catch (e) {
-      setFormError('Could not create announcement. Please try again.');
+      setFormError('Unable to create announcement. Please try again.');
     } finally {
       setSubmitting(false);
     }

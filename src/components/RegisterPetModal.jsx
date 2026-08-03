@@ -127,7 +127,7 @@ const RegisterPetModal = ({
       onClose?.();
       await logAuditTrail('create', newPet.pet.id, 'pet', null, submitData);
     } catch (err) {
-      setError('Could not register pet. Please try again.');
+      setError('Unable to register pet. Please try again.');
     } finally {
       setSubmitting(false);
     }

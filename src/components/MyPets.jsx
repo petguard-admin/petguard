@@ -39,7 +39,7 @@ const MyPets = () => {
     if (!user) throw new Error('Please log in to continue.');
     const db = getDatabase(app);
     const mapSnap = await get(ref(db, `ownerUidMap/${user.uid}`));
-    if (!mapSnap.exists()) throw new Error('No account found. Please contact support.');
+    if (!mapSnap.exists()) throw new Error('Account not found. Please contact support.');
     return String(mapSnap.val() || '');
   }, [user]);
 
@@ -72,7 +72,7 @@ const MyPets = () => {
         setSelectedPetId(effectiveSelected);
       } catch (e) {
         if (!active) return;
-        setError('Could not load pets. Please try again.');
+        setError('Unable to load your pets. Please try again.');
       }
     })();
 
@@ -129,7 +129,7 @@ const MyPets = () => {
       setEditing(false);
       setIsEditModalOpen(false);
     } catch (e) {
-      setError('Could not switch pet. Please try again.');
+      setError('Unable to switch pets. Please try again.');
     }
   };
   
@@ -184,7 +184,7 @@ const MyPets = () => {
       setMessage('Pet updated.');
       await logAuditTrail('update', selectedPetId, 'pet', selectedPet, updateData);
     } catch (err) {
-      setError('Could not update pet. Please try again.');
+      setError('Unable to update pet information. Please try again.');
     } finally {
       setSaving(false);
     }
@@ -239,7 +239,7 @@ const MyPets = () => {
       setSelectedPetId(arr[0].id);
     }
   } catch (e) {
-    setError('Could not reload pets. Please try again.');
+    setError('Unable to reload pets. Please try again.');
   }
 }, [getOwnerId]);
 
@@ -278,7 +278,7 @@ const MyPets = () => {
       setMessage('Pet deleted.');
       await logAuditTrail('delete', selectedPetId, 'pet', selectedPet, null);
     } catch (err) {
-      setError('Could not delete pet. Please try again.');
+      setError('Unable to delete pet. Please try again.');
     } finally {
       setDeleting(false);
     }

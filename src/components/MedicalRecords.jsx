@@ -56,7 +56,7 @@ const MedicalRecords = () => {
     if (!user) throw new Error('Please log in to continue.');
     const db = getDatabase(app);
     const mapSnap = await get(ref(db, `ownerUidMap/${user.uid}`));
-    if (!mapSnap.exists()) throw new Error('No account found. Please contact support.');
+    if (!mapSnap.exists()) throw new Error('Account not found. Please contact support.');
     return String(mapSnap.val() || '');
   }, [user]);
 
@@ -93,7 +93,7 @@ const MedicalRecords = () => {
         setSelectedPetId(firstPetId);
       } catch (e) {
         if (!active) return;
-        setError('Could not load pet. Please try again.');
+        setError('Unable to load pet information. Please try again.');
       }
     })();
 
@@ -124,7 +124,7 @@ const MedicalRecords = () => {
         setRecords(mine);
       } catch (e) {
         if (!active) return;
-        setError('Could not load medical records. Please try again.');
+        setError('Unable to load medical records. Please try again.');
       } finally {
         if (active) setRecordsLoading(false);
       }
@@ -319,7 +319,7 @@ const MedicalRecords = () => {
       setEditForm(null);
       await logAuditTrail('update', selectedRecord.id, editForm.recordType === 'vaccination' ? 'vaccination_record' : 'medical_record', selectedRecord, patch);
     } catch (err) {
-      setFormError('Could not update record. Please try again.');
+      setFormError('Unable to update record. Please try again.');
     } finally {
       setSavingEdit(false);
     }
@@ -340,7 +340,7 @@ const MedicalRecords = () => {
       setMessage('Record deleted.');
       await logAuditTrail('delete', rec.id, rec.recordType === 'vaccination' ? 'vaccination_record' : 'medical_record', rec, null);
     } catch (err) {
-      setError('Could not delete record. Please try again.');
+      setError('Unable to delete record. Please try again.');
     } finally {
       setDeletingId('');
     }

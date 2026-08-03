@@ -24,7 +24,7 @@ const Profile = () => {
     if (!user) throw new Error('Please log in to continue.');
     const db = getDatabase(app);
     const mapSnap = await get(ref(db, `ownerUidMap/${user.uid}`));
-    if (!mapSnap.exists()) throw new Error('No account found. Please contact support.');
+    if (!mapSnap.exists()) throw new Error('Account not found. Please contact support.');
     return String(mapSnap.val() || '');
   }, [user]);
 
@@ -52,7 +52,7 @@ const Profile = () => {
         });
       } catch (e) {
         if (!active) return;
-        setError('Could not load profile. Please try again.');
+        setError('Unable to load your profile. Please try again.');
       }
     })();
 
@@ -87,7 +87,7 @@ const Profile = () => {
       setMessage('Profile updated.');
       await logAuditTrail('update', ownerId, 'owner_profile', profile, form);
     } catch (err) {
-      setError('Could not update profile. Please try again.');
+      setError('Unable to update your profile. Please try again.');
     } finally {
       setSaving(false);
     }

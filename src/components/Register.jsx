@@ -85,7 +85,7 @@ const Register = () => {
       if (err?.code === 'auth/email-already-in-use') {
         setError('An account with this email already exists. Please sign in with your existing account.');
       } else {
-        setError(err?.message || 'Registration failed.');
+        setError('Something went wrong. Please try again later.');
       }
     } finally {
       setSubmitting(false);

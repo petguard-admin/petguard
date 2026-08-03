@@ -100,7 +100,7 @@ const AdminUserManagement = () => {
       setUsers(arr);
     } catch (e) {
       setUsers([]);
-      setError('Could not load users. Please try again.');
+      setError('Unable to load users. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -114,7 +114,7 @@ const AdminUserManagement = () => {
       } catch (e) {
         if (!cancelled) {
           setUsers([]);
-          setError('Could not load users. Please try again.');
+          setError('Unable to load users. Please try again.');
         }
       }
     };

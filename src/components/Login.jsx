@@ -71,7 +71,7 @@ const Login = () => {
         setLockoutUntil(Date.now() + 15 * 60 * 1000);
         setError('Too many failed attempts. Account locked for 15 minutes.');
       } else {
-        setError(err?.message || 'Login failed.');
+        setError('Invalid email or password. Please try again.');
       }
     } finally {
       setSubmitting(false);
@@ -92,7 +92,7 @@ const Login = () => {
       await sendPasswordResetEmail(auth, email.trim());
       setMessage('Password reset email sent. Check your inbox.');
     } catch (err) {
-      setError(err?.message || 'Failed to send password reset email.');
+      setError('Unable to send password reset email. Please try again later.');
     } finally {
       setResetting(false);
     }

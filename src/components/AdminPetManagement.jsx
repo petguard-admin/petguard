@@ -189,7 +189,7 @@ const AdminPetManagement = () => {
     } catch (e) {
       setPets([]);
       setOwners([]);
-      setError('Could not load pets. Please try again.');
+      setError('Unable to load pets. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -203,7 +203,7 @@ const AdminPetManagement = () => {
       } catch (e) {
         if (!cancelled) {
           setPets([]);
-          setError('Could not load pets. Please try again.');
+          setError('Unable to load pets. Please try again.');
         }
       }
     };
@@ -289,7 +289,7 @@ const AdminPetManagement = () => {
       setMedicalRecords(arr);
     } catch (e) {
       setMedicalRecords([]);
-      setError('Could not load medical records. Please try again.');
+      setError('Unable to load medical records. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -375,7 +375,7 @@ const AdminPetManagement = () => {
       setVaccinationRecords(arr);
     } catch (e) {
       setVaccinationRecords([]);
-      setError('Could not load vaccination records. Please try again.');
+      setError('Unable to load vaccination records. Please try again.');
     } finally {
       setLoading(false);
     }
