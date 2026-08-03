@@ -251,7 +251,9 @@ const LandingPage = () => {
       </main>
 
       {/* CTA */}
-      <CTA />
+      <div id="getting-started">
+        <CTA />
+      </div>
 
       {/* Footer */}
       <Footer />

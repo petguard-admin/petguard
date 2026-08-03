@@ -11,6 +11,14 @@ const Hero = () => {
     if (isAdmin) return "/admin/dashboard";
     return "/my-pets";
   };
+
+  const scrollToCTA = (e) => {
+    e.preventDefault();
+    const element = document.getElementById('getting-started');
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
   return (
     <section className="bg-slate-950">
       <div className="container mx-auto px-3 sm:px-4 py-10 sm:py-16 lg:py-20">
@@ -44,15 +52,12 @@ const Hero = () => {
                 </Button>
               </Link>
 
-              <Link to="/#health-info">
-                <Button
-                  size="md"
-                  variant="outline"
-                  className="border-emerald-500 mx-4 text-emerald-400 hover:bg-emerald-950/30 rounded-lg px-4 sm:px-6 text-sm sm:text-base"
-                >
-                  Learn More
-                </Button>
-              </Link>
+              <button
+                onClick={scrollToCTA}
+                className="border-emerald-500 mx-4 text-emerald-400 hover:bg-emerald-950/30 rounded-lg px-4 sm:px-6 text-sm sm:text-base font-medium transition-colors"
+              >
+                Learn More
+              </button>
             </div>
 
             {/* Stats */}
