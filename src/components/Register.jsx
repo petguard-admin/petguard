@@ -31,12 +31,17 @@ const Register = () => {
     if (!form.lastname.trim()) return 'Lastname is required.';
     if (!form.firstname.trim()) return 'Firstname is required.';
     if (!form.email.trim()) return 'Email is required.';
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(form.email)) return 'Invalid email format.';
     if (!form.phone.trim()) return 'Phone no. is required.';
     if (!form.barangay.trim()) return 'Barangay is required.';
     if (!form.gender.trim()) return 'Gender is required.';
     if (!form.birthday.trim()) return 'Birthday is required.';
     if (!form.password) return 'Password is required.';
-    if (form.password.length < 6) return 'Password must be at least 6 characters.';
+    if (form.password.length < 8) return 'Password must be at least 8 characters.';
+    if (!/[A-Z]/.test(form.password)) return 'Password must contain at least one uppercase letter.';
+    if (!/[a-z]/.test(form.password)) return 'Password must contain at least one lowercase letter.';
+    if (!/\d/.test(form.password)) return 'Password must contain at least one number.';
     if (form.password !== form.confirmPassword) return 'Passwords do not match.';
     return '';
   };

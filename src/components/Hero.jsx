@@ -1,7 +1,16 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { Button } from "./ui/Button";
+import { useAuth } from "../AuthContext";
 
 const Hero = () => {
+  const { user, isAdmin } = useAuth();
+
+  const getStartedLink = () => {
+    if (!user) return "/login";
+    if (isAdmin) return "/admin/dashboard";
+    return "/my-pets";
+  };
   return (
     <section className="bg-slate-950">
       <div className="container mx-auto px-3 sm:px-4 py-10 sm:py-16 lg:py-20">
@@ -25,21 +34,25 @@ const Hero = () => {
             </p>
 
             <div className="mt-5 sm:mt-8 flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start">
-              <Button
-                size="md"
-                variant="green"
-                className="text-sm mx-4 sm:text-base"
-              >
-                Get Started
-              </Button>
+              <Link to={getStartedLink()}>
+                <Button
+                  size="md"
+                  variant="green"
+                  className="text-sm mx-4 sm:text-base"
+                >
+                  Get Started
+                </Button>
+              </Link>
 
-              <Button
-                size="md"
-                variant="outline"
-                className="border-emerald-500 mx-4 text-emerald-400 hover:bg-emerald-950/30 rounded-lg px-4 sm:px-6 text-sm sm:text-base"
-              >
-                Learn More
-              </Button>
+              <Link to="/#health-info">
+                <Button
+                  size="md"
+                  variant="outline"
+                  className="border-emerald-500 mx-4 text-emerald-400 hover:bg-emerald-950/30 rounded-lg px-4 sm:px-6 text-sm sm:text-base"
+                >
+                  Learn More
+                </Button>
+              </Link>
             </div>
 
             {/* Stats */}

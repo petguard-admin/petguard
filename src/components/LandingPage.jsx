@@ -1,6 +1,7 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { get, getDatabase, ref } from "firebase/database";
+import DOMPurify from 'dompurify';
 import Navbar from "./Navbar";
 import Hero from "./Hero";
 import Announcements from "./Announcements";
@@ -219,7 +220,7 @@ const LandingPage = () => {
             </section>
 
             {/* Health Info */}
-            <section>
+            <section id="health-info">
               <div className="flex items-end justify-between mb-8">
                 <div>
                   <h2 className="text-2xl font-bold text-slate-50">
@@ -277,7 +278,7 @@ const LandingPage = () => {
             <div className="p-6 overflow-y-auto flex-1">
               <div className="prose prose-invert max-w-none">
                 {selectedItem.content && (
-                  <div dangerouslySetInnerHTML={{ __html: selectedItem.content }} />
+                  <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(selectedItem.content) }} />
                 )}
                 {selectedItem.description && (
                   <p className="text-slate-300 whitespace-pre-wrap leading-relaxed">{selectedItem.description}</p>

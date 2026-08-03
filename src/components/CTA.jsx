@@ -4,7 +4,13 @@ import { Button } from './ui/Button';
 import { useAuth } from '../AuthContext';
 
 const CTA = () => {
-  const { user } = useAuth();
+  const { user, isAdmin } = useAuth();
+
+  const getStartedLink = () => {
+    if (!user) return "/register";
+    if (isAdmin) return "/admin/dashboard";
+    return "/my-pets";
+  };
 
   return (
     <section className="py-12 sm:py-16 bg-slate-900">
@@ -40,9 +46,9 @@ const CTA = () => {
           </div>
         </div>
 
-        <Link to={user ? "/my-pets" : "/register"}>
+        <Link to={getStartedLink()}>
           <Button variant="green" className="text-xs sm:text-sm">
-            {user ? "Manage Your Pets" : "Get Started"}
+            {user ? (isAdmin ? "Dashboard" : "Manage Your Pets") : "Get Started"}
           </Button>
         </Link>
       </div>

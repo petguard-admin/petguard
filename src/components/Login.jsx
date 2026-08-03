@@ -16,6 +16,8 @@ const Login = () => {
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
   const [resetting, setResetting] = useState(false);
+  const [attempts, setAttempts] = useState(0);
+  const [lockoutUntil, setLockoutUntil] = useState(null);
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -25,6 +27,19 @@ const Login = () => {
     if (!email.trim() || !password) {
       setError('Email and password are required.');
       return;
+    }
+
+    // Check if account is locked
+    if (lockoutUntil && Date.now() < lockoutUntil) {
+      const remainingTime = Math.ceil((lockoutUntil - Date.now()) / 1000 / 60);
+      setError(`Too many failed attempts. Please try again in ${remainingTime} minutes.`);
+      return;
+    }
+
+    // Reset lockout if time has passed
+    if (lockoutUntil && Date.now() >= lockoutUntil) {
+      setAttempts(0);
+      setLockoutUntil(null);
     }
 
     setSubmitting(true);
@@ -43,8 +58,20 @@ const Login = () => {
       }
       
       navigate(isAdmin ? '/admin' : '/');
+      // Reset attempts on successful login
+      setAttempts(0);
+      setLockoutUntil(null);
     } catch (err) {
-      setError(err?.message || 'Login failed.');
+      const newAttempts = attempts + 1;
+      setAttempts(newAttempts);
+
+      // Lock account after 5 failed attempts for 15 minutes
+      if (newAttempts >= 5) {
+        setLockoutUntil(Date.now() + 15 * 60 * 1000);
+        setError('Too many failed attempts. Account locked for 15 minutes.');
+      } else {
+        setError(err?.message || 'Login failed.');
+      }
     } finally {
       setSubmitting(false);
     }

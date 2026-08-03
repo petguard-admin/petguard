@@ -1,0 +1,92 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    
+    "users": {
+      "$uid": {
+        ".read": "auth != null && (auth.uid == $uid || root.child('users').child(auth.uid).child('role').val() == 'admin')",
+        ".write": "auth != null && (auth.uid == $uid || root.child('users').child(auth.uid).child('role').val() == 'admin')",
+        ".validate": "newData.hasChildren(['email', 'role'])"
+      }
+    },
+    
+    "owners": {
+      "$ownerId": {
+        ".read": "auth != null && (data.child('uid').val() == auth.uid || root.child('users').child(auth.uid).child('role').val() == 'admin')",
+        ".write": "auth != null && (data.child('uid').val() == auth.uid || root.child('users').child(auth.uid).child('role').val() == 'admin')",
+        ".validate": "newData.hasChildren(['uid', 'email', 'firstname', 'lastname'])"
+      }
+    },
+    
+    "pets": {
+      "$petId": {
+        ".read": "auth != null && (data.child('ownerId').val() == root.child('ownerUidMap').child(auth.uid).val() || root.child('users').child(auth.uid).child('role').val() == 'admin')",
+        ".write": "auth != null && (data.child('ownerId').val() == root.child('ownerUidMap').child(auth.uid).val() || root.child('users').child(auth.uid).child('role').val() == 'admin')",
+        ".validate": "newData.hasChildren(['ownerId', 'name', 'species'])"
+      }
+    },
+    
+    "medicalRecords": {
+      "$recordId": {
+        ".read": "auth != null && (data.child('ownerId').val() == root.child('ownerUidMap').child(auth.uid).val() || root.child('users').child(auth.uid).child('role').val() == 'admin')",
+        ".write": "auth != null && (data.child('ownerId').val() == root.child('ownerUidMap').child(auth.uid).val() || root.child('users').child(auth.uid).child('role').val() == 'admin')"
+      }
+    },
+    
+    "vaccinationRecords": {
+      "$recordId": {
+        ".read": "auth != null && (data.child('ownerId').val() == root.child('ownerUidMap').child(auth.uid).val() || root.child('users').child(auth.uid).child('role').val() == 'admin')",
+        ".write": "auth != null && (data.child('ownerId').val() == root.child('ownerUidMap').child(auth.uid).val() || root.child('users').child(auth.uid).child('role').val() == 'admin')"
+      }
+    },
+    
+    "announcements": {
+      ".read": "auth != null",
+      ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() == 'admin'",
+      "$id": {
+        ".validate": "newData.hasChildren(['title', 'type', 'isPublished'])"
+      }
+    },
+    
+    "auditTrail": {
+      ".read": "auth != null && root.child('users').child(auth.uid).child('role').val() == 'admin'",
+      ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() == 'admin'"
+    },
+    
+    "ownerUidMap": {
+      "$uid": {
+        ".read": "auth != null && auth.uid == $uid",
+        ".write": "auth != null && auth.uid == $uid"
+      }
+    },
+    
+    "emailIndex": {
+      "$key": {
+        ".read": "auth != null && root.child('users').child(auth.uid).child('role').val() == 'admin'",
+        ".write": "auth != null"
+      }
+    },
+    
+    "phoneIndex": {
+      "$phone": {
+        ".read": "auth != null && root.child('users').child(auth.uid).child('role').val() == 'admin'",
+        ".write": "auth != null"
+      }
+    },
+    
+    "petsByOwner": {
+      "$ownerId": {
+        ".read": "auth != null && ($ownerId == root.child('ownerUidMap').child(auth.uid).val() || root.child('users').child(auth.uid).child('role').val() == 'admin')",
+        ".write": "auth != null && ($ownerId == root.child('ownerUidMap').child(auth.uid).val() || root.child('users').child(auth.uid).child('role').val() == 'admin')"
+      }
+    },
+    
+    "selectedPetByOwner": {
+      "$ownerId": {
+        ".read": "auth != null && $ownerId == root.child('ownerUidMap').child(auth.uid).val()",
+        ".write": "auth != null && $ownerId == root.child('ownerUidMap').child(auth.uid).val()"
+      }
+    }
+  }
+}
